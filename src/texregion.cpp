@@ -7,12 +7,14 @@
 
 #include "texregion.h"
 
-TexRegion::TexRegion(std::shared_ptr<TexRes> tex_res, Rectangle src_rect) {
+using namespace std;
+
+TexRegion::TexRegion(shared_ptr<TexRes> tex_res, Rectangle src_rect) {
 	this->tex_res = tex_res;
 	this->src_rect = src_rect;
 }
 
-TexRegion::TexRegion(std::shared_ptr<TexRes> tex_res) {
+TexRegion::TexRegion(shared_ptr<TexRes> tex_res) {
 	this->tex_res = tex_res;
 	this->src_rect = (Rectangle){
 		0,
@@ -20,4 +22,8 @@ TexRegion::TexRegion(std::shared_ptr<TexRes> tex_res) {
 		static_cast<float>(tex_res->getWidth()),
 		static_cast<float>(tex_res->getHeight())
 	};
+}
+
+Vector2 TexRegion::getDimensions() {
+	return (Vector2){src_rect.width, src_rect.height};
 }

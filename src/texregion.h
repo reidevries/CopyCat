@@ -20,19 +20,24 @@
 #include "texres.h"
 
 class TexRegion {
-	private:
-		std::shared_ptr<TexRes> tex_res;
-		Rectangle src_rect;
-	public:
-		TexRegion(std::shared_ptr<TexRes> tex_res, Rectangle src_rect);
-		TexRegion(std::shared_ptr<TexRes> tex_res);
-		Rectangle getSrcRect() {return src_rect;}
+private:
+	std::shared_ptr<TexRes> tex_res;
+	Rectangle src_rect;
+public:
+	TexRegion(std::shared_ptr<TexRes> tex_res, Rectangle src_rect);
+	TexRegion(std::shared_ptr<TexRes> tex_res);
+	Rectangle getSrcRect() {return src_rect;}
+	//get the dimensions of the src rect
+	Vector2 getDimensions();
 
-		//passthru methods
-		Texture2D get() {return tex_res->get();} //get the underlying Texture2D
-		std::shared_ptr<TexRes> getRes() {return tex_res;} //get the pointer to the resource
-		void age(float dt) {tex_res->age(dt);} //ages the resource
-		void seen() {tex_res->seen();} //resets the age of the resource
+	//get the underlying Texture2D
+	Texture2D get() {return tex_res->get();}
+	//get the pointer to the resource
+	std::shared_ptr<TexRes> getRes() {return tex_res;}
+	//ages the resource
+	void age(float dt) {tex_res->age(dt);}
+	//resets the age of the resource
+	void seen() {tex_res->seen();}
 };
 
 

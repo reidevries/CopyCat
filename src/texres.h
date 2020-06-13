@@ -20,25 +20,25 @@
 #include "debugprinter.h"
 
 class TexRes {
-	private:
-		Texture2D tex;
-		double last_seen;	//in ms since last seen on the screen
-	public:
-		TexRes();
-		TexRes(const char* filename);
-		Texture2D get() {return tex;}
+private:
+	Texture2D tex;
+	double last_seen;	//in ms since last seen on the screen
+public:
+	TexRes();
+	TexRes(const char* filename);
+	Texture2D get() {return tex;}
 
-		//passthru methods for texture2D struct
-		unsigned int getID() {return tex.id;}
-		int getWidth() {return tex.width;}
-		int getHeight() {return tex.height;}
-		int getMipMaps() {return tex.mipmaps;}
-		int getFormat() {return tex.format;}
+	//passthru methods for texture2D struct
+	unsigned int getID() {return tex.id;}
+	int getWidth() {return tex.width;}
+	int getHeight() {return tex.height;}
+	int getMipMaps() {return tex.mipmaps;}
+	int getFormat() {return tex.format;}
 
-		void age(float dt) {last_seen += dt;}
-		void seen() {last_seen = 0;}
-		double getAge() {return last_seen;}
-		~TexRes();
+	void age(float dt) {last_seen += dt;}
+	void seen() {last_seen = 0;}
+	double getAge() {return last_seen;}
+	~TexRes();
 };
 
 #endif /* SRC_TEXRES_H_ */

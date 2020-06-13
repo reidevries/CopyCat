@@ -12,10 +12,14 @@
 class DebugPrinter {
   public:
 	static const int VERBOSITY = 2;
+	static std::stringstream log;
+	//prints a debugmsg like "source: debugmsg" if verbosity <= VERBOSITY
     static void printDebug(std::string source, std::string debugmsg, int verbosity);
     static void printDebug(const char* source, const char* debugmsg, int verbosity);
+    //same as above, but prints a number before the debugmsg
     static void printDebug(const char* source, uintptr_t ref, const char* debugmsg, int verbosity);
-    static void saveDebug(std::string source, std::string debugmsg, std::string filename);
+    static void saveDebugLog(const char* filename);
+
 };
 
 #endif

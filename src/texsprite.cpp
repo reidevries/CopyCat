@@ -2,83 +2,138 @@
 
 #include <iostream>
 
-TexSprite::TexSprite(std::string name, std::vector<TexRegion> regions, float screenscale) {
+using namespace std;
+
+TexSprite::TexSprite(string name, vector<TexRegion> regions, SpriteType type,
+	Vector2 size)
+{
 	this->name = name;
 	this->regions = regions;
-	this->offset = (Vector2){0,0};
-	this->origin = (Vector2){0.5,0.5};
+	this->type = type;
+	this->size = size;
+	this->offset = (Vector2 ) { 0, 0 };
+	this->origin = (Vector2 ) { 0.5, 0.5 };
 	draw_index = 0;
-	
-	setScreenScale(screenscale);
-}
 
-void TexSprite::setDrawIndex(int tex_index) {
-	if (tex_index < regions.size() && tex_index >= 0) this->draw_index = tex_index;
-	else {
-		DebugPrinter::printDebug("TexSprite::setDrawIndex",
-				std::to_string(tex_index) + " is an invalid tex_index for TexSprite " + name, 1);
-		std::cerr << "Tried to set TexSprite '" << name << "' to invalid texindex " << tex_index << std::endl;
+	updateRectangleSize();
+	updateRectanglePos((Vector2 ) { 0, 0 });
+
+	if (this->type == SpriteType::world) {
+		plane = LoadModelFromMesh((Mesh) GenMeshPlane(size.x, size.y, 1, 1));
+		setDrawIndex(0);
 	}
 }
 
-void TexSprite::updateRectanglePos(Vector2 pos) {
+TexSprite::TexSprite(string name, vector<TexRegion> regions, SpriteType type)
+	: TexSprite(name, regions, type, regions[0].getDimensions())
+{
+}
+
+TexSprite::TexSprite(string name, vector<TexRegion> regions)
+	: TexSprite(name, regions, SpriteType::screen)
+{
+}
+
+void TexSprite::setDrawIndex(int tex_index)
+{
+	if (tex_index < regions.size() && tex_index >= 0) {
+		this->draw_index = tex_index;
+	} else {
+		DebugPrinter::printDebug("TexSprite::setDrawIndex",
+			to_string(tex_index) + " is an invalid tex_index for TexSprite "
+				+ name, 1);
+		cerr << "Tried to set TexSprite '" << name << "' to invalid texindex "
+			<< tex_index << endl;
+	}
+
+	if (type == SpriteType::world) {
+		plane.materials[0].maps[MAP_DIFFUSE].texture =
+			regions[draw_index].get();
+	}
+}
+
+void TexSprite::updateRectanglePos(Vector2 pos)
+{
 	//changes the position of the drawing rectangle.
-	//This won't be correct if updatePixels is not called on updates to scale, screen_scale or offset
-	dest_rect.x = scale_pixels*pos.x + offset_pixels.x;
-	dest_rect.y = scale_pixels*pos.y + offset_pixels.y;
+	//This won't be correct if updatePixels is not called on updates to scale or offset
+	dest_rect.x = pos.x + offset.x;
+	dest_rect.y = pos.y + offset.y;
 }
 
-void TexSprite::updatePixels() {
-	//the pixel scale is the screen scale multiplied by the scale.
-	scale_pixels = scale*screen_scale;
-	//the pixel offset is the world offset multiplied by the screen scale
-	offset_pixels = VectorMath::scale(offset, screen_scale);
-
-	//the destination rectangle for drawing has the dimensions of the src rectangle multiplied by the pixel scale
-	Rectangle src_rect = regions[draw_index].getSrcRect();
-	dest_rect.width = src_rect.width*scale_pixels;
-	dest_rect.height = src_rect.height*scale_pixels;
-
-	//the dimensions of the destination rectangle are multiplied by the origin position (0 <= x,y <= 1) to get the pixel origin
-	origin_pixels = (Vector2){dest_rect.width*origin.x, dest_rect.height*origin.y};
+void TexSprite::updateRectangleSize()
+{
+	if (type == SpriteType::world) {
+		dest_rect.width = size.x * scale;
+		dest_rect.height = size.y * scale;
+	} else {
+		Rectangle src_rect = regions[draw_index].getSrcRect();
+		dest_rect.width = src_rect.width * scale;
+		dest_rect.height = src_rect.height * scale;
+	}
+	origin_pixels = (Vector2 ) {
+		dest_rect.width * origin.x,
+		dest_rect.height * origin.y
+	};
 }
 
-void TexSprite::setOffset(Vector2 offset) {
+void TexSprite::setSize(Vector2 size)
+{
+	this->size = size;
+}
+
+void TexSprite::setOffset(Vector2 offset)
+{
 	this->offset = offset;
-	updatePixels();
-	updateRectanglePos((Vector2){});
+	updateRectangleSize();
+	updateRectanglePos((Vector2 ) { });
 }
 
-void TexSprite::setScale(float scale) {
+void TexSprite::setScale(float scale)
+{
 	this->scale = scale;
-	updatePixels();
+	updateRectangleSize();
 }
 
-void TexSprite::setOrigin(Vector2 origin) {
+void TexSprite::setOrigin(Vector2 origin)
+{
 	this->scale = scale;
-	updatePixels();
+	updateRectangleSize();
 }
 
-void TexSprite::setScreenScale(float screen_scale) {
-	this->screen_scale = screen_scale;
-	updatePixels();
-}
-
-Texture2D TexSprite::getCurrentTexture() {
+Texture2D TexSprite::getCurrentTexture()
+{
 	return regions[draw_index].get();
 }
 
-void TexSprite::draw(Color color) {
-	regions[draw_index].seen();	//this should work with camera position whenever thats implemented
-	DrawTexturePro(regions[draw_index].get(), regions[draw_index].getSrcRect(), dest_rect, origin_pixels, rotation, WHITE);
+Vector3 TexSprite::getPos3D()
+{
+	Vector3 pos_3d;
+	pos_3d.x = dest_rect.x;
+	pos_3d.y = up;
+	pos_3d.z = dest_rect.y;
+	return pos_3d;
 }
 
-void TexSprite::draw(Vector2 pos) {
+void TexSprite::draw(Vector2 pos, Camera cam)
+{
 	updateRectanglePos(pos);
-	regions[draw_index].seen(); //same here
-	DrawTexturePro(regions[draw_index].get(), regions[draw_index].getSrcRect(), dest_rect, origin_pixels, rotation, WHITE);
+	regions[draw_index].seen();
+
+	if (type == SpriteType::world) {
+		DrawModelEx(plane, getPos3D(), (Vector3 ) { 0.0, 1.0, 0.0 }, rotation,
+			(Vector3 ) { 1.0, 1.0, 1.0 }, WHITE);
+	} else if (type == SpriteType::billboard) {
+		DrawBillboardRec(cam, regions[draw_index].get(),
+			regions[draw_index].getSrcRect(), getPos3D(), scale, WHITE);
+	} else {
+		DebugPrinter::printDebug("TexSprite::draw",
+			"pls use drawUI to draw a sprite of the 'screen' type", 3);
+	}
 }
 
-void TexSprite::draw() {
-	draw(WHITE);
+void TexSprite::drawUI(Color color)
+{
+	regions[draw_index].seen();
+	DrawTexturePro(regions[draw_index].get(), regions[draw_index].getSrcRect(),
+		dest_rect, origin_pixels, rotation, color);
 }

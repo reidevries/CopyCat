@@ -22,55 +22,90 @@
 #include "texregion.h"
 #include "vectormath.h"
 
+//defines how the sprite is to be drawn, only for use within TexSprite
+enum class SpriteType {
+	screen,		//Gets drawn in 2D by drawUI
+				//It is drawn on the screen at the pixel coords of "offset"
+				//This is a candidate for being split into another class, but
+				//I think it would share too many methods
+
+	world,  	//Gets drawn in 3D as a flat plane textured with the sprite
+				//It's drawn in the world at the coordinates specified by
+				//dest_rect and "up", which is formed from
+				//offset+pos as specified in draw(Vector2, Camera)
+
+	billboard 	//gets drawn in 3D as a billboard
+				//It's drawn in the same way as "world", but it always faces
+				//the camera. Can't be rotated on any axis due to limitations
+				//of the raylib library.
+};
+
 class TexSprite {
-	private:
-		std::string name;
-		/* This vector stores all the regions of textures that can be drawn
-		 * by this texturesprite. Using the same shared_ptr to draw multiple
-		 * regions should be fine, because it will automatically handle
-		 * deletion without having to store multiple copies of the resources.
-		 */
-		std::vector<TexRegion> regions;
-		int draw_index;					//the index of the texture that is currently being drawn
-		Vector2 offset;
-		Vector2 origin;					//the origin for rotation and positioning 0.0x0.0 = top left corner, 1.0x1.0=bottom right corner
-		float scale = 1;
-		float rotation = 0;
-		
-		//screen_scale is the ratio of game units to pixels, for getting the position on the screen
-		//pos_pixels and scale_pixels are updated when the scale, pos or screen_scale are changed
-		float screen_scale = 1;
+private:
+	std::string name;
+	/* If the type is "ui", it gets drawn in 2D, if the type is "world",
+	 * it gets drawn in 3D within the world, with the "plane" model.
+	 * If the type is "billboard", it gets drawn as a billboard
+	 */
+	Model plane;
+	SpriteType type;
+	Vector2 size;
+	float up; //determines y position if rendered in 3D
+	/* This vector stores all the regions of textures that can be drawn
+	 * by this texsprite. Using the same shared_ptr to draw multiple
+	 * regions should be fine, because it will automatically handle
+	 * deletion without having to store multiple copies of the resources.
+	 * src_rect is ignored for "world" type drawing
+	 */
+	std::vector<TexRegion> regions;
+	int draw_index; //the index of the texture that currently being drawn
+	Vector2 offset;
+	//the origin for rotation and positioning
+	Vector2 origin; //0x0 = top left corner, 1x1=bottom right corner
+	float scale = 1;
+	float rotation = 0;
 
-		Vector2 origin_pixels;
-		Vector2 offset_pixels;
-		float scale_pixels = 1;
-		Rectangle dest_rect;
-		void updatePixels(); //call this when any of the variables offset, origin, scale, or screen_scale are modified
-		void updateRectanglePos(Vector2 pos);	//updates the rectangle where the object will be drawn on the screen
-		
-		Texture2D getCurrentTexture();
-		void ageTextures();
-	public:
-		TexSprite(std::string name, std::vector<TexRegion> regions, float screen_scale);
-		std::vector<TexRegion> getAllTextures() {return regions;}
-		std::string getName() {return name;}
-		
-		void setDrawIndex(int draw_index);
-		int getDrawIndex() {return draw_index;}
-		void setOffset(Vector2 offset);
-		Vector2 getOffset() {return offset;}
-		void setOrigin(Vector2 origin);
-		Vector2 getOrigin() {return origin;}
-		void setScale(float scale);
-		float getScale() {return scale;}
-		void setRotation(float rotation) {this->rotation = rotation;}
-		float getRotation() {return rotation;}
+	Vector2 origin_pixels;
+	Rectangle dest_rect;
+	//update rectangle size
+	void updateRectangleSize();
+	//updates the position to draw on screen
+	void updateRectanglePos(Vector2 pos);
 
-		void setScreenScale(float screenscale);
-		
-		void draw(Color color);
-		void draw(Vector2 pos);
-		void draw();
+	Texture2D getCurrentTexture();
+	void ageTextures();
+	Vector3 getPos3D();	//get the pos as 3D world coords
+public:
+	TexSprite(std::string name,
+			std::vector<TexRegion> regions,
+			SpriteType type,
+			Vector2 size);
+	//same as above, but using src_rect size as default
+	TexSprite(std::string name,
+			std::vector<TexRegion> regions,
+			SpriteType type);
+	//same as above, but defaulting to "screen" SpriteType
+	TexSprite(std::string name,
+			std::vector<TexRegion> regions);
+	std::vector<TexRegion> getAllTextures() {return regions;}
+	std::string getName() {return name;}
+
+	//also updates material texture
+	void setDrawIndex(int draw_index);
+	int getDrawIndex() {return draw_index;}
+	void setOffset(Vector2 offset);
+	Vector2 getOffset() {return offset;}
+	void setSize(Vector2 size);
+	Vector2 getSize() {return size;}
+	void setOrigin(Vector2 origin);
+	Vector2 getOrigin() {return origin;}
+	void setScale(float scale);
+	float getScale() {return scale;}
+	void setRotation(float rotation) {this->rotation = rotation;}
+	float getRotation() {return rotation;}
+
+	void draw(Vector2 pos, Camera cam);
+	void drawUI(Color color);
 };
 
 #endif

@@ -6,32 +6,42 @@
 #include "level.h"
 #include <memory>
 #include "texsprite.h"
+#include <sstream>
+#include "messagelist.h"
 
-class GameObject {
-	protected:
-		std::vector<TexSprite> sprites;
-		int sprite_num;
-		Vector2 pos;
-		int z_pos;
-		
-		float screen_scale;
-		
-	public:
-		GameObject(std::vector<TexSprite> sprites, int sprite_num, Vector2 pos, float screen_scale);
-		GameObject(Vector2 pos, float screen_scale);
-		int getSpriteNum() {return sprite_num;}
-		Vector2 getPosition() {return pos;}
-		int getZPos() {return z_pos;}
-		
-		void replaceSprites(std::vector<TexSprite> sprites, int sprite_num);
-		void setPos(Vector2 pos) {this->pos = pos;}
-		void setZPos(int zpos) {this->z_pos = zpos;}
-		
-		void setScreenScale(float screen_scale);
-		
-		virtual std::unique_ptr<Level> update(std::unique_ptr<Level> level, float dt);
-		virtual void draw() =0;
-		virtual ~GameObject() {sprites.clear();}
+class GameObject
+{
+private:
+	static int id_counter;
+
+protected:
+	std::vector<TexSprite> sprites;
+	int sprite_num;
+	Vector2 pos;
+	int up_pos = 0;
+
+public:
+	const int id;
+	const std::string name;
+
+	GameObject(std::string type_name,
+		std::vector<TexSprite> sprites,
+		int sprite_num,
+		Vector2 pos);
+	GameObject(std::string type_name, Vector2 pos);
+	int getSpriteNum() {return sprite_num;}
+	Vector2 getPos() {return pos;}
+	int getUpPos() {return up_pos;}
+	int getRenderDistance();
+
+	void replaceSprites(std::vector<TexSprite> sprites, int sprite_num);
+	void setPos(Vector2 pos) {this->pos = pos;}
+	void setUpPos(int up_pos) {this->up_pos = up_pos;}
+
+	virtual void passMessages(std::vector<Message>) =0;
+	virtual std::vector<Message> update(float dt, unsigned int time_s) =0;
+	virtual void draw() =0;
+	virtual ~GameObject() {sprites.clear();}
 };
 
 #endif

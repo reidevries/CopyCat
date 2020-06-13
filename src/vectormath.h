@@ -30,6 +30,7 @@ class VectorMath {
 		static float dot(Vector2 a, Vector2 b);
 		static float dist(Vector2 a, Vector2 b);
 		static float sqrdist(Vector2 a, Vector2 b);
+		static Vector2 convert3Dto2Dcoord(Vector3 a, Camera cam);	//converts a 3d coord to a screen coord
 };
 
 #endif
