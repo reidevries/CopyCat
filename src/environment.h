@@ -17,6 +17,13 @@
 #include "debugprinter.h"
 #include "messagelist.h"
 #include "resman.h"
+#include "gameobject_list.h"
+
+#include "catconf.h"
+#ifndef CATCONF_H
+#define CAT_VERBOSITY 0
+#endif
+
 
 class Environment
 {
@@ -43,6 +50,7 @@ public:
 	Environment(const int set_bucket_size, const int set_world_size);
 	void insertObject(std::shared_ptr<GameObject> gameobject);
 	void deleteObjectByID(const int id);
+
 	//gets a pointer to a specific object
 	std::shared_ptr<GameObject> getObjectByID(const int id);
 	//gets the set of objects with the given name
@@ -63,7 +71,10 @@ public:
 	void distributeMessages(MessageList messages);
 
 	//updates all the gameobjects and accumulates their sent messages
-	MessageList update(float dt, unsigned int time_s, ResMan& resman);
+	MessageList update(const float dt,
+		const unsigned int time_s,
+		const unsigned int tick,
+		ResMan& resman);
 };
 
 #endif /* SRC_ENVIRONMENT_H_ */

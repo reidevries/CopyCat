@@ -13,15 +13,30 @@
 #include <memory>
 #include <map>
 #include <vector>
-
-enum MessageType{say, inspect, inspect_response};
+#include <sstream>
+#include "debugprinter.h"
 
 struct Message
 {
-	int src_id;
-	int dest_id;
-	MessageType type;
-	std::string message;
+	enum Type{say, inspect, inspect_response, debug};
+	static const std::string type_text[];
+
+	const int src_id; 	//0 for system messages
+	const int dest_id;	//also 0 for system messages
+	const Type type;
+	const std::string message;
+	Message(int set_src_id,
+		int set_dest_id,
+		Message::Type set_type,
+		std::string set_message)
+		: src_id(set_src_id),
+		  dest_id(set_dest_id),
+		  type(set_type),
+		  message(set_message)
+	{
+	}
+
+	std::string print() const;
 };
 
 class MessageList
@@ -34,11 +49,14 @@ private:
 public:
 	MessageList() {};
 	void insert(const Message message);
+	void emplace(const int src_id, const int dest_id,
+		const Message::Type type, const std::string message);
 	void insert(const std::vector<Message> messages);
 
 	std::vector<Message> popAllMessages();
-	std::vector<Message> getMessagesBySrc(int src_id);
-	std::vector<Message> getMessagesByDest(int dest_id);
+	std::vector<Message> getMessagesBySrc(const int src_id);
+	std::vector<Message> getMessagesByDest(const int dest_id);
+
 
 };
 

@@ -7,11 +7,17 @@
 #include <sstream>
 
 //verbosity controls how many log messages there are
-//0 is for critical errors, 1 is for general errors, 2 is for general messages, 3 is for extra messages, 4 is for tests/outputs that shouldn't usually be seen
+//0 is for critical errors, 1 is for general errors,
+//2 is for general messages, 3 is for extra messages,
+//4 is for tests/outputs that shouldn't usually be seen
+#include "catconf.h"
+#ifndef CATCONF_H
+#define CAT_VERBOSITY 0
+#endif
 
 class DebugPrinter {
   public:
-	static const int VERBOSITY = 2;
+	static const int VERBOSITY = CAT_VERBOSITY;
 	static std::stringstream log;
 	//prints a debugmsg like "source: debugmsg" if verbosity <= VERBOSITY
     static void printDebug(std::string source, std::string debugmsg, int verbosity);

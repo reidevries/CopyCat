@@ -2,7 +2,7 @@
  * textureres.c
  *
  *  Created on: Apr 2, 2020
- *      Author: raeaw
+ *      Author: rei de vries
  */
 
 #include "texres.h"

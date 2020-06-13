@@ -19,6 +19,9 @@ Environment::Environment(const int set_bucket_size, const int set_world_size)
 		}
 		objects_by_pos.push_back(column);
 	}
+
+	//for testing
+	insertObject(make_shared<Example>());
 }
 
 Environment::Environment()
@@ -31,7 +34,7 @@ Vector2 Environment::getIndicesAtWorldPos(const Vector2 world_pos)
 	int x_index = world_pos.x/bucket_size;
 	int y_index = world_pos.y/bucket_size;
 	if (x_index < world_size 	&& y_index < world_size
-		&& x_index > 0 			&& y_index > 0) {
+		&& x_index >= 0 			&& y_index >= 0) {
 		return {static_cast<float>(x_index), static_cast<float>(y_index)};
 	} else {
 		return {-1, -1};
@@ -79,6 +82,10 @@ void Environment::insertObject(std::shared_ptr<GameObject> game_object)
 		game_object->id,
 		game_object->getRenderDistance()
 	});
+
+	DebugPrinter::printDebug("Environment::insertObject",
+		game_object->id, " successfully inserted", 3);
+
 }
 
 void Environment::deleteObjectByID(const int id)
@@ -144,7 +151,8 @@ map<int, shared_ptr<GameObject>> Environment::getObjectsInBoxForRender(
 	return accumulator;
 }
 
-set<shared_ptr<GameObject>> Environment::getObjectsByPos(const Vector2 pos, const int radius)
+set<shared_ptr<GameObject>> Environment::getObjectsByPos(const Vector2 pos,
+	const int radius)
 {
 	Vector2 bucket = getIndicesAtWorldPos(pos);
 	float diameter = static_cast<float>(radius*2);
@@ -157,16 +165,23 @@ set<shared_ptr<GameObject>> Environment::getObjectsByPos(const Vector2 pos, cons
 	return getObjectsInBox(box);
 }
 
-void Environment::distributeMessages(MessageList messages) {
+void Environment::distributeMessages(MessageList messages)
+{
 	for (auto& object : object_buf) {
-		object.second->passMessages(messages.getMessagesByDest(object.first));
+		vector<Message> delivery = messages.getMessagesByDest(object.first);
+		object.second->passMessages(delivery);
 	}
 }
 
-MessageList Environment::update(float dt, unsigned int time_s, ResMan& resman) {
+MessageList Environment::update(const float dt,
+	const unsigned int time_s,
+	const unsigned int tick,
+	ResMan& resman)
+{
 	MessageList temp;
 	for (auto& object : object_buf) {
-		temp.insert(object.second->update(dt, time_s));
+		vector<Message> new_messages = object.second->update(dt, time_s, tick);
+		temp.insert(new_messages);
 	}
 	return temp;
 }

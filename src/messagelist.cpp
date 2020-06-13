@@ -8,11 +8,34 @@
 
 using namespace std;
 
+const string Message::type_text[] = {
+	"say",
+	"inspect",
+	"inspect_response",
+	"debug"
+};
+
+string Message::print() const
+{
+	stringstream ss;
+	ss << "src: " << src_id
+		<< " dest: " << dest_id
+		<< " type: " << type_text[type]
+		<< " contents: " << message;
+	return ss.str();
+}
+
 void MessageList::insert(const Message message)
 {
 	by_src_id[message.src_id].push_back(messages.size());
 	by_dest_id[message.dest_id].push_back(messages.size());
 	messages.push_back(message);
+}
+
+void MessageList::emplace(const int src_id, const int dest_id,
+	const Message::Type type, const std::string message)
+{
+	insert(Message(src_id, dest_id, type, message));
 }
 
 void MessageList::insert(const vector<Message> messages) {
@@ -28,7 +51,7 @@ vector<Message> MessageList::popAllMessages()
 	return popped;
 }
 
-vector<Message> MessageList::getMessagesBySrc(int src_id)
+vector<Message> MessageList::getMessagesBySrc(const int src_id)
 {
 	vector<Message> accumulator;
 	if (by_src_id.count(src_id) > 0) {
@@ -39,11 +62,11 @@ vector<Message> MessageList::getMessagesBySrc(int src_id)
 	return accumulator;
 }
 
-vector<Message> MessageList::getMessagesByDest(int dest_id)
+vector<Message> MessageList::getMessagesByDest(const int dest_id)
 {
 	vector<Message> accumulator;
-	if (by_src_id.count(dest_id) > 0) {
-		for (auto const& index : by_src_id.at(dest_id)) {
+	if (by_dest_id.count(dest_id) > 0) {
+		for (auto& index : by_dest_id.at(dest_id)) {
 			accumulator.push_back(messages[index]);
 		}
 	}

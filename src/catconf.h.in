@@ -1,0 +1,5 @@
+// the configured options and settings
+#define CATCONF_H
+#cmakedefine CAT_VERBOSITY @CAT_VERBOSITY@
+#define COPYCAT_VERSION_MAJOR @copycat_VERSION_MAJOR@
+#define COPYCAT_VERSION_MINOR @copycat_VERSION_MINOR@

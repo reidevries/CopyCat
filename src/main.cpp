@@ -11,19 +11,28 @@
 #include "catconf.h"
 
 #ifndef CATCONF_H
-#define CATDEBUG 2
+#define CAT_VERBOSITY 0
 #define COPYCAT_VERSION_MAJOR 0
 #define COPYCAT_VERSION_MINOR 0
 #endif
 
-int main(void)
+using namespace std;
+
+const bool debug = (CAT_VERBOSITY > 0);
+
+void parseSystemMessages(vector<Message> messages) {
+	for (auto const& message: messages) {
+		cout << "Message from " << message.src_id
+			<< " : " << message.message << endl;
+	}
+}
+
+int main(int argc, char* argv[])
 {
     const int screen_w = 1280;	//size of viewport in pixels
 	const int screen_h = 720;
-	
-	bool debug = (CATDEBUG > 0);
 
-	std::stringstream window_title;
+	stringstream window_title;
 	window_title << "copycat version "
 		<< int(COPYCAT_VERSION_MAJOR)
 		<< "." << int(COPYCAT_VERSION_MINOR);
@@ -42,16 +51,29 @@ int main(void)
     while (!WindowShouldClose()) {
     	float dt = GetFrameTime();
     	counter_ms += dt;
-    	if (counter_ms > 1000) {
+    	int tick = 0;
+    	if (counter_ms > 1.0) {
     		++time_s;
+    		tick = 1;
     		//subtract by 1000 rather than setting =0,
     		//so the time_s doesn't drift too much
-    		counter_ms -= 1000;
+    		counter_ms -= 1.0;
     	}
-		environment.update(dt, time_s, resman);
+		MessageList buffer = environment.update(dt, time_s, tick, resman);
+		parseSystemMessages(buffer.getMessagesByDest(0));
+
 		resman.loadTextures(dt);
 		resman.deleteUnused();
 		view.render(dt, environment);
+
+		if (time_s%19 == 3 && tick == 1) {
+			DebugPrinter::printDebug("main", "set example to 100", 4);
+			buffer.emplace(0,1,Message::Type::say,"set 100");
+		} else if (time_s%123 == 4 && tick == 1) {
+			DebugPrinter::printDebug("main", "reset example", 4);
+			buffer.emplace(0,1,Message::Type::say,"reset");
+		}
+		environment.distributeMessages(buffer);
     }
     
     CloseWindow();
