@@ -29,7 +29,7 @@ Environment::Environment()
 {
 }
 
-Vector2 Environment::getIndicesAtWorldPos(const Vector2 world_pos)
+Vector2 Environment::getIndicesAtWorldPos(const Vector2 world_pos) const
 {
 	int x_index = world_pos.x/bucket_size;
 	int y_index = world_pos.y/bucket_size;
@@ -41,7 +41,10 @@ Vector2 Environment::getIndicesAtWorldPos(const Vector2 world_pos)
 	}
 }
 
-map<int, shared_ptr<GameObject>> Environment::getObjectsAtBucket(int x, int y) {
+map<int, shared_ptr<GameObject>> Environment::getObjectsAtBucket(
+	int x,
+	int y) const
+{
 	map<int, shared_ptr<GameObject>> accumulator;
 	if (x >= 0 && x < world_size && y >= 0 && y < world_size) {
 		for (auto const& id : objects_by_pos[x][y]) {
@@ -78,13 +81,16 @@ void Environment::insertObject(std::shared_ptr<GameObject> game_object)
 
 	objects_by_pos[bucket.x][bucket.y].insert(game_object->id);
 
-	objects_by_zpos.insert({
+	objects_by_render_order.insert({
 		game_object->id,
 		game_object->getRenderDistance()
 	});
 
+	stringstream ss;
+	ss << game_object->getInfo() << " successfully inserted into bucket at "
+		<< VectorMath::printVector(bucket);
 	DebugPrinter::printDebug("Environment::insertObject",
-		game_object->id, " successfully inserted", 3);
+		ss.str(), 3);
 
 }
 
@@ -93,13 +99,14 @@ void Environment::deleteObjectByID(const int id)
 	object_buf.erase(id);
 }
 
-shared_ptr<GameObject> Environment::getObjectByID(const int id)
+shared_ptr<GameObject> Environment::getObjectByID(const int id) const
 {
 	if (object_buf.count(id) > 0) return object_buf.at(id);
 	else return nullptr;
 }
 
-set<shared_ptr<GameObject>> Environment::getObjectsByName(const string name)
+set<shared_ptr<GameObject>> Environment::getObjectsByName(
+	const string name) const
 {
 	set<shared_ptr<GameObject>> accumulator;
 	if (objects_by_name.count(name) > 0) {
@@ -110,7 +117,8 @@ set<shared_ptr<GameObject>> Environment::getObjectsByName(const string name)
 	return accumulator;
 }
 
-set<shared_ptr<GameObject>> Environment::getObjectsInBox(const Rectangle box)
+set<shared_ptr<GameObject>> Environment::getObjectsInBox(
+	const Rectangle box) const
 {
 	Vector2 mins = getIndicesAtWorldPos({box.x, box.y});
 	Vector2 maxs = getIndicesAtWorldPos({box.x+box.width, box.y+box.height});
@@ -128,20 +136,20 @@ set<shared_ptr<GameObject>> Environment::getObjectsInBox(const Rectangle box)
 	return accumulator;
 }
 
-map<int, shared_ptr<GameObject>> Environment::getObjectsInBoxForRender(
+multimap<int, shared_ptr<GameObject>> Environment::getObjectsInBoxForRender(
 	const Rectangle box)
 {
 	Vector2 mins = getIndicesAtWorldPos({box.x, box.y});
 	Vector2 maxs = getIndicesAtWorldPos({box.x+box.width, box.y+box.height});
 
-	map<int, shared_ptr<GameObject>> accumulator;
+	multimap<int, shared_ptr<GameObject>> accumulator;
 	for (int u = mins.x; u <= maxs.x; ++u) {
 		for (int v = mins.y; v <= maxs.y; ++v) {
 			map<int, shared_ptr<GameObject>> local_objects
 				= getObjectsAtBucket(u, v);
-			for (auto const& object : local_objects) {
+			for (auto& object : local_objects) {
 				accumulator.insert({
-					objects_by_zpos[object.first],
+					objects_by_render_order[object.first],
 					object.second
 				});
 			}
@@ -152,7 +160,7 @@ map<int, shared_ptr<GameObject>> Environment::getObjectsInBoxForRender(
 }
 
 set<shared_ptr<GameObject>> Environment::getObjectsByPos(const Vector2 pos,
-	const int radius)
+	const int radius) const
 {
 	Vector2 bucket = getIndicesAtWorldPos(pos);
 	float diameter = static_cast<float>(radius*2);
@@ -165,6 +173,15 @@ set<shared_ptr<GameObject>> Environment::getObjectsByPos(const Vector2 pos,
 	return getObjectsInBox(box);
 }
 
+set<shared_ptr<GameObject>> Environment::getAllObjects() const {
+	set<shared_ptr<GameObject>> accumulator;
+	for (auto const& object : object_buf) {
+		accumulator.insert(object.second);
+	}
+	return accumulator;
+}
+
+
 void Environment::distributeMessages(MessageList messages)
 {
 	for (auto& object : object_buf) {
@@ -173,14 +190,11 @@ void Environment::distributeMessages(MessageList messages)
 	}
 }
 
-MessageList Environment::update(const float dt,
-	const unsigned int time_s,
-	const unsigned int tick,
-	ResMan& resman)
+MessageList Environment::update(CatClock& clk, ResMan& resman)
 {
 	MessageList temp;
 	for (auto& object : object_buf) {
-		vector<Message> new_messages = object.second->update(dt, time_s, tick);
+		vector<Message> new_messages = object.second->update(clk);
 		temp.insert(new_messages);
 	}
 	return temp;

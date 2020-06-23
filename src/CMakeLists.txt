@@ -6,7 +6,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 	gameobject.cpp
 	main.cpp
 	texregion.cpp
-	vectormath.cpp
 	polygon.cpp
 	texres.cpp
 	environment.cpp

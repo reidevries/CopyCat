@@ -1,5 +1,5 @@
 /*
- * textureres.c
+ * texres.cpp
  *
  *  Created on: Apr 2, 2020
  *      Author: rei de vries
@@ -7,15 +7,20 @@
 
 #include "texres.h"
 
-TexRes::TexRes() {
-	//generate a blank texture as default
-	this->tex = LoadTextureFromImage(GenImageColor(99, 99, YELLOW));
-	last_seen = 0;
+//generate a blank texture as default
+TexRes::TexRes()
+{
+	tex = LoadTextureFromImage(GenImageColor(99, 99, YELLOW));
 }
 
-TexRes::TexRes(const char* filename) {
-	this->tex = LoadTexture(filename);
-	last_seen = 0;
+//load texture from filename
+TexRes::TexRes(const char* filename)
+{
+	tex = LoadTexture(filename);
+}
+
+void TexRes::reloadTexture(Image& image) {
+	UpdateTexture(tex, image.data);
 }
 
 TexRes::~TexRes() {

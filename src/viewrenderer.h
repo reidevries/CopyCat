@@ -19,6 +19,7 @@
 #include "environment.h"
 #include "level.h"
 #include "texres.h"
+#include "catclock.h"
 
 class ViewRenderer
 {
@@ -29,18 +30,21 @@ public:
 	int screen_w, screen_h;
 	float screen_scale;
 	float world_w;
-	bool debug;
+	const bool debug;
 	Camera cam;
-	void pointCameraAt(Vector2 coords);
+	void pointCameraAt(const Vector2 coords);
 	Rectangle getCameraFrustrum();
+
+	Model testmodel;
 
 	std::vector<std::unique_ptr<TexSprite>> ui_buf;
 	Font font;
 
 public:
-	ViewRenderer(int screen_w, int screen_h, bool debug);
-	void render(float dt, Environment& environment);
-	void renderDebug(float dt);
+	ViewRenderer(const int screen_w, const int screen_h,
+		const bool set_debug);
+	void render(CatClock& clk, Environment& environment);
+	void renderDebug(CatClock& clk, Environment& environment);
 };
 
 #endif /* SRC_VIEWRENDERER_H_ */

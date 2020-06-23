@@ -9,12 +9,14 @@
 
 using namespace std;
 
-TexRegion::TexRegion(shared_ptr<TexRes> tex_res, Rectangle src_rect) {
+TexRegion::TexRegion(shared_ptr<TexRes> tex_res, Rectangle src_rect)
+{
 	this->tex_res = tex_res;
 	this->src_rect = src_rect;
 }
 
-TexRegion::TexRegion(shared_ptr<TexRes> tex_res) {
+TexRegion::TexRegion(shared_ptr<TexRes> tex_res)
+{
 	this->tex_res = tex_res;
 	this->src_rect = (Rectangle){
 		0,
@@ -24,6 +26,7 @@ TexRegion::TexRegion(shared_ptr<TexRes> tex_res) {
 	};
 }
 
-Vector2 TexRegion::getDimensions() {
+Vector2 TexRegion::getDimensions() const
+{
 	return (Vector2){src_rect.width, src_rect.height};
 }

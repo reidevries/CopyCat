@@ -9,13 +9,15 @@
 
 using namespace std;
 
+const string Example::words[] = {
+	"set",
+	"reset"
+};
+
 Example::Example()
 		: GameObject(
 			"Example",
-			vector<TexSprite>(),
-			0,
-			{0,0},
-			{"set", "reset"}
+			std::vector<string>(begin(words), end(words))
 		)
 {
 }
@@ -43,16 +45,10 @@ void Example::parseMessage(Message message, std::vector<Token> lexed)
 	}
 }
 
-vector<Message> Example::update(const float dt,
-	const unsigned int time_s,
-	const unsigned int tick)
+vector<Message> Example::update(CatClock& clk)
 {
-	my_example_data += dt;
+	my_example_data += clk.dt_s;
 	vector<Message> response;
-	if (tick == 1) response.emplace_back(id,0,Message::Type::debug,to_string(my_example_data));
+	if (clk.tock_m) response.emplace_back(id,0,Message::Type::debug,to_string(my_example_data));
 	return response;
-}
-
-void Example::draw()
-{
 }

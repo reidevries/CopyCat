@@ -4,12 +4,14 @@
 
 using namespace std;
 
-TexSprite::TexSprite(string name, vector<TexRegion> regions, SpriteType type,
-	Vector2 size)
+TexSprite::TexSprite(const string set_name,
+	const SpriteType set_type,
+	vector<TexRegion> regions,
+	const Vector2 size)
 {
-	this->name = name;
+	this->name = set_name;
+	this->type = set_type;
 	this->regions = regions;
-	this->type = type;
 	this->size = size;
 	this->offset = (Vector2 ) { 0, 0 };
 	this->origin = (Vector2 ) { 0.5, 0.5 };
@@ -19,18 +21,22 @@ TexSprite::TexSprite(string name, vector<TexRegion> regions, SpriteType type,
 	updateRectanglePos((Vector2 ) { 0, 0 });
 
 	if (this->type == SpriteType::world) {
-		plane = LoadModelFromMesh((Mesh) GenMeshPlane(size.x, size.y, 1, 1));
-		setDrawIndex(0);
+		plane = LoadModelFromMesh(
+			static_cast<Mesh>(GenMeshPlane(size.x, size.y, 1, 1))
+		);
 	}
+	setDrawIndex(0);
 }
 
-TexSprite::TexSprite(string name, vector<TexRegion> regions, SpriteType type)
-	: TexSprite(name, regions, type, regions[0].getDimensions())
+TexSprite::TexSprite(const string name,
+	const SpriteType type,
+	vector<TexRegion> regions)
+	: TexSprite(name, type, regions, regions[0].getDimensions())
 {
 }
 
-TexSprite::TexSprite(string name, vector<TexRegion> regions)
-	: TexSprite(name, regions, SpriteType::screen)
+TexSprite::TexSprite(const string name, vector<TexRegion> regions)
+	: TexSprite(name, SpriteType::screen, regions)
 {
 }
 
@@ -38,17 +44,16 @@ void TexSprite::setDrawIndex(int tex_index)
 {
 	if (tex_index < regions.size() && tex_index >= 0) {
 		this->draw_index = tex_index;
+		if (type == SpriteType::world) {
+			plane.materials[0].maps[MAP_ALBEDO].texture
+				= regions[draw_index].get();
+		}
 	} else {
 		DebugPrinter::printDebug("TexSprite::setDrawIndex",
 			to_string(tex_index) + " is an invalid tex_index for TexSprite "
 				+ name, 1);
 		cerr << "Tried to set TexSprite '" << name << "' to invalid texindex "
 			<< tex_index << endl;
-	}
-
-	if (type == SpriteType::world) {
-		plane.materials[0].maps[MAP_DIFFUSE].texture =
-			regions[draw_index].get();
 	}
 }
 
@@ -105,13 +110,13 @@ Texture2D TexSprite::getCurrentTexture()
 	return regions[draw_index].get();
 }
 
-Vector3 TexSprite::getPos3D()
+Vector3 TexSprite::getPos3D() const
 {
-	Vector3 pos_3d;
-	pos_3d.x = dest_rect.x;
-	pos_3d.y = up;
-	pos_3d.z = dest_rect.y;
-	return pos_3d;
+	return (Vector3){
+		dest_rect.x,
+		up,
+		dest_rect.y
+	};
 }
 
 void TexSprite::draw(Vector2 pos, Camera cam)
@@ -131,7 +136,7 @@ void TexSprite::draw(Vector2 pos, Camera cam)
 	}
 }
 
-void TexSprite::drawUI(Color color)
+void TexSprite::drawUI(const Color color)
 {
 	regions[draw_index].seen();
 	DrawTexturePro(regions[draw_index].get(), regions[draw_index].getSrcRect(),

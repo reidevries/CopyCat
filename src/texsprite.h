@@ -43,12 +43,9 @@ enum class SpriteType {
 class TexSprite {
 private:
 	std::string name;
-	/* If the type is "ui", it gets drawn in 2D, if the type is "world",
-	 * it gets drawn in 3D within the world, with the "plane" model.
-	 * If the type is "billboard", it gets drawn as a billboard
-	 */
-	Model plane;
 	SpriteType type;
+
+	Model plane; //cant be static because it also contains the "material"
 	Vector2 size;
 	float up; //determines y position if rendered in 3D
 	/* This vector stores all the regions of textures that can be drawn
@@ -74,16 +71,16 @@ private:
 
 	Texture2D getCurrentTexture();
 	void ageTextures();
-	Vector3 getPos3D();	//get the pos as 3D world coords
+	Vector3 getPos3D() const;	//get the pos as 3D world coords
 public:
 	TexSprite(std::string name,
-			std::vector<TexRegion> regions,
 			SpriteType type,
+			std::vector<TexRegion> regions,
 			Vector2 size);
 	//same as above, but using src_rect size as default
 	TexSprite(std::string name,
-			std::vector<TexRegion> regions,
-			SpriteType type);
+			SpriteType type,
+			std::vector<TexRegion> regions);
 	//same as above, but defaulting to "screen" SpriteType
 	TexSprite(std::string name,
 			std::vector<TexRegion> regions);
@@ -91,18 +88,18 @@ public:
 	std::string getName() {return name;}
 
 	//also updates material texture
-	void setDrawIndex(int draw_index);
-	int getDrawIndex() {return draw_index;}
+	void setDrawIndex(int tex_index);
+	int getDrawIndex() const {return draw_index;}
 	void setOffset(Vector2 offset);
-	Vector2 getOffset() {return offset;}
+	Vector2 getOffset() const {return offset;}
 	void setSize(Vector2 size);
-	Vector2 getSize() {return size;}
+	Vector2 getSize() const {return size;}
 	void setOrigin(Vector2 origin);
-	Vector2 getOrigin() {return origin;}
+	Vector2 getOrigin() const {return origin;}
 	void setScale(float scale);
-	float getScale() {return scale;}
+	float getScale() const {return scale;}
 	void setRotation(float rotation) {this->rotation = rotation;}
-	float getRotation() {return rotation;}
+	float getRotation() const {return rotation;}
 
 	void draw(Vector2 pos, Camera cam);
 	void drawUI(Color color);

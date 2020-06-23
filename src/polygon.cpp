@@ -1,28 +1,26 @@
 #include "polygon.h"
 
-#include <cmath>
-#include "vectormath.h"
-#include <iostream>
-#include <sstream>
-#include <algorithm>
-
 # define M_PI           3.14159265358979323846
 
-void Polygon::updateBound(Vector2 new_point) {
-	if (new_point.x < bounds_min.x) {
-		bounds_min.x = new_point.x;
-	} else if (new_point.x > bounds_max.x) {
-		bounds_max.x = new_point.x;
+using namespace std;
+
+void Polygon::updateBound(const Vector2 new_pos)
+{
+	if (new_pos.x < bounds_min.x) {
+		bounds_min.x = new_pos.x;
+	} else if (new_pos.x > bounds_max.x) {
+		bounds_max.x = new_pos.x;
 	}
 	
-	if (new_point.y < bounds_min.y) {
-		bounds_min.y = new_point.y;
-	} else if (new_point.y > bounds_max.y) {
-		bounds_max.y = new_point.y;
+	if (new_pos.y < bounds_min.y) {
+		bounds_min.y = new_pos.y;
+	} else if (new_pos.y > bounds_max.y) {
+		bounds_max.y = new_pos.y;
 	}
 }
 
-void Polygon::recalculateBound() {
+void Polygon::recalculateBound()
+{
 	bounds_max = (Vector2){0,0};
 	bounds_min = (Vector2){999999999.0,999999999.0};
 	for (auto vertex : vertices) {
@@ -30,14 +28,18 @@ void Polygon::recalculateBound() {
 	}
 }
 
-void Polygon::recalculateBound(Vector2 removed_point) {	//if we're removing one point, only need to recalculate if the removed point is on a boundary
+void Polygon::recalculateBound(const Vector2 removed_point)
+{
+	//if we're removing one point,
+	//only need to recalculate if the removed point is on a boundary
 	if (   removed_point.x <= bounds_min.x || removed_point.y <= bounds_min.y
 		|| removed_point.x >= bounds_max.x || removed_point.y >= bounds_max.y) {
 		recalculateBound();
 	} 
 }
 
-void Polygon::recalculateData() {
+void Polygon::recalculateData()
+{
 	Vector2 centre_accumulator = (Vector2){0,0};
 	double denominator;
 	for (auto vertex : vertices) {
@@ -50,28 +52,31 @@ void Polygon::recalculateData() {
 	recalculateBound();
 }
 
-Polygon::Polygon() {
-}
-
-Polygon::Polygon(std::vector<Vector2> vertices, int point_num) {
+Polygon::Polygon(vector<Vector2> vertices)
+{
 	this->vertices = vertices;
 	recalculateData();
 }
 
-Polygon::Polygon(Vector2 centre, float radius, int point_num) {
+Polygon::Polygon(Vector2 centre, const float radius, const int num_vertices)
+{
 	centre_pos = centre;
 	
 	bounds_max = (Vector2){0,0};
 	bounds_min = (Vector2){0,0};
-	for (int i = 0; i < point_num; i++) {
-		double radians = 2*M_PI*i/point_num;
-		Vector2 edge = (Vector2){ float(centre.x + radius*cos(radians)), float(centre.y - radius*sin(radians)) };
+	for (int i = 0; i < num_vertices; i++) {
+		double radians = 2*M_PI*i/num_vertices;
+		Vector2 edge = {
+			static_cast<float>(centre.x + radius*cos(radians)),
+			static_cast<float>(centre.y - radius*sin(radians))
+		};
 		vertices.push_back(edge);
 		updateBound(edge);
 	}
 }
 
-int Polygon::getNearestIndex(Vector2 pos) {
+int Polygon::getNearestIndex(const Vector2 pos) const
+{
 	float mindist = -1;
 	int savedmin = 0;
 	for (auto it = vertices.begin(); it != vertices.end(); ++it) {
@@ -84,9 +89,10 @@ int Polygon::getNearestIndex(Vector2 pos) {
 	return savedmin;
 }
 
-int Polygon::getNearestClockwiseIndex(Vector2 pos) {
+int Polygon::getNearestClockwiseIndex(const Vector2 pos) const
+{
 	int nearestindex = getNearestIndex(pos);
-	if (nearestindex >= getPointNum()) {
+	if (nearestindex >= getNumVertices()) {
 		return nearestindex;
 	}
 	Vector2 nearest = vertices[nearestindex];
@@ -105,18 +111,23 @@ int Polygon::getNearestClockwiseIndex(Vector2 pos) {
 			is_clockwise = true;
 		}
 	}
-	int nextindex = (nearestindex+1)%(getPointNum()+1);
+	int nextindex = (nearestindex+1)%(getNumVertices()+1);
 	
 	if (is_clockwise) return nearestindex;
 	else return nextindex;
 }
 
-std::array<Vector2, 2> Polygon::getNearestEdge(Vector2 pos) {
-	std::vector<Vector2>::iterator next_it;
+array<Vector2, 2> Polygon::getNearestEdge(const Vector2 pos)
+{
+	vector<Vector2>::iterator next_it;
 	float nearest_dist = 100000;
-	std::array<Vector2, 2> nearest_edge = {(Vector2){-1,-1}, (Vector2){-1,-1}};
+	array<Vector2, 2> nearest_edge = {
+		(Vector2){-1,-1},
+		(Vector2){-1,-1}
+	};
+
 	for (auto it = vertices.begin(); it != vertices.end(); it++) {
-		next_it = std::next(it);
+		next_it = next(it);
 		if (next_it == vertices.end()) {
 			next_it = vertices.begin();
 		}
@@ -130,26 +141,30 @@ std::array<Vector2, 2> Polygon::getNearestEdge(Vector2 pos) {
 	return nearest_edge;
 }
 
-Vector2 Polygon::getPointPos(int index) {
+Vector2 Polygon::getVertexPos(const int index) const
+{
 	if (index < vertices.size() && index >= 0) {
 		return vertices[index];
 	} else {
-		std::cout << "hey! ur trying to access vertex " << index << ", which doesn't exist in Polygon " << this << "!" << std::endl;
+		cout << "hey! ur trying to access vertex " << index
+			<< ", which doesn't exist in Polygon " << this << "!" << endl;
 		return vertices[0];
 	}
 }
 
-void Polygon::movePoint(int index, Vector2 newpos) {
+void Polygon::moveVertex(const int index, const Vector2 new_pos)
+{
 	if (vertices.size() > 0) {
 		float scalar = 1/vertices.size();
 		centre_pos = VectorMath::sub(centre_pos, VectorMath::scale(vertices[index], scalar));
-		vertices[index] = newpos;
-		centre_pos = VectorMath::add(centre_pos, VectorMath::scale(newpos, scalar));
-		updateBound(newpos);
+		vertices[index] = new_pos;
+		centre_pos = VectorMath::add(centre_pos, VectorMath::scale(new_pos, scalar));
+		updateBound(new_pos);
 	}
 }
 
-void Polygon::addPoint(int index, Vector2 point) {
+void Polygon::addVertex(const int index, const Vector2 point)
+{
 	if (vertices.size() == 0) {
 		centre_pos = point;
 		bounds_max = point;
@@ -157,13 +172,17 @@ void Polygon::addPoint(int index, Vector2 point) {
 	} else {
 		float newsize = vertices.size()+1;
 		float scalar = vertices.size()/newsize;
-		centre_pos = VectorMath::add(VectorMath::scale(centre_pos, scalar), VectorMath::scale(point, 1/newsize));
+		centre_pos = VectorMath::add(
+			VectorMath::scale(centre_pos, scalar),
+			VectorMath::scale(point, 1/newsize)
+		);
 		updateBound(point);
 	}
 	vertices.insert(vertices.begin()+index, point);
 }
 
-void Polygon::removePoint(int index) {
+void Polygon::removeVertex(const int index)
+{
 	if (vertices.size() > 0) {
 		if (vertices.size() == 1) {
 			centre_pos = (Vector2){0,0};
@@ -171,8 +190,13 @@ void Polygon::removePoint(int index) {
 			bounds_min = (Vector2){0,0};
 		} else {
 			float oldsize = vertices.size();
-			float scalar = (oldsize+1)/oldsize;
-			centre_pos = VectorMath::scale(VectorMath::sub(centre_pos, VectorMath::scale(vertices[index], 1/oldsize)), scalar);
+			centre_pos = VectorMath::scale(
+				VectorMath::sub(
+					centre_pos,
+					VectorMath::scale(vertices[index], 1/oldsize)
+				),
+				(oldsize+1)/oldsize
+			);
 		}
 		Vector2 removed_point = vertices[index];
 		vertices.erase(vertices.begin()+index);
@@ -180,26 +204,30 @@ void Polygon::removePoint(int index) {
 	}
 }
 
-void Polygon::reverse() {
+void Polygon::reverse()
+{
 	std::reverse(vertices.begin(), vertices.end());
 }
 
-void Polygon::clear() {
+void Polygon::clear()
+{
 	vertices.clear();
 }
 
-bool Polygon::containsPoint(Vector2 point) {
-	if (point.x < bounds_min.x || point.x > bounds_max.x || 
-		point.y < bounds_min.y || point.y > bounds_max.y) {
+bool Polygon::containsPoint(const Vector2 point) const
+{
+	if (point.x < bounds_min.x 		|| point.x > bounds_max.x
+		|| point.y < bounds_min.y 	|| point.y > bounds_max.y) {
 		return false;
 	} else {
 		return VectorMath::checkPointInPolygon(point, vertices);
 	}
 }
 
-float Polygon::findVertexCoverage(Polygon b) {
-	std::vector<Vector2> bv = b.getVertices();
-	int bn = b.getPointNum()+getPointNum();
+float Polygon::findVertexCoverage(const Polygon b) const
+{
+	vector<Vector2> bv = b.getVertices();
+	int bn = b.getNumVertices()+getNumVertices();
 	float accumulator = 0;
 	for (auto b_vertex : bv) {
 		if (containsPoint(b_vertex)) accumulator++;
@@ -210,26 +238,27 @@ float Polygon::findVertexCoverage(Polygon b) {
 	return accumulator/bn;
 }
 
-std::vector<Vector2> Polygon::findOverlapShape(Polygon b) {
-	std::vector<Vector2> b_vertices = b.getVertices();
+vector<Vector2> Polygon::findOverlapShape(const Polygon b) const
+{
+	vector<Vector2> b_vertices = b.getVertices();
 	return b_vertices;
 }
 
-Vector2* Polygon::getArrayScaled(float screen_scale) {
-	Vector2* return_vec = new Vector2[vertices.size()];
-	int i = 0;
-	for (auto vertex : vertices) {
-		return_vec[i] = VectorMath::scale(vertex, screen_scale);
-		i++;
+vector<Vector2> Polygon::getArrayScaled(float screen_scale) const
+{
+	vector<Vector2> return_vec;
+	for (auto const& vertex : vertices) {
+		return_vec.push_back(VectorMath::scale(vertex, screen_scale));
 	}
 	return return_vec;
 }
 
-std::string Polygon::printArray() {
-	std::stringstream ss;
-	for (std::vector<Vector2>::iterator it = vertices.begin(); it != vertices.end(); it++) {
-		ss << it->x << "," << it->y << " ";
+string Polygon::printArray() const
+{
+	stringstream ss;
+	for (auto const& vertex : vertices) {
+		ss << vertex.x << "," << vertex.y << " ";
 	}
-	ss << std::endl;
+	ss << endl;
 	return ss.str();
 }

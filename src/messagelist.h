@@ -25,10 +25,10 @@ struct Message
 	const int dest_id;	//also 0 for system messages
 	const Type type;
 	const std::string message;
-	Message(int set_src_id,
-		int set_dest_id,
-		Message::Type set_type,
-		std::string set_message)
+	Message(const int set_src_id,
+		const int set_dest_id,
+		const Message::Type set_type,
+		const std::string set_message)
 		: src_id(set_src_id),
 		  dest_id(set_dest_id),
 		  type(set_type),
@@ -48,14 +48,14 @@ private:
 
 public:
 	MessageList() {};
-	void insert(const Message message);
+	void insert(Message message);
 	void emplace(const int src_id, const int dest_id,
 		const Message::Type type, const std::string message);
 	void insert(const std::vector<Message> messages);
 
 	std::vector<Message> popAllMessages();
-	std::vector<Message> getMessagesBySrc(const int src_id);
-	std::vector<Message> getMessagesByDest(const int dest_id);
+	std::vector<Message> getMessagesBySrc(const int src_id) const;
+	std::vector<Message> getMessagesByDest(const int dest_id) const;
 
 
 };

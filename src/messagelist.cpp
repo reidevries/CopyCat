@@ -38,7 +38,7 @@ void MessageList::emplace(const int src_id, const int dest_id,
 	insert(Message(src_id, dest_id, type, message));
 }
 
-void MessageList::insert(const vector<Message> messages) {
+void MessageList::insert(vector<Message> messages) {
 	for (auto const& message : messages) insert(message);
 }
 
@@ -51,7 +51,7 @@ vector<Message> MessageList::popAllMessages()
 	return popped;
 }
 
-vector<Message> MessageList::getMessagesBySrc(const int src_id)
+vector<Message> MessageList::getMessagesBySrc(const int src_id) const
 {
 	vector<Message> accumulator;
 	if (by_src_id.count(src_id) > 0) {
@@ -62,7 +62,7 @@ vector<Message> MessageList::getMessagesBySrc(const int src_id)
 	return accumulator;
 }
 
-vector<Message> MessageList::getMessagesByDest(const int dest_id)
+vector<Message> MessageList::getMessagesByDest(const int dest_id) const
 {
 	vector<Message> accumulator;
 	if (by_dest_id.count(dest_id) > 0) {

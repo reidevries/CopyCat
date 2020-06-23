@@ -17,6 +17,7 @@
 #include "debugprinter.h"
 #include "messagelist.h"
 #include "resman.h"
+#include "catclock.h"
 #include "gameobject_list.h"
 
 #include "catconf.h"
@@ -30,10 +31,10 @@ class Environment
 private:
 	std::map<int, std::shared_ptr<GameObject>> object_buf;
 	std::map<std::string, std::set<int>> objects_by_name;
-	std::map<int, int> objects_by_zpos;
+	std::map<int, int> objects_by_render_order;
 
 	//number of grid squares to include in a bucket
-	const int bucket_size;	//in world units
+	const int bucket_size;	//Sin world units
 	const int world_size;	//in buckets
 	//this vector always contains world_size x world_size sets,
 	//but the sets may be empty
@@ -41,9 +42,9 @@ private:
 
 	Level current_level;
 
-	Vector2 getIndicesAtWorldPos(const Vector2 world_pos);
+	Vector2 getIndicesAtWorldPos(const Vector2 world_pos) const;
 	std::map<int, std::shared_ptr<GameObject>> getObjectsAtBucket(
-		int x, int y);
+		int x, int y) const;
 
 public:
 	Environment();
@@ -52,29 +53,28 @@ public:
 	void deleteObjectByID(const int id);
 
 	//gets a pointer to a specific object
-	std::shared_ptr<GameObject> getObjectByID(const int id);
+	std::shared_ptr<GameObject> getObjectByID(const int id) const;
 	//gets the set of objects with the given name
-	std::set<std::shared_ptr<GameObject>> getObjectsByName(const std::string name);
+	std::set<std::shared_ptr<GameObject>> getObjectsByName(
+		const std::string name) const;
 	//gets the set of objects within a box selection
-	std::set<std::shared_ptr<GameObject>> getObjectsInBox(const Rectangle box);
+	std::set<std::shared_ptr<GameObject>> getObjectsInBox(
+		const Rectangle box) const;
 	//gets a map of objects within a box selection, ordered by render distance
-	std::map<int, std::shared_ptr<GameObject>> getObjectsInBoxForRender(
+	std::multimap<int, std::shared_ptr<GameObject>> getObjectsInBoxForRender(
 		const Rectangle box);
 	//gets the set of all objects within "radius" buckets of the coord
 	//0 selects only the bucket the coord is within, higher values
 	//include neighbours (including diagonals)
 	std::set<std::shared_ptr<GameObject>> getObjectsByPos(
-		const Vector2 coord, const int radius);
-	std::set<std::shared_ptr<GameObject>> getAllObjects();
+		const Vector2 coord, const int radius) const;
+	std::set<std::shared_ptr<GameObject>> getAllObjects() const;
 
 
 	void distributeMessages(MessageList messages);
 
 	//updates all the gameobjects and accumulates their sent messages
-	MessageList update(const float dt,
-		const unsigned int time_s,
-		const unsigned int tick,
-		ResMan& resman);
+	MessageList update(CatClock& clk, ResMan& resman);
 };
 
 #endif /* SRC_ENVIRONMENT_H_ */

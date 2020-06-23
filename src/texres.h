@@ -1,5 +1,5 @@
 /*
- * TextureResource.h
+ * texres.h
  *
  *  Created on: Mar 23, 2020
  *      Author: rei de vries
@@ -22,22 +22,24 @@
 class TexRes {
 private:
 	Texture2D tex;
-	double last_seen;	//in ms since last seen on the screen
+	unsigned short last_seen_s = 0;	//in seconds since last seen on the screen
 public:
 	TexRes();
 	TexRes(const char* filename);
 	Texture2D get() {return tex;}
 
-	//passthru methods for texture2D struct
-	unsigned int getID() {return tex.id;}
-	int getWidth() {return tex.width;}
-	int getHeight() {return tex.height;}
-	int getMipMaps() {return tex.mipmaps;}
-	int getFormat() {return tex.format;}
+	void reloadTexture(Image& image);
 
-	void age(float dt) {last_seen += dt;}
-	void seen() {last_seen = 0;}
-	double getAge() {return last_seen;}
+	//passthru methods for texture2D struct
+	unsigned int getID() const {return tex.id;}
+	int getWidth() const {return tex.width;}
+	int getHeight() const {return tex.height;}
+	int getMipMaps() const {return tex.mipmaps;}
+	int getFormat() const {return tex.format;}
+
+	void age() {++last_seen_s;} //call every time one second passes
+	void seen() {last_seen_s = 0;}
+	unsigned short getAge() const {return last_seen_s;}
 	~TexRes();
 };
 

@@ -26,17 +26,15 @@ private:
 public:
 	TexRegion(std::shared_ptr<TexRes> tex_res, Rectangle src_rect);
 	TexRegion(std::shared_ptr<TexRes> tex_res);
-	Rectangle getSrcRect() {return src_rect;}
+	Rectangle getSrcRect() const {return src_rect;}
 	//get the dimensions of the src rect
-	Vector2 getDimensions();
+	Vector2 getDimensions() const;
 
 	//get the underlying Texture2D
 	Texture2D get() {return tex_res->get();}
 	//get the pointer to the resource
-	std::shared_ptr<TexRes> getRes() {return tex_res;}
-	//ages the resource
-	void age(float dt) {tex_res->age(dt);}
-	//resets the age of the resource
+	std::shared_ptr<TexRes> getRes() const {return tex_res;}
+	//resets the age of the underlying resource
 	void seen() {tex_res->seen();}
 };
 
