@@ -16,6 +16,11 @@ TexSprite::TexSprite(const uint8_t resource_index,
 	this->regions = regions;
 	this->size = size;
 
+	if (type == Type::world) {
+		Rectangle square = {0,0,size.x,size.y};
+		plane = Cat::constructPlane(square);
+	}
+
 	setDrawIndex(0);
 }
 
@@ -63,6 +68,11 @@ Vector3 TexSprite::getRotation()
 	return VectorMath::scale(rotation_axis, rotation_deg);
 }
 
+void TexSprite::rotatePlane(float roll, float pitch, float yaw)
+{
+	plane = Cat::rotatePlane(plane, roll, pitch, yaw);
+}
+
 void TexSprite::drawBillboard(Texture2D atlas,
 	Rectangle src_rect,
 	Vector2 pos,
@@ -70,20 +80,23 @@ void TexSprite::drawBillboard(Texture2D atlas,
 {
 	if (type == Type::billboard) {
 		DrawBillboardRec(cam, atlas,
-			src_rect, getPos3D(pos), 100.0f, WHITE);
+			src_rect, getPos3D(pos), 1.0f, WHITE);
 	} else {
 		DebugPrinter::printDebug(3, "TexSprite::drawBillboard",
 			"wrong drawing method used for this SpriteType");
 	}
 }
 
-void TexSprite::drawWorld(Model model,
+void TexSprite::drawWorld(Texture2D atlas,
+	Rectangle src_rect,
 	Vector2 pos,
 	Camera cam)
 {
 	if (type == Type::world) {
-		DrawModelEx(model, getPos3D(pos), rotation_axis, rotation_deg,
-			{scale,scale,scale}, WHITE);
+		Cat::drawPlane(atlas, src_rect, getPos3D(pos), plane);
+
+		//DrawModelEx(model, getPos3D(pos), rotation_axis, rotation_deg,
+		//	{scale,scale,scale}, WHITE);
 	} else {
 		DebugPrinter::printDebug(3, "TexSprite::drawWorld",
 			"wrong drawing method used for this SpriteType");

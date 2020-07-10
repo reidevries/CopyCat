@@ -79,10 +79,9 @@ void ViewRenderer::render(CatClock& clk,
 	ResBuf<Texture2D>& tex_buf = resman.getTexBuf();
 	array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE>& region_bufs
 		= resman.getRegionBufs();
-	ResBuf<Model>& model_buf = resman.getModelBuf();
 
 	for (auto& object : render_list) {
-		object.second->draw(tex_buf, region_bufs, model_buf, cam);
+		object.second->draw(tex_buf, region_bufs, cam);
 	}
 
 	EndMode3D();
@@ -118,28 +117,4 @@ void ViewRenderer::renderDebug(CatClock& clk,
 			static_cast<float>(screen_h * 0.1)
 		}, static_cast<float>(font.baseSize * 0.75), 2.0f, RED);
 
-}
-
-void ViewRenderer::drawObject(shared_ptr<GameObject> object, ResMan& resman) {
-	for (auto& s : object->getSprites()) {
-		switch (s.getType()) {
-		case (TexSprite::Type::billboard):
-			DrawBillboardRec(cam, resman.getTexAt(s.getResID()),
-				resman.getRegionAt(s.getResID(), s.getCurrentRegionID()),
-				s.getPos3D(object->getPos()), 100.0f, WHITE);
-			break;
-		case (TexSprite::Type::world):
-			DrawModelEx(resman.getModelAt(s.getResID()),
-				s.getPos3D(object->getPos()),
-				s.getRotationAxis(),
-				s.getRotationDeg(),
-				s.getScale3D(),
-				WHITE);
-			break;
-		case (TexSprite::Type::screen):
-			DebugPrinter::printDebug(3, "ViewRenderer::drawObject",
-				"Don't draw a texsprite of type screen in this method");
-			break;
-		}
-	}
 }

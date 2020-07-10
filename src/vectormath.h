@@ -139,13 +139,23 @@ constexpr Vector3 scale(Vector3 a, Vector3 b)
 	return (Vector3){a.x*b.x, a.y*b.y, a.z*b.z};
 }
 
-constexpr float max(Vector2 a) {
+constexpr float max(Vector2 a)
+{
 	return (a.x>a.y)?a.x:a.y;
 }
 
-constexpr float max(Vector3 a) {
+constexpr float max(Vector3 a)
+{
 	return (a.x>a.y)?
 		((a.x>a.z)?a.x:a.z):((a.y>a.z)?a.y:a.z);
+}
+
+constexpr Vector2 dot(Vector2 a, Vector4 mat)
+{
+	return {
+		a.x*mat.w + a.y*mat.x,
+		a.x*mat.y + a.y*mat.z
+	};
 }
 
 static bool checkPointInPolygon(const Vector2 point,

@@ -19,6 +19,7 @@
 #include <cstdint>
 
 #include "catconf.h"
+#include "catdraw.h"
 #include "debugprinter.h"
 #include "vectormath.h"
 
@@ -50,6 +51,7 @@ private:
 	uint8_t res_id;
 	std::string region_name;
 	Type type;
+	Cat::Plane plane;
 
 	//list of regions from the atlas, and the index of which one to draw
 	//only used if type is 'billboard' or 'screen'
@@ -135,11 +137,14 @@ public:
 	void setRotationDeg(float rotation) {this->rotation_deg = rotation;}
 	float getRotationDeg() {return rotation_deg;}
 
+	void rotatePlane(float roll, float pitch, float yaw);
+
 	void drawBillboard(Texture2D atlas,
 		Rectangle src_rect,
 		Vector2 pos,
 		Camera cam);
-	void drawWorld(Model model,
+	void drawWorld(Texture2D atlas,
+		Rectangle src_rect,
 		Vector2 pos,
 		Camera cam);
 	void drawScreen(Texture2D atlas,

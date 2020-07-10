@@ -8,5 +8,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 	polygon.cpp
 	environment.cpp
 	messagelist.cpp
-	viewrenderer.cpp)
+	viewrenderer.cpp
+	catdraw.cpp)
 add_subdirectory(gameobjects)

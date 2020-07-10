@@ -39,17 +39,10 @@ int GameObject::getRenderDistance() const
 	return pos.x-pos.y;
 }
 
-void GameObject::setSpriteRotation(Vector3 rotation)
+void GameObject::rotateSprites(float roll, float pitch, float yaw)
 {
 	for (auto& s : sprites) {
-		s.setRotation(rotation);
-	}
-}
-
-void GameObject::rotateSprites(Vector3 rotation)
-{
-	for (auto& s : sprites) {
-		s.setRotation(VectorMath::addModulo(rotation, s.getRotation(), 360));
+		s.rotatePlane(roll,pitch,yaw);
 	}
 }
 
@@ -100,7 +93,6 @@ void GameObject::passMessages(vector<Message> messages)
 
 void GameObject::draw(ResBuf<Texture2D>& tex_buf,
 	std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
-	ResBuf<Model>& model_buf,
 	Camera& cam) {
 	for (auto& s : sprites) {
 		switch (s.getType()) {
@@ -111,7 +103,8 @@ void GameObject::draw(ResBuf<Texture2D>& tex_buf,
 				cam);
 			break;
 		case (TexSprite::Type::world):
-			s.drawWorld(model_buf.at(s.getResID()),
+			s.drawWorld(tex_buf.at(s.getResID()),
+				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
 				pos,
 				cam);
 			break;

@@ -328,17 +328,6 @@ Rectangle ResMan::getRegionAt(uint8_t atlas_id, uint8_t region_id)
 	return Rectangle();
 }
 
-Model ResMan::getModelAt(uint8_t id)
-{
-	if (id < Res::MAX_BUF_SIZE
-		&& !model_buf.isFree(id) ) {
-		return model_buf.get(id);
-	}
-	DebugPrinter::printDebug(3, "ResMan::getModelAt",
-		"resource id " + to_string(id) + " invalid");
-	return Model();
-}
-
 ResMan::~ResMan()
 {
 	if (image_buf.ID < Res::MAX_BUF_SIZE) UnloadImage(image_buf.image);
@@ -347,5 +336,4 @@ ResMan::~ResMan()
 		region_buf.popAll();
 		//don't need to unload rectangles, they're just 4 ints
 	}
-	for (auto& model : model_buf.popAll()) UnloadModel(model);
 }

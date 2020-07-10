@@ -62,8 +62,7 @@ public:
 
 	void setPos(Vector2 pos) {this->pos = pos;}
 	void setUpPos(int up_pos) {this->up_pos = up_pos;}
-	void setSpriteRotation(Vector3 rotation);
-	void rotateSprites(Vector3 rotation);
+	void rotateSprites(float roll, float pitch, float yaw);
 
 	std::string getInfo() const;
 
@@ -73,7 +72,6 @@ public:
 	virtual std::vector<Message> update(CatClock& clk) =0;
 	virtual void draw(ResBuf<Texture2D>& tex_buf,
 		std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
-		ResBuf<Model>& model_buf,
 		Camera& cam);
 	virtual ~GameObject() {sprites.clear();}
 };

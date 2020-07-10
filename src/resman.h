@@ -65,10 +65,6 @@ private:
 	void parseAtlasString(std::string atlas);
 	//	-	-	END TEXTURE BUFFER SECTION	-	-	//
 
-	//	-	-	MODEL BUFFER SECTION	-	-	-	//
-	ResBuf<Model> model_buf;
-	//	-	-	END MODEL BUFFER SECTION	-	-	//
-
 	void freeTexByIndex(uint8_t index);
 	uint8_t newTex(std::string name);
 
@@ -112,7 +108,6 @@ public:
 		return region_bufs;
 	}
 	Rectangle getRegionAt(uint8_t atlas_index, uint8_t region_index);
-	ResBuf<Model>& getModelBuf() {return model_buf;}
 	Model getModelAt(uint8_t id);
 
 	~ResMan();

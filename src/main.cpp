@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
 		if (waiting_to_load_test_region) {
 			TexSprite test_sprite = resman.constructSprite(
 				"debug",
-				TexSprite::Type::billboard,
-				{128,160}
+				TexSprite::Type::world,
+				{64,96}
 			);
 			test_sprite.setOffset({0,0});
 			environment.insertObject(std::make_shared<Example>(test_sprite));
