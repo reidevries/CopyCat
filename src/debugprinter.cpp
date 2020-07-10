@@ -2,25 +2,24 @@
 
 using namespace std;
 
-void DebugPrinter::printDebug(string source, string debugmsg, int verbosity)
+stringstream DebugPrinter::record("start log\n");
+
+void DebugPrinter::printDebug(int verbosity,
+	string source,
+	string debugmsg)
 {
 	if (verbosity <= VERBOSITY) {
 		if (verbosity == 4) cout << "DEBUG: ";
 		cout << source << ": " << debugmsg << endl;
-		//log << source << ": " << debugmsg << endl;
+		DebugPrinter::record << source << ": " << debugmsg << endl;
 	}
 }
 
-void DebugPrinter::printDebug(const char* source, const char* debugmsg, int verbosity)
+void DebugPrinter::printDebug(int verbosity,
+	const char* source,
+	const char* debugmsg)
 {
-	printDebug(string(source), string(debugmsg), verbosity);
-}
-
-void DebugPrinter::printDebug(const char* source, uintptr_t ref, const char* debugmsg, int verbosity)
-{
-	stringstream ss;
-	ss << ref << debugmsg;
-	printDebug(static_cast<string>(source), ss.str(), verbosity);
+	printDebug(verbosity, string(source), string(debugmsg));
 }
 
 void DebugPrinter::saveDebugLog(const char* filename)
@@ -28,12 +27,11 @@ void DebugPrinter::saveDebugLog(const char* filename)
   ofstream f;
   f.open(filename);
   if (f) {
-    //f << log.str();
+    f << DebugPrinter::record.str();
     f.close();
   } else {
-    stringstream ss;
-    ss << "Error opening file " << filename << " to save debug log" << endl;
-    printDebug("DebugPrinter::saveDebug", ss.str().c_str(), 1);
+    printDebug(1, "DebugPrinter::saveDebugLog",
+    	string("Error opening file ") + filename + " to save debug log");
     return;
   }
 }

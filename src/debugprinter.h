@@ -18,14 +18,15 @@
 class DebugPrinter {
   public:
 	static const int VERBOSITY = CAT_VERBOSITY;
-	static std::stringstream log;
+	static std::stringstream record;
 	//prints a debugmsg like "source: debugmsg" if verbosity <= VERBOSITY
-    static void printDebug(std::string source, std::string debugmsg, int verbosity);
-    static void printDebug(const char* source, const char* debugmsg, int verbosity);
-    //same as above, but prints a number before the debugmsg
-    static void printDebug(const char* source, uintptr_t ref, const char* debugmsg, int verbosity);
+    static void printDebug(int verbosity,
+    	std::string source,
+    	std::string debugmsg);
+    static void printDebug(int verbosity,
+    	const char* source,
+    	const char* debugmsg);
     static void saveDebugLog(const char* filename);
-
 };
 
 #endif

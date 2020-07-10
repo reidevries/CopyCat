@@ -13,11 +13,12 @@
 #ifndef SRC_GAMEOBJECTS_EXAMPLE_H_
 #define SRC_GAMEOBJECTS_EXAMPLE_H_
 
-#include "raylib.h"
-#include "../gameobject.h"
-#include "../messagelist.h"
 #include <vector>
 #include <string>
+
+#include "catconf.h"
+#include "../gameobject.h"
+#include "../messagelist.h"
 
 class Example : public GameObject
 {
@@ -27,11 +28,11 @@ private:
 	//below declaration not necessary,
 	//but recommended for clarity and to look pretty
 	static const std::string words[];
-	enum Key{set, reset};
+	enum Key{set, reset, spin};
 
 	void parseMessage(Message message, std::vector<Token> lexed);
 public:
-	Example();
+	Example(TexSprite t);
 	std::vector<Message> update(CatClock& clk);
 };
 

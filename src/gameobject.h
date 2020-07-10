@@ -1,23 +1,27 @@
 #ifndef GAMEOBJECT_H	
 #define GAMEOBJECT_H
 
-#include <raylib.h>
 #include <algorithm>
 #include <vector>
-#include "level.h"
-#include <memory>
-#include "texsprite.h"
 #include <sstream>
+#include <memory>
+#include <cstdint>
+
+#include "catconf.h"
+#include "level.h"
+#include "texsprite.h"
 #include "messagelist.h"
 #include "catclock.h"
+#include "resman.h"
+#include "resbuf.h"
 
 class GameObject
 {
 private:
-	static int id_counter;
+	static uint16_t id_counter;
 
 protected:
-	std::vector<std::unique_ptr<TexSprite>> sprites;
+	std::vector<TexSprite> sprites;
 	Vector2 pos;
 	int up_pos = 0;
 
@@ -36,36 +40,41 @@ protected:
 	//the second is the int following the keyword (-1 if there is none)
 	virtual void parseMessage(Message, std::vector<Token>);
 public:
-	const int id;
+	const uint16_t id;
 	const std::string name;
 
 	GameObject(const std::string type_name,
 		const std::vector<std::string> set_keywords);
 	GameObject(const std::string type_name,
-		std::vector<std::unique_ptr<TexSprite>>& sprites,
+		std::vector<TexSprite>& sprites,
 		const Vector2 pos,
 		const std::vector<std::string> set_keywords);
 	GameObject(const std::string set_name,
-		std::unique_ptr<TexSprite> sprite,
+		TexSprite sprite,
 		const Vector2 pos,
 		const std::vector<std::string> set_keywords);
 
+	std::vector<TexSprite>& getSprites() {return sprites;}
 	int getSpriteNum() const {return sprites.size();}
 	Vector2 getPos() const {return pos;}
 	int getUpPos() const {return up_pos;}
 	int getRenderDistance() const;
 
-	void replaceSprites(std::vector<std::unique_ptr<TexSprite>>& sprites);
 	void setPos(Vector2 pos) {this->pos = pos;}
 	void setUpPos(int up_pos) {this->up_pos = up_pos;}
+	void setSpriteRotation(Vector3 rotation);
+	void rotateSprites(Vector3 rotation);
 
-	std::string getInfo();
+	std::string getInfo() const;
 
 	virtual void passMessages(std::vector<Message>);
 
 	//implement these methods to create a gameobject
 	virtual std::vector<Message> update(CatClock& clk) =0;
-	virtual void draw(Camera cam);
+	virtual void draw(ResBuf<Texture2D>& tex_buf,
+		std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
+		ResBuf<Model>& model_buf,
+		Camera& cam);
 	virtual ~GameObject() {sprites.clear();}
 };
 

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int GameObject::id_counter = 1;
+uint16_t GameObject::id_counter = 1;
 
 
 GameObject::GameObject(
@@ -14,23 +14,23 @@ GameObject::GameObject(
 
 GameObject::GameObject(
 	const string set_name,
-	vector<unique_ptr<TexSprite>>& sprites,
+	vector<TexSprite>& sprites,
 	Vector2 pos,
 	const std::vector<std::string> set_keywords)
 	: GameObject(set_name, set_keywords)
 {
-	replaceSprites(sprites);
+	this->sprites = sprites;
 	this->pos = pos;
 }
 
 GameObject::GameObject(
 	const string set_name,
-	unique_ptr<TexSprite> sprite,
+	TexSprite sprite,
 	Vector2 pos,
 	const std::vector<std::string> set_keywords)
 	: GameObject(set_name, set_keywords)
 {
-	this->sprites.push_back(move(sprite));
+	this->sprites.push_back(sprite);
 	this->pos = pos;
 }
 
@@ -39,15 +39,21 @@ int GameObject::getRenderDistance() const
 	return pos.x-pos.y;
 }
 
-void GameObject::replaceSprites(vector<unique_ptr<TexSprite>>& new_sprites)
+void GameObject::setSpriteRotation(Vector3 rotation)
 {
-	sprites.clear();
-	for (auto& sprite : new_sprites) {
-		sprites.push_back(move(sprite));
+	for (auto& s : sprites) {
+		s.setRotation(rotation);
 	}
 }
 
-string GameObject::getInfo()
+void GameObject::rotateSprites(Vector3 rotation)
+{
+	for (auto& s : sprites) {
+		s.setRotation(VectorMath::addModulo(rotation, s.getRotation(), 360));
+	}
+}
+
+string GameObject::getInfo() const
 {
 	stringstream ss;
 	ss << id
@@ -92,8 +98,27 @@ void GameObject::passMessages(vector<Message> messages)
 	}
 }
 
-void GameObject::draw(const Camera cam) {
+void GameObject::draw(ResBuf<Texture2D>& tex_buf,
+	std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
+	ResBuf<Model>& model_buf,
+	Camera& cam) {
 	for (auto& s : sprites) {
-		s->draw(pos, cam);
+		switch (s.getType()) {
+		case (TexSprite::Type::billboard):
+			s.drawBillboard(tex_buf.at(s.getResID()),
+				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
+				pos,
+				cam);
+			break;
+		case (TexSprite::Type::world):
+			s.drawWorld(model_buf.at(s.getResID()),
+				pos,
+				cam);
+			break;
+		case (TexSprite::Type::screen):
+			s.drawScreen(tex_buf.at(s.getResID()),
+				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
+				WHITE);
+		}
 	}
 }

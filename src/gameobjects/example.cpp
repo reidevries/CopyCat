@@ -11,12 +11,15 @@ using namespace std;
 
 const string Example::words[] = {
 	"set",
-	"reset"
+	"reset",
+	"spin"
 };
 
-Example::Example()
+Example::Example(TexSprite tex)
 		: GameObject(
 			"Example",
+			tex,
+			{10,10},
 			std::vector<string>(begin(words), end(words))
 		)
 {
@@ -27,7 +30,6 @@ void Example::parseMessage(Message message, std::vector<Token> lexed)
 	switch (message.type) {
 	case Message::Type::say:
 		for (auto const& tok : lexed) {
-			DebugPrinter::printDebug("Example::parseMessage", keywords[tok.keyword_index], 4);
 			switch(static_cast<Key>(tok.keyword_index)) {
 			case set:
 				my_example_data = tok.numeral;
@@ -35,6 +37,8 @@ void Example::parseMessage(Message message, std::vector<Token> lexed)
 			case reset:
 				my_example_data = 0;
 				break;
+			case spin:
+				rotateSprites((Vector3){10,1000,100});
 			default:
 				break;
 			}

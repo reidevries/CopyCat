@@ -9,13 +9,15 @@
 #ifndef SRC_CATCLOCK_H_
 #define SRC_CATCLOCK_H_
 
+#include <cstdint>
+
 struct CatClock {
 	float dt_s;				//time in seconds since last frame
-	unsigned short time_m;	//time in minutes since process began, max 45 days
-	char time_s;			//time in seconds since last minute tick, max 60
+	uint16_t time_m;		//time in minutes since process began, max 45 days
+	uint8_t time_s;			//time in seconds since last minute tick, max 60
 	float time_ms;			//time in ms since last second tick, max 1000
 
-	unsigned long time_f;	//time in frames since process began
+	uint32_t time_f;		//time in frames since process began
 
 	//these become true only for the frame at which exactly a minute
 	//or exactly a second has passed, so that a task can be done once

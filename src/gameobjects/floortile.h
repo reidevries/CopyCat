@@ -8,11 +8,12 @@
 #ifndef SRC_GAMEOBJECTS_FLOORTILE_H_
 #define SRC_GAMEOBJECTS_FLOORTILE_H_
 
-#include "raylib.h"
-#include "../gameobject.h"
-#include "../messagelist.h"
 #include <vector>
 #include <string>
+
+#include "catconf.h"
+#include "../gameobject.h"
+#include "../messagelist.h"
 #include "../texsprite.h"
 
 class FloorTile : public GameObject
@@ -22,7 +23,7 @@ public:
 	enum Type{floor, lava};
 
 private:
-	enum Key{next};
+	enum Key{};
 	static const std::string words[];
 
 	static const std::string type_text[];
@@ -35,8 +36,7 @@ private:
 	void parseMessage(Message message, std::vector<Token> lexed);
 
 public:
-	FloorTile(FloorTile::Type, std::vector<std::unique_ptr<TexSprite>>&);
-	FloorTile(FloorTile::Type, std::unique_ptr<TexSprite>);
+	FloorTile(FloorTile::Type, TexSprite);
 	std::vector<Message> update(CatClock& clk);
 };
 

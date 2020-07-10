@@ -8,18 +8,19 @@
 #ifndef SRC_VIEWRENDERER_H_
 #define SRC_VIEWRENDERER_H_
 
-#include "raylib.h"
 #include <vector>
 #include <set>
 #include <string>
+
+#include "catconf.h"
 #include "gameobject.h"
 #include "polygon.h"
 #include "resman.h"
 #include "debugprinter.h"
 #include "environment.h"
 #include "level.h"
-#include "texres.h"
 #include "catclock.h"
+#include "resbuf.h"
 
 class ViewRenderer
 {
@@ -37,14 +38,16 @@ public:
 
 	Model testmodel;
 
-	std::vector<std::unique_ptr<TexSprite>> ui_buf;
+	std::vector<TexSprite> ui_buf;
 	Font font;
 
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
-	void render(CatClock& clk, Environment& environment);
-	void renderDebug(CatClock& clk, Environment& environment);
+	void addSprite(TexSprite ui_sprite);
+	void render(CatClock& clk, Environment& environment, ResMan& resman);
+	void renderDebug(CatClock& clk, Environment& environment, ResMan& resman);
+	void drawObject(std::shared_ptr<GameObject> object, ResMan& resman);
 };
 
 #endif /* SRC_VIEWRENDERER_H_ */

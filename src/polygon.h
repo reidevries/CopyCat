@@ -1,15 +1,16 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include <raylib.h>
 #include <vector>
 #include <string>
 #include <array>
 #include <cmath>
-#include "vectormath.h"
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+
+#include "catconf.h"
+#include "vectormath.h"
 
 class Polygon {
 	private:

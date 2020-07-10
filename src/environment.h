@@ -11,8 +11,9 @@
 #include <map>
 #include <set>
 #include <vector>
-#include <raylib.h>
 #include <string>
+#include <cstdint>
+
 #include "gameobject.h"
 #include "debugprinter.h"
 #include "messagelist.h"
@@ -29,16 +30,16 @@
 class Environment
 {
 private:
-	std::map<int, std::shared_ptr<GameObject>> object_buf;
-	std::map<std::string, std::set<int>> objects_by_name;
-	std::map<int, int> objects_by_render_order;
-
-	//number of grid squares to include in a bucket
-	const int bucket_size;	//Sin world units
-	const int world_size;	//in buckets
+	std::map<uint16_t, std::shared_ptr<GameObject>> object_buf;
+	std::map<std::string, std::set<uint16_t>> objects_by_name;
+	std::map<uint8_t, uint16_t> objects_by_render_order;
 	//this vector always contains world_size x world_size sets,
 	//but the sets may be empty
-	std::vector<std::vector<std::set<int>>> objects_by_pos;
+	std::vector<std::vector<std::set<uint16_t>>> objects_by_pos;
+
+	//number of grid squares to include in a bucket
+	const int bucket_size;	//in world units
+	const int world_size;	//in buckets
 
 	Level current_level;
 
@@ -50,10 +51,10 @@ public:
 	Environment();
 	Environment(const int set_bucket_size, const int set_world_size);
 	void insertObject(std::shared_ptr<GameObject> gameobject);
-	void deleteObjectByID(const int id);
+	void deleteObjectByID(const uint16_t id);
 
 	//gets a pointer to a specific object
-	std::shared_ptr<GameObject> getObjectByID(const int id) const;
+	std::shared_ptr<GameObject> getObjectByID(const uint16_t id) const;
 	//gets the set of objects with the given name
 	std::set<std::shared_ptr<GameObject>> getObjectsByName(
 		const std::string name) const;
@@ -62,6 +63,10 @@ public:
 		const Rectangle box) const;
 	//gets a map of objects within a box selection, ordered by render distance
 	std::multimap<int, std::shared_ptr<GameObject>> getObjectsInBoxForRender(
+		const Rectangle box);
+	//gets a vector of texsprites,
+	//ordered by their owner gameobjects' render distance
+	std::vector<TexSprite> getSpritesInBoxForRender(
 		const Rectangle box);
 	//gets the set of all objects within "radius" buckets of the coord
 	//0 selects only the bucket the coord is within, higher values

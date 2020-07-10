@@ -2,22 +2,47 @@
 #define VECTORMATH_H
 
 #include <cmath>
-#include <raylib.h>
 #include <vector>
 #include <string>
 #include <sstream>
 #include <cmath>
 #include <cstdint>
 
+#include "catconf.h"
+
 namespace VectorMath {
-static std::string printVector(const Vector2 a)
+constexpr double DEG_TO_RAD = 0.01745329252;
+constexpr double RAD_TO_DEG = 57.295779513;
+constexpr Matrix identity = {
+	1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+};
+
+constexpr double degToRad(double deg)
 {
-	std::stringstream ss;
-	ss << a.x << "," << a.y;
-	return ss.str();
+	return deg*DEG_TO_RAD;
 }
 
-static double invSqrt(const double a)
+constexpr double radToDeg(double rad)
+{
+	return rad*RAD_TO_DEG;
+}
+
+static std::string printVector(const Vector2 a)
+{
+	return std::to_string(a.x) + "," + std::to_string(a.y);
+}
+
+static std::string printVector(const Vector3 a)
+{
+	return std::to_string(a.x) +
+		"," + std::to_string(a.y) +
+		"," + std::to_string(a.z);
+}
+
+constexpr double invSqrt(const double a)
 {
 #ifdef QUAKE
 	//stolen from quake lol
@@ -36,34 +61,91 @@ static double invSqrt(const double a)
 #endif
 }
 
-static double dot(const Vector2 a, const Vector2 b)
+constexpr double dot(Vector2 a, Vector2 b)
 {
 	return a.x*b.x+a.y*b.y;
 }
 
-static double dist(const Vector2 a, const Vector2 b)
+constexpr double dist(Vector2 a, Vector2 b)
 {
 	return sqrt( pow(b.x-a.x, 2) + pow(b.y-a.y, 2) );
 }
 
-static Vector2 add(const Vector2 a, const Vector2 b)
+constexpr Vector2 add(Vector2 a, Vector2 b)
 {
 	return (Vector2){a.x+b.x, a.y+b.y};
 }
 
-static Vector2 sub(const Vector2 a, const Vector2 b)
+constexpr Vector2 addModulo(Vector2 a, Vector2 b, unsigned int m)
+{
+	Vector2 sum = {a.x+b.x, a.y+b.y};
+	Vector2 decimal_part = {
+		sum.x-static_cast<int>(sum.x),
+		sum.y-static_cast<int>(sum.y)
+	};
+	return (Vector2) {
+		decimal_part.x + (static_cast<int>(sum.x)%m),
+		decimal_part.y + (static_cast<int>(sum.y)%m)
+	};
+}
+
+constexpr Vector3 addModulo(Vector3 a, Vector3 b, unsigned int m)
+{
+	Vector3 sum = {a.x+b.x, a.y+b.y, a.z+b.z};
+	Vector3 decimal_part = {
+		sum.x-static_cast<int>(sum.x),
+		sum.y-static_cast<int>(sum.y),
+		sum.z-static_cast<int>(sum.z)
+	};
+	return (Vector3) {
+		decimal_part.x + (static_cast<int>(sum.x)%m),
+		decimal_part.y + (static_cast<int>(sum.y)%m),
+		decimal_part.z + (static_cast<int>(sum.z)%m)
+	};
+}
+
+constexpr Vector3 add(Vector3 a, Vector3 b)
+{
+	return (Vector3){a.x+b.x, a.y+b.y, a.z+b.z};
+}
+
+constexpr Vector2 sub(Vector2 a, Vector2 b)
 {
 	return (Vector2){a.x-b.x, a.y-b.y};
 }
 
-static Vector2 scale(const Vector2 a, const double b)
+constexpr Vector3 sub(Vector3 a, Vector3 b)
 {
-	return (Vector2){static_cast<float>(a.x*b), static_cast<float>(a.y*b)};
+	return (Vector3){a.x-b.x, a.y-b.y, a.z-b.z};
 }
 
-static Vector2 scale(const Vector2 a, const Vector2 b)
+constexpr Vector2 scale(Vector2 a, float b)
+{
+	return (Vector2){a.x*b, a.y*b};
+}
+
+constexpr Vector3 scale(Vector3 a, float b)
+{
+	return (Vector3){a.x*b, a.y*b, a.z*b};
+}
+
+constexpr Vector2 scale(Vector2 a, Vector2 b)
 {
 	return (Vector2){a.x*b.x, a.y*b.y};
+}
+
+constexpr Vector3 scale(Vector3 a, Vector3 b)
+{
+	return (Vector3){a.x*b.x, a.y*b.y, a.z*b.z};
+}
+
+constexpr float max(Vector2 a) {
+	return (a.x>a.y)?a.x:a.y;
+}
+
+constexpr float max(Vector3 a) {
+	return (a.x>a.y)?
+		((a.x>a.z)?a.x:a.z):((a.y>a.z)?a.y:a.z);
 }
 
 static bool checkPointInPolygon(const Vector2 point,
@@ -90,10 +172,21 @@ static bool checkPointInPolygon(const Vector2 point,
 	return (counter%2 == 1);
 }
 
-static Vector2 normalise(const Vector2 a)
+constexpr Vector2 normalise(Vector2 a)
 {
-	double dist = invSqrt(pow(a.x,2)+pow(a.y,2));
+	double dist = invSqrt(a.x*a.x+a.y*a.y);
 	return VectorMath::scale(a, dist);
+}
+
+constexpr Vector3 normalise(Vector3 a)
+{
+	double dist = invSqrt(a.x*a.x+a.y*a.y+a.z*a.z);
+	return VectorMath::scale(a,dist);
+}
+
+constexpr Vector3 normalize_shit_fast(Vector3 a)
+{
+	return VectorMath::scale(a, 1/max(a));
 }
 
 static Vector2 intersectLines(const Vector2 a_1,

@@ -13,39 +13,49 @@
 #ifndef TEXTURESPRITE_H
 #define TEXTURESPRITE_H
 
-#include <raylib.h>
 #include <string>
 #include <memory>
 #include <vector>
-#include "debugprinter.h"
+#include <cstdint>
 
-#include "texregion.h"
+#include "catconf.h"
+#include "debugprinter.h"
 #include "vectormath.h"
 
-//defines how the sprite is to be drawn, only for use within TexSprite
-enum class SpriteType {
-	screen,		//Gets drawn in 2D by drawUI
-				//It is drawn on the screen at the pixel coords of "offset"
-				//This is a candidate for being split into another class, but
-				//I think it would share too many methods
-
-	world,  	//Gets drawn in 3D as a flat plane textured with the sprite
-				//It's drawn in the world at the coordinates specified by
-				//dest_rect and "up", which is formed from
-				//offset+pos as specified in draw(Vector2, Camera)
-
-	billboard 	//gets drawn in 3D as a billboard
-				//It's drawn in the same way as "world", but it always faces
-				//the camera. Can't be rotated on any axis due to limitations
-				//of the raylib library.
-};
 
 class TexSprite {
-private:
-	std::string name;
-	SpriteType type;
+public:
+	//defines how the sprite is to be drawn
+	enum class Type {
+		screen,		//Gets drawn in 2D by drawUI
+					//It is drawn on the screen at the pixel coords of "offset"
+					//This is a candidate for being split into another class, but
+					//I think it would share too many methods
 
-	Model plane; //cant be static because it also contains the "material"
+		world,  	//Gets drawn in 3D as a flat plane textured with the sprite
+					//It's drawn in the world at the coordinates specified by
+					//dest_rect and "up", which is formed from
+					//offset+pos as specified in draw(Vector2, Camera)
+
+		billboard 	//gets drawn in 3D as a billboard
+					//It's drawn in the same way as "world", but it always faces
+					//the camera. Can't be rotated on any axis due to limitations
+					//of the raylib library.
+	};
+
+private:
+	//ID of the Texture2D or Model from ResMan
+	//if type==world it references a Model
+	//otherwise it's a Texture2D
+	uint8_t res_id;
+	std::string region_name;
+	Type type;
+
+	//list of regions from the atlas, and the index of which one to draw
+	//only used if type is 'billboard' or 'screen'
+	std::vector<uint8_t> regions;
+	unsigned int draw_index;
+
 	Vector2 size;
 	float up; //determines y position if rendered in 3D
 	/* This vector stores all the regions of textures that can be drawn
@@ -54,55 +64,87 @@ private:
 	 * deletion without having to store multiple copies of the resources.
 	 * src_rect is ignored for "world" type drawing
 	 */
-	std::vector<TexRegion> regions;
-	int draw_index; //the index of the texture that currently being drawn
-	Vector2 offset;
-	//the origin for rotation and positioning
-	Vector2 origin; //0x0 = top left corner, 1x1=bottom right corner
-	float scale = 1;
-	float rotation = 0;
 
-	Vector2 origin_pixels;
-	Rectangle dest_rect;
-	//update rectangle size
-	void updateRectangleSize();
-	//updates the position to draw on screen
-	void updateRectanglePos(Vector2 pos);
+	//offset position from the given "draw" position
+	Vector2 offset;
+
+	Vector3 rotation_axis;
+	float rotation_deg;
+	//scaling for all types
+	float scale = 1.0;
 
 	Texture2D getCurrentTexture();
 	void ageTextures();
-	Vector3 getPos3D() const;	//get the pos as 3D world coords
+
 public:
-	TexSprite(std::string name,
-			SpriteType type,
-			std::vector<TexRegion> regions,
-			Vector2 size);
-	//same as above, but using src_rect size as default
-	TexSprite(std::string name,
-			SpriteType type,
-			std::vector<TexRegion> regions);
+	//calculates pos in 3D, and dest rect and origin for screen type
+	constexpr Rectangle getDestRect(Vector2 pos)
+	{
+		return (Rectangle){
+			pos.x+offset.x,
+			pos.y+offset.y,
+			size.x,
+			size.y
+		};
+	}
+	constexpr Vector2 getOrigin2D()
+	{
+		return {size.x/2, size.y/2};
+	}
+	constexpr Vector3 getPos3D(Vector2 pos)
+	{
+		return (Vector3){
+			pos.x+offset.x,
+			up,
+			pos.y+offset.y
+		};
+	}
+
+	TexSprite(const uint8_t resource_index,
+		std::string name,
+		Type type,
+		std::vector<uint8_t> regions,
+		Vector2 size);
 	//same as above, but defaulting to "screen" SpriteType
-	TexSprite(std::string name,
-			std::vector<TexRegion> regions);
-	std::vector<TexRegion> getAllTextures() {return regions;}
-	std::string getName() {return name;}
+	TexSprite(const uint8_t resource_index,
+		std::string name,
+		std::vector<uint8_t> regions,
+		Vector2 size);
+	//constructor for "world" type where 'regions' is unused
+	TexSprite(const uint8_t resource_index,
+		std::string name,
+		Vector2 size);
 
-	//also updates material texture
+	std::string getName() {return region_name;}
+	unsigned int getCurrentRegionID() {return regions[draw_index];}
 	void setDrawIndex(int tex_index);
-	int getDrawIndex() const {return draw_index;}
-	void setOffset(Vector2 offset);
-	Vector2 getOffset() const {return offset;}
-	void setSize(Vector2 size);
-	Vector2 getSize() const {return size;}
-	void setOrigin(Vector2 origin);
-	Vector2 getOrigin() const {return origin;}
-	void setScale(float scale);
-	float getScale() const {return scale;}
-	void setRotation(float rotation) {this->rotation = rotation;}
-	float getRotation() const {return rotation;}
+	unsigned int getDrawIndex() const {return draw_index;}
+	unsigned int getResID() const {return res_id;}
+	Type getType() const {return type;}
 
-	void draw(Vector2 pos, Camera cam);
-	void drawUI(Color color);
+	void setOffset(Vector2 offset) {this->offset = offset;}
+	Vector2 getOffset() const {return offset;}
+	void setSize(Vector2 size) {this->size = size;}
+	Vector2 getSize() const {return size;}
+	void setScale(float scale) {this->scale = scale;}
+	float getScale() const {return scale;}
+	Vector3 getScale3D() const {return {scale,scale,scale};}
+	void setRotation(Vector3 rotation); //as vector3 of pitch,yaw,roll
+	Vector3 getRotation();
+	Vector3 getRotationAxis() {return rotation_axis;}
+	void setRotationDeg(float rotation) {this->rotation_deg = rotation;}
+	float getRotationDeg() {return rotation_deg;}
+
+	void drawBillboard(Texture2D atlas,
+		Rectangle src_rect,
+		Vector2 pos,
+		Camera cam);
+	void drawWorld(Model model,
+		Vector2 pos,
+		Camera cam);
+	void drawScreen(Texture2D atlas,
+		Rectangle src_rect,
+		Color color);
 };
 
 #endif

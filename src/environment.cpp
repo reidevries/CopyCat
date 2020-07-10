@@ -13,15 +13,12 @@ Environment::Environment(const int set_bucket_size, const int set_world_size)
 	: bucket_size(set_bucket_size), world_size(set_world_size)
 {
 	for (int x = 0; x < world_size; ++x) {
-		vector<set<int>> column;
+		vector<set<uint16_t>> column;
 		for (int y = 0; y < world_size; ++y) {
-			column.push_back(set<int>());
+			column.push_back(set<uint16_t>());
 		}
 		objects_by_pos.push_back(column);
 	}
-
-	//for testing
-	insertObject(make_shared<Example>());
 }
 
 Environment::Environment()
@@ -58,12 +55,10 @@ void Environment::insertObject(std::shared_ptr<GameObject> game_object)
 {
 	Vector2 bucket = getIndicesAtWorldPos(game_object->getPos());
 	if (bucket.x < 0 || bucket.y < 0) {
-		stringstream ss;
-		ss << "failed to insert" << game_object->name << " "
-			<< game_object->id
-			<< " because position is outside environment boundary";
-		DebugPrinter::printDebug("Environment::insertObject",
-			ss.str().c_str(), 0);
+		DebugPrinter::printDebug(0, "Environment::insertObject",
+			"failed to insert" + game_object->name + " "
+			+ to_string(game_object->id)
+			+ " because position is outside environment boundary");
 		return;
 	}
 
@@ -71,7 +66,7 @@ void Environment::insertObject(std::shared_ptr<GameObject> game_object)
 	if (objects_by_name.count(game_object->name) > 0) {
 		objects_by_name.at(game_object->name).insert(game_object->id);
 	} else {
-		set<int> id_set;
+		set<uint16_t> id_set;
 		id_set.insert(game_object->id);
 		objects_by_name.insert({
 			game_object->name,
@@ -86,20 +81,28 @@ void Environment::insertObject(std::shared_ptr<GameObject> game_object)
 		game_object->getRenderDistance()
 	});
 
-	stringstream ss;
-	ss << game_object->getInfo() << " successfully inserted into bucket at "
-		<< VectorMath::printVector(bucket);
-	DebugPrinter::printDebug("Environment::insertObject",
-		ss.str(), 3);
+	DebugPrinter::printDebug(3, "Environment::insertObject",
+		game_object->getInfo() + " successfully inserted into bucket at "
+		+ VectorMath::printVector(bucket));
 
 }
 
-void Environment::deleteObjectByID(const int id)
+void Environment::deleteObjectByID(const uint16_t id)
 {
+	//before erasing object, erase its id from objects_by_name,
+	//objects_by_render_order, and objects_by_pos
+	shared_ptr<GameObject> cur_object = object_buf.at(id);
+	string object_name = cur_object->name;
+	objects_by_name.at(object_name).erase(id);
+	uint8_t render_distance = cur_object->getRenderDistance();
+	objects_by_render_order.erase(render_distance);
+	Vector2 bucket = getIndicesAtWorldPos(cur_object->getPos());
+	objects_by_pos.at(bucket.x).at(bucket.y).erase(id);
+
 	object_buf.erase(id);
 }
 
-shared_ptr<GameObject> Environment::getObjectByID(const int id) const
+shared_ptr<GameObject> Environment::getObjectByID(const uint16_t id) const
 {
 	if (object_buf.count(id) > 0) return object_buf.at(id);
 	else return nullptr;
@@ -156,6 +159,36 @@ multimap<int, shared_ptr<GameObject>> Environment::getObjectsInBoxForRender(
 		}
 	}
 
+	return accumulator;
+}
+
+vector<TexSprite> Environment::getSpritesInBoxForRender(const Rectangle box)
+{
+	Vector2 mins = getIndicesAtWorldPos({box.x, box.y});
+	Vector2 maxs = getIndicesAtWorldPos({box.x+box.width, box.y+box.height});
+
+	//put into a map to make sure it's sorted by render distance
+	map<uint8_t, uint16_t> sorted_by_render_distance;
+	for (int u = mins.x; u <= maxs.x; ++u) {
+		for (int v = mins.y; v <= maxs.y; ++v) {
+			for (auto const& object_id : objects_by_pos[u][v]) {
+				sorted_by_render_distance.insert({
+					object_buf.at(object_id)->getRenderDistance(),
+					object_id
+				});
+			}
+		}
+	}
+
+
+	vector<TexSprite> accumulator;
+	//put tex sprites from objects into accumulator
+	for (auto const& object_id : sorted_by_render_distance) {
+		for (auto const& cur_sprite
+			: object_buf.at(object_id.second)->getSprites()){
+			accumulator.push_back(cur_sprite);
+		}
+	}
 	return accumulator;
 }
 
