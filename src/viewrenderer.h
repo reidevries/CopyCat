@@ -27,7 +27,8 @@ class ViewRenderer
 public:
 	//world height is fixed to 128 units.
 	//world width is scaled depending on aspect ratio
-	const int WORLD_H = 128;
+	static const int WORLD_H = 128;
+	static const int METRE = 16;
 	int screen_w, screen_h;
 	float screen_scale;
 	float world_w;
@@ -41,12 +42,14 @@ public:
 	std::vector<TexSprite> ui_buf;
 	Font font;
 
+	void renderAxes();
+	void renderAxes2D(Vector2 pos, float cam_rot);
+	void renderDebug(CatClock& clk, Environment& environment, ResMan& resman);
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
 	void addSprite(TexSprite ui_sprite);
 	void render(CatClock& clk, Environment& environment, ResMan& resman);
-	void renderDebug(CatClock& clk, Environment& environment, ResMan& resman);
 	void drawObject(std::shared_ptr<GameObject> object, ResMan& resman);
 };
 

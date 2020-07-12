@@ -41,6 +41,9 @@ int main(int argc, char* argv[])
 		<< "." << int(COPYCAT_VERSION_MINOR);
 
     InitWindow(screen_w, screen_h, window_title.str().c_str());
+    //globally disable backface culling
+    //we are not loading models in this game
+	rlDisableBackfaceCulling();
 
     ResMan resman(debug);
     ViewRenderer view(screen_w, screen_h, debug);
@@ -66,12 +69,19 @@ int main(int argc, char* argv[])
 		);
 		if (waiting_to_load_test_region) {
 			TexSprite test_sprite = resman.constructSprite(
-				"debug",
+				"billboard",
 				TexSprite::Type::world,
-				{64,96}
+				{128,74}
 			);
-			test_sprite.setOffset({0,0});
+			test_sprite.setOffset({-32,-32});
 			environment.insertObject(std::make_shared<Example>(test_sprite));
+			TexSprite test_sprite2 = resman.constructSprite(
+				"cat_placeholder",
+				TexSprite::Type::world,
+				{64,128}
+			);
+			test_sprite2.setOffset({32,-16});
+			environment.insertObject(std::make_shared<Example>(test_sprite2));
 			waiting_to_load_test_region = false;
 		}
 

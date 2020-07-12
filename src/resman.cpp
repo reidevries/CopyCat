@@ -25,7 +25,7 @@ string ResMan::constructAtlasFilename(string name) const
 
 ResMan::ResMan(const bool set_debug) : debug(set_debug)
 {
-	newTex("debug");
+	requestTex("debug");
 }
 
 ResMan::ResMan()
@@ -45,7 +45,7 @@ void ResMan::parseAtlasString(string atlas)
 {
 	stringstream ss(atlas);
 	string buf;
-	uint8_t region_id = Res::MAX_BUF_SIZE;
+	uint8_t region_id = Res::REGION_BUF_SIZE;
 	AtlasTok cur_token = s;
 	Rectangle cur_rectangle;
 	string cur_name;
@@ -53,7 +53,7 @@ void ResMan::parseAtlasString(string atlas)
 	while (ss >> buf) {
 		//lines that start with "s" represent a region of the atlas
 		if (buf.compare("s") == 0) {
-			region_id = (region_id+1)%Res::MAX_BUF_SIZE;
+			region_id = (region_id+1)%Res::REGION_BUF_SIZE;
 			cur_token = s;
 			cur_rectangle = {0,0,0,0};
 			cur_name = "";
@@ -61,7 +61,11 @@ void ResMan::parseAtlasString(string atlas)
 
 		switch(cur_token) {
 		case (nameID):
-			cur_name = nameID;
+			cur_name = buf;
+			//if the last character isn't a digit, append '0'
+			if (!isdigit(cur_name.back())) {
+				cur_name = cur_name + "0";
+			}
 			break;
 		case (positionX):
 			cur_rectangle.x = stoi(buf);
@@ -87,17 +91,70 @@ void ResMan::parseAtlasString(string atlas)
 
 }
 
-uint8_t ResMan::newTex(string name)
+uint8_t ResMan::requestTex(string name)
 {
-	if (tex_buf.has(name)) return tex_buf.find(name);
-	else {
+	uint8_t atlas_id;
+	if (tex_buf.has(name)) {
+		atlas_id = tex_buf.find(name);
+	} else {
+		atlas_id = tex_buf.push(name, Texture2D());
 		tex_load_queue.push(name);
-		return tex_buf.push(name, Texture2D());
+	}
+	//initialize associated region buf
+	if (atlas_id < Res::TEX_BUF_SIZE) {
+		region_bufs[atlas_id] = ResBuf<Rectangle, Res::REGION_BUF_SIZE>();
+	} else {
+		DebugPrinter::printDebug(0, "ResMan::requestTex",
+			"no free space left for " + name + "!");
+	}
+	return atlas_id;
+}
+
+vector<uint8_t> ResMan::requestRegions(uint8_t atlas_id, string name,
+	uint8_t num_frames) {
+	vector<uint8_t> accumulator;
+	//don't queue regions for nonexistent atlas
+	if (!tex_buf.isFree(atlas_id)) {
+		if (debug && region_bufs[atlas_id].has(name)) {
+			DebugPrinter::printDebug(0, "ResMan::requestRegions",
+				"Oi, Rei u made a boo-boo somewhere, " + name
+				+ " should have a suffix, should look like "
+				+ name + "0");
+		}
+
+		//if num_frames==0, nonetheless request one region called ${name}0
+		if (num_frames == 0) num_frames = 1;
+
+		for (int i = 0; i < num_frames; ++i) {
+			string frame_name = name+to_string(i);
+			accumulator.push_back(
+				region_bufs[atlas_id].findOrPush(frame_name, Rectangle()));
+		}
+	} else {
+		DebugPrinter::printDebug(0, "ResMan::queueRegions",
+			"error: atlas id " + to_string(atlas_id)
+			+ " should be queued before loading the region " + name);
+	}
+	return accumulator;
+}
+
+//request a single region without animation frames
+uint8_t ResMan::requestRegion(uint8_t atlas_id, string name)
+{
+	if (!tex_buf.isFree(atlas_id)) {
+		string frame_name = name+"0";
+		return region_bufs[atlas_id].findOrPush(frame_name, Rectangle());
+	} else {
+		DebugPrinter::printDebug(0, "ResMan::queueRegions",
+			"error: atlas id " + to_string(atlas_id)
+			+ " should be queued before loading the region " + name);
+		return Res::REGION_BUF_SIZE;
 	}
 }
 
 void ResMan::freeTexByIndex(uint8_t index) {
 	UnloadTexture(tex_buf.pop(index));
+	region_bufs[index].clear();
 }
 
 uint8_t ResMan::getAtlasID(string name)
@@ -117,25 +174,30 @@ void ResMan::loadNextImage()
 		cur_id = tex_buf.find(to_load);
 	} catch (const std::out_of_range& e) {
 		DebugPrinter::printDebug(0, "ResMan::loadNextImage",
-			to_load + " doesn't exist in tex_buf??");
+			to_load + " should've been initialised, but hasn't");
 		return;
 	}
+	DebugPrinter::printDebug(2, "ResMan::loadNextImage",
+		"loading " + to_load + " into buf at index " + to_string(cur_id));
 
 	//first, load the png into Image data on the CPU
 	string image_filename = constructImageFilename(to_load);
 	if (FileExists(image_filename.c_str())) {
 		image_buf.name = to_load;
 		image_buf.image = LoadImage(image_filename.c_str());
+		image_buf.rect = {
+			0,
+			0,
+			static_cast<float>(image_buf.image.width),
+			static_cast<float>(image_buf.image.height)
+		};
 		image_buf.ID = cur_id;
 		image_buf.atlas = "";
-		tex_load_queue.pop();
 	} else {
 		DebugPrinter::printDebug(0, "ResMan::loadNextImage",
 			"error loading " + image_filename);
 	}
-
-	//if the regions buf is already filled, skip
-	if (region_bufs.at(cur_id).count() > 0) return;
+	tex_load_queue.pop();
 
 	//second, load the atlas into a std::string if the file exists
 	//if the file doesn't exist, set the texture to be one big region
@@ -143,20 +205,21 @@ void ResMan::loadNextImage()
 	if (FileExists(atlas_filename.c_str())) {
 		image_buf.atlas = static_cast<string>(LoadFileText(
 			atlas_filename.c_str()));
+		DebugPrinter::printDebug(3, "ResMan::loadNextImage",
+			"found atlas file at " + atlas_filename);
 	} else {
-		region_bufs.at(cur_id).push(to_load, (Rectangle){
-			0,
-			0,
-			static_cast<float>(image_buf.image.width),
-			static_cast<float>(image_buf.image.height)
-		});
+		region_bufs.at(cur_id).replace(requestRegion(cur_id, image_buf.name),
+			image_buf.rect);
+		DebugPrinter::printDebug(2, "ResMan::loadNextImage",
+			"no available atlas file, using this rect: "
+			+ VectorMath::printRect(image_buf.rect));
 	}
 }
 
 void ResMan::loadNextTex()
 {
 	//skip method if the image buf is empty
-	if (image_buf.ID >= Res::MAX_BUF_SIZE) return;
+	if (image_buf.ID >= Res::TEX_BUF_SIZE) return;
 
 	//first, load the texture from image_buf and unload the image
 	tex_buf.replace(image_buf.ID, LoadTextureFromImage(image_buf.image));
@@ -174,26 +237,13 @@ void ResMan::loadNextTex()
 		}
 	}
 
-
 	image_buf = ImageBuf(); //reset image_buf
 }
 
-bool ResMan::isTexLoaded(string atlas_name) const
+bool ResMan::isRegionLoaded(uint8_t atlas_id, uint8_t region_id) const
 {
-	if (tex_buf.has(atlas_name)) {
-		uint8_t cur_id = tex_buf.find(atlas_name);
-		if (!tex_buf.isFree(cur_id)) {
-			if (tex_buf.get(cur_id).id > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			DebugPrinter::printDebug(0, "ResMan::isTexLoaded",
-				"error: for some reason atlas " + atlas_name +
-				" exists but isn't loaded");
-			return false;
-		}
+	if (isTexLoaded(atlas_id)) {
+		return (!region_bufs.at(atlas_id).isFree(region_id));
 	} else return false;
 }
 
@@ -205,102 +255,74 @@ bool ResMan::isRegionLoaded(string atlas_name, string region_name) const
 	} else return false;
 }
 
-bool ResMan::requestRegion(string atlas_name, string region_name)
+bool ResMan::isTexLoaded(uint8_t atlas_id) const
 {
-	if (isRegionLoaded(atlas_name, region_name)) {
-		return true;
-	} else {
-		if (isTexLoaded(atlas_name)) {
-			DebugPrinter::printDebug(0, "ResMan::loadRegion",
-				"error: trying to access region '" + region_name +
-				"' but it doesn't exist for " + atlas_name);
+	if (!tex_buf.isFree(atlas_id)) {
+		if (tex_buf.get(atlas_id).id > 0) {
+			return true;
 		} else {
-			newTex(atlas_name);
+			return false;
 		}
+	} else {
+		DebugPrinter::printDebug(0, "ResMan::isTexLoaded",
+			"error: for some reason atlas at " + to_string(atlas_id)
+			+ " exists but isn't loaded");
+		return false;
 	}
-	return false;
 }
 
-vector<uint8_t> ResMan::getRegions(string atlas_name,
-	string region_name) const
+bool ResMan::isTexLoaded(string atlas_name) const
 {
-	uint8_t cur_id = tex_buf.find(atlas_name);
-	vector<uint8_t> accumulator;
-	if (region_bufs.at(cur_id).count() == 0) {
-		DebugPrinter::printDebug(0, "ResMan::getRegions",
-			"error: nothing in region buffer for '" + atlas_name + "'");
-		return accumulator;
-	}
-
-	//gets all regions containing region_name
-	//regions can have a suffix '#n' where n is an integer
-	//example: 'run_anim#0' 'run_anim#1' 'run_anim#2' etc
-	//otherwise just the region that matches region_name will be used
-	for (auto const& region : region_bufs.at(cur_id).getBufMap()) {
-		if (region.first.find(region_name) != string::npos) {
-			size_t suffix_pos = region.first.find_first_of("#");
-			//if the region name has no suffix, or has a '#' with no numeral
-			//after it, then push just the one region.
-			if (suffix_pos == string::npos
-				|| suffix_pos+1 >= region.first.size()) {
-				accumulator.push_back(region.second);
-				break;
-			//otherwise, push the regions in the order of the suffices
-			} else {
-				string number = region.first.substr(suffix_pos+1, 1);
-				uint8_t region_order = stoi(number);
-				//if an error occurs and region_order is large,
-				//the vector will take up a lot of memory
-				//limit the number of regions to prevent this
-				if (region_order < Res::MAX_BUF_SIZE) {
-					accumulator.insert(accumulator.begin()+region_order,
-						region.second);
-				}
-			}
-		}
-	}
-
-	return accumulator;
+	if (tex_buf.has(atlas_name)) {
+		uint8_t cur_id = tex_buf.find(atlas_name);
+		return isTexLoaded(cur_id);
+	} else return false;
 }
 
 TexSprite ResMan::constructSprite(string atlas_name,
 	string region_name,
+	uint8_t num_frames,
 	TexSprite::Type type,
 	Vector2 size)
 {
-	if (tex_buf.has(atlas_name)) {
-		uint8_t cur_id = tex_buf.find(atlas_name);
-		if (region_bufs.at(cur_id).has(region_name)) {
-			return TexSprite(
-				cur_id,
-				region_name,
-				type,
-				getRegions(atlas_name, region_name),
-				size
-			);
-		} else {
-			DebugPrinter::printDebug(0, "ResMan::constructSprite",
-				atlas_name + " is loaded, but " + region_name
-				+ " not found in appropriate buf, panic!!!!");
-			return TexSprite(cur_id, atlas_name, size);
-		}
-	//if the atlas isn't found, try queuing it to be loaded
-	} else {
-		uint8_t cur_id = newTex(atlas_name);
-		return TexSprite(cur_id, atlas_name, size);
+	//if the atlas/regions are already loaded, queueTex and queueRegions will
+	//spit out the existing ids instead of queuing them
+	uint8_t cur_id = requestTex(atlas_name);
+	vector<uint8_t> region_ids = requestRegions(cur_id, region_name,
+		num_frames);
+	if (region_ids.size() == 0) {
+		DebugPrinter::printDebug(0, "ResMan::constructSprite",
+			"BIG error, requestRegions(" + to_string(cur_id) + ",'"
+			+ region_name + "'," + to_string(num_frames)
+			+ ") didn't return any region ids!");
 	}
+	return TexSprite(cur_id, region_ids, region_name, type, size);
 }
 
 TexSprite ResMan::constructSprite(string atlas_name,
 	TexSprite::Type type,
 	Vector2 size)
 {
-	return constructSprite(atlas_name, atlas_name, type, size);
+	return constructSprite(atlas_name, atlas_name, 0, type, size);
+}
+
+Rectangle ResMan::getRegionAt(uint8_t atlas_id, uint8_t region_id)
+{
+	if (atlas_id < Res::TEX_BUF_SIZE
+		&& region_id < Res::REGION_BUF_SIZE
+		&& !tex_buf.isFree(atlas_id)
+		&& !region_bufs[atlas_id].isFree(region_id)) {
+		return region_bufs[atlas_id].at(region_id);
+	}
+	DebugPrinter::printDebug(3, "ResMan::getRegionAt",
+		"resource id " + to_string(atlas_id) +
+		" or region id " + to_string(region_id) + " invalid");
+	return Rectangle();
 }
 
 Texture2D ResMan::getTexAt(uint8_t id)
 {
-	if (id < Res::MAX_BUF_SIZE
+	if (id < Res::TEX_BUF_SIZE
 		&& !tex_buf.isFree(id) ) {
 		return tex_buf.get(id);
 	}
@@ -309,28 +331,9 @@ Texture2D ResMan::getTexAt(uint8_t id)
 	return Texture2D();
 }
 
-Rectangle ResMan::getRegionAt(uint8_t atlas_id, uint8_t region_id)
-{
-	if (atlas_id < Res::MAX_BUF_SIZE && region_id < Res::MAX_BUF_SIZE) {
-		if (!region_bufs[atlas_id].isFree(region_id)) {
-			return region_bufs[atlas_id].get(region_id);
-		} else {
-			DebugPrinter::printDebug(3, "ResMan::getRegionAt",
-				"region at " + to_string(atlas_id) +
-				"," + to_string(region_id) +
-				" isn't loaded");
-		}
-	} else {
-		DebugPrinter::printDebug(3, "ResMan::getRegionAt",
-			"invalid region id " + to_string(atlas_id) +
-			"," + to_string(region_id));
-	}
-	return Rectangle();
-}
-
 ResMan::~ResMan()
 {
-	if (image_buf.ID < Res::MAX_BUF_SIZE) UnloadImage(image_buf.image);
+	if (image_buf.ID < Res::TEX_BUF_SIZE) UnloadImage(image_buf.image);
 	for (auto& tex : tex_buf.popAll()) UnloadTexture(tex);
 	for (auto& region_buf : region_bufs) {
 		region_buf.popAll();

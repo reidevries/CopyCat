@@ -14,42 +14,38 @@
 #include <array>
 #include <map>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <cstdint>
 
-namespace Res {
-	static const uint8_t MAX_BUF_SIZE = 255;
-}
-
-template <class T>
+template <class T, std::size_t buf_size>
 class ResBuf {
 private:
-	std::array<T, Res::MAX_BUF_SIZE> buf;
+	std::array<T, buf_size> buf;
 	//buf_free represents the age of the element
 	//any integer >= MAX_BUF_SIZE means it's free
 	//increments by 1 every time a new elem is inserted
 	//if none are free, report error
-	std::array<uint8_t, Res::MAX_BUF_SIZE> buf_free;
-	std::array<std::string, Res::MAX_BUF_SIZE> buf_names;
-	std::map<std::string, uint8_t> buf_by_name;
+	std::array<std::size_t, buf_size> buf_free;
+	std::array<std::string, buf_size> buf_names;
+	std::map<std::string, std::size_t> buf_by_name;
 
 	//not the capacity of the buf, but the number of nonfree elements
-	uint8_t entry_counter = 0;
+	std::size_t entry_counter = 0;
 
 	//constant time
-	void freeEntry(uint8_t i)
+	void freeEntry(std::size_t i)
 	{
-		buf_free[i] = Res::MAX_BUF_SIZE;
+		buf_free[i] = buf_size;
 		buf_by_name.erase(buf_names[i]);
-		buf_names[i] = "";
+		buf_names[i] = "empty";
 		--entry_counter;
 	}
 
 	//not quite constant time, has to increment age
-	void insert(uint8_t i, std::string name, T entry)
+	void insert(std::size_t i, std::string name, T entry)
 	{
-		std::cout << "inserted " << name << " at index " << i << std::endl;
-		for (int i = 0; i < Res::MAX_BUF_SIZE; ++i) ++buf_free[i];
+		for (int i = 0; i < buf_size; ++i) ++buf_free[i];
 
 		buf_free[i] = 0;
 		buf_by_name.insert({name, i});
@@ -57,14 +53,18 @@ private:
 		buf[i] = entry;
 		++entry_counter;
 	}
+
 public:
 	ResBuf()
 	{
-		//set every entry in buf_free to MAX_BUF_SIZE
-		//to indicate they're all currently free
-		for (int i = 0; i < Res::MAX_BUF_SIZE; ++i) {
-			buf_free[i] = Res::MAX_BUF_SIZE;
-		}
+		buf_free.fill(buf_size);
+		buf_names.fill("empty");
+		entry_counter = 0;
+	}
+
+	ResBuf(T default_object) : ResBuf()
+	{
+		buf.fill(default_object);
 	}
 
 	//return number of nonfree elements in the buf
@@ -73,24 +73,29 @@ public:
 		return entry_counter;
 	}
 
+	unsigned int getBufSize() const
+	{
+		return buf_size;
+	}
+
 	unsigned int getFreeIndex() const
 	{
-		for (int i = 0; i < Res::MAX_BUF_SIZE; ++i) {
-			if (buf_free[i] >= Res::MAX_BUF_SIZE) {
+		for (int i = 0; i < buf_size; ++i) {
+			if (buf_free[i] >= buf_size) {
 				return i;
 			}
 		}
-		return Res::MAX_BUF_SIZE;
+		return buf_size;
 	}
 
 	unsigned int getOldestNonFree() const
 	{
 		unsigned int oldest_index = 0;
 		unsigned int oldest_age = 0;
-		for (int i = 0; i < Res::MAX_BUF_SIZE; ++i) {
+		for (int i = 0; i < buf_size; ++i) {
 			//only find oldest age for non-free indices
 			if (buf_free[i] > oldest_age
-				&& buf_free[i] < Res::MAX_BUF_SIZE) {
+				&& buf_free[i] < buf_size) {
 				oldest_age = buf_free[i];
 				oldest_index = i;
 			}
@@ -101,19 +106,19 @@ public:
 	//figure out whether index of buf is free or not
 	bool isFree(unsigned int index) const
 	{
-		if (index >= Res::MAX_BUF_SIZE) return false;
-		if (buf_free[index] < Res::MAX_BUF_SIZE) return false;
+		if (index >= buf_size) return false;
+		if (buf_free[index] < buf_size) return false;
 		return true;
 	}
 
 	//constant time access, by copying rather than reference
-	T get(uint8_t index) const
+	T get(std::size_t index) const
 	{
 		return buf[index];
 	}
 
 	//constant time access
-	T& at(uint8_t index)
+	T& at(std::size_t index)
 	{
 		return buf[index];
 	}
@@ -137,14 +142,14 @@ public:
 	}
 
 	//gets name at index
-	std::string nameAt(uint8_t index) const
+	std::string nameAt(std::size_t index) const
 	{
-		if (index < Res::MAX_BUF_SIZE) {
+		if (index < buf_size) {
 			return buf_names[index];
 		} else return std::string("NOT FOUND");
 	}
 
-	std::map<std::string, uint8_t> getBufMap() const
+	std::map<std::string, std::size_t> getBufMap() const
 	{
 		return buf_by_name;
 	}
@@ -153,14 +158,25 @@ public:
 	unsigned int push(std::string name, T entry)
 	{
 		unsigned int free_index = getFreeIndex();
-		if (free_index < Res::MAX_BUF_SIZE) {
+		if (free_index < buf_size) {
 			insert(free_index, name, entry);
 		}
 		return free_index;
 	}
 
+	//if "name" exists in the buffer, return it,
+	//otherwise push new entry into the buffer
+	unsigned int findOrPush(std::string name, T entry)
+	{
+		if (has(name)) {
+			return find(name);
+		} else {
+			return push(name, entry);
+		}
+	}
+
 	//only do this if u know what ur doin
-	void replace(uint8_t index, T entry)
+	void replace(std::size_t index, T entry)
 	{
 		if (isFree(index)) {
 			std::cout << "ResBuf::replace error: " << index
@@ -176,11 +192,11 @@ public:
 	//and sets it to be free.
 	//MUST unload referenced object externally to avoid leaks
 	//should be constant time
-	T& pop(uint8_t index)
+	T& pop(std::size_t index)
 	{
-		if (index > Res::MAX_BUF_SIZE) {
+		if (index > buf_size) {
 			std::cout << "ResBuf error: " << index
-				<< " out of range, max size is " << Res::MAX_BUF_SIZE
+				<< " out of range, max size is " << buf_size
 				<< std::endl;
 			std::cout << "Returning first element in array";
 			return buf[0];
@@ -205,12 +221,32 @@ public:
 		return buf[oldest_index];
 	}
 
-	std::array<T, Res::MAX_BUF_SIZE>& popAll()
+	std::array<T, buf_size>& popAll()
 	{
-		for (int i = 0; i < Res::MAX_BUF_SIZE; ++i) {
+		for (int i = 0; i < buf_size; ++i) {
 			freeEntry(i);
 		}
 		return buf;
+	}
+
+	void clear()
+	{
+		for (int i = 0; i < buf_size; ++i) {
+			freeEntry(i);
+		}
+	}
+
+	//for debugging
+	std::string printBuf() {
+		std::stringstream output;
+		output << "index:\tvalue:\tage:\tname:\t" << std::endl;
+		for (int i = 0; i < buf_size; ++i) {
+			output << i << "\t"
+				<< buf[i] << "\t"
+				<< static_cast<int>(buf_free[i]) << "\t"
+				<< buf_names[i] << "\t" << std::endl;
+		}
+		return output.str();
 	}
 };
 

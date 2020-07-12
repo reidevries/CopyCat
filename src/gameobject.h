@@ -12,8 +12,8 @@
 #include "texsprite.h"
 #include "messagelist.h"
 #include "catclock.h"
-#include "resman.h"
 #include "resbuf.h"
+#include "resconstants.h"
 
 class GameObject
 {
@@ -70,9 +70,12 @@ public:
 
 	//implement these methods to create a gameobject
 	virtual std::vector<Message> update(CatClock& clk) =0;
-	virtual void draw(ResBuf<Texture2D>& tex_buf,
-		std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
-		Camera& cam);
+	virtual void draw(ResBuf<Texture2D, Res::TEX_BUF_SIZE>& tex_buf,
+		std::array<
+			ResBuf<Rectangle, Res::REGION_BUF_SIZE>,
+			Res::TEX_BUF_SIZE
+		>& region_bufs,
+		Camera cam);
 	virtual ~GameObject() {sprites.clear();}
 };
 

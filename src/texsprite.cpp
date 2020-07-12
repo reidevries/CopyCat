@@ -4,73 +4,47 @@
 
 using namespace std;
 
-TexSprite::TexSprite(const uint8_t resource_index,
+TexSprite::TexSprite(const uint8_t res_index,
+	const vector<uint8_t> region_indices,
 	const string name,
 	const Type type,
-	vector<uint8_t> regions,
 	const Vector2 size)
 {
-	this->res_id = resource_index;
+	this->res_id = res_index;
+	this->region_ids = region_indices;
 	this->region_name = name;
 	this->type = type;
-	this->regions = regions;
 	this->size = size;
 
 	if (type == Type::world) {
 		Rectangle square = {0,0,size.x,size.y};
-		plane = Cat::constructPlane(square);
+		quad = Cat::Quad(square, Cat::Orthog::north);
 	}
 
-	setDrawIndex(0);
+	setAnimIndex(0);
 }
 
-TexSprite::TexSprite(const uint8_t resource_index,
-	const string name,
-	vector<uint8_t> regions,
-	const Vector2 size)
-	: TexSprite(resource_index, name, Type::billboard, regions, size)
+void TexSprite::setAnimIndex(uint8_t anim_index)
 {
-}
-
-TexSprite::TexSprite(const uint8_t resource_index,
-	const string name,
-	const Vector2 size)
-{
-	this->res_id = resource_index;
-	this->region_name = name;
-	this->type = Type::world;
-	this->size = size;
-
-	setDrawIndex(0);
-}
-
-void TexSprite::setDrawIndex(int tex_index)
-{
-	if (tex_index < regions.size()
-		&& tex_index >= 0
-		&& (type == Type::billboard || type == Type::screen)) {
-		this->draw_index = tex_index;
-	} else {
-		DebugPrinter::printDebug(1, "TexSprite::setDrawIndex",
-			to_string(tex_index) + " is an invalid tex_index for TexSprite "
-			+ region_name);
+	if (anim_index < region_ids.size()) {
+		this->anim_index = anim_index;
 	}
 }
 
-void TexSprite::setRotation(Vector3 rotation)
+void TexSprite::setRot(Vector3 rot)
 {
-	rotation_axis = VectorMath::normalize_shit_fast(rotation);
-	rotation_deg = VectorMath::max(rotation);
+	rot_axis = VectorMath::normalize_shit_fast(rot);
+	rot_deg = VectorMath::max(rot);
 }
 
-Vector3 TexSprite::getRotation()
+Vector3 TexSprite::getRot()
 {
-	return VectorMath::scale(rotation_axis, rotation_deg);
+	return VectorMath::scale(rot_axis, rot_deg);
 }
 
-void TexSprite::rotatePlane(float roll, float pitch, float yaw)
+void TexSprite::rotQuad(float roll, float pitch, float yaw)
 {
-	plane = Cat::rotatePlane(plane, roll, pitch, yaw);
+	quad.rotate(roll, pitch, yaw);
 }
 
 void TexSprite::drawBillboard(Texture2D atlas,
@@ -93,8 +67,7 @@ void TexSprite::drawWorld(Texture2D atlas,
 	Camera cam)
 {
 	if (type == Type::world) {
-		Cat::drawPlane(atlas, src_rect, getPos3D(pos), plane);
-
+		Cat::drawQuad(atlas, src_rect, getPos3D(pos), quad);
 		//DrawModelEx(model, getPos3D(pos), rotation_axis, rotation_deg,
 		//	{scale,scale,scale}, WHITE);
 	} else {
@@ -110,7 +83,7 @@ void TexSprite::drawScreen(Texture2D atlas,
 {
 	if (type == Type::screen) {
 		DrawTexturePro(atlas, src_rect, getDestRect({0,0}), getOrigin2D(),
-			rotation_deg, color);
+			rot_deg, color);
 	} else {
 		DebugPrinter::printDebug(3, "TexSprite::drawScreen",
 			"wrong drawing method used for this SpriteType");

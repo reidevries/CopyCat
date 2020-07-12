@@ -3,23 +3,35 @@
 using namespace std;
 
 stringstream DebugPrinter::record("start log\n");
+string DebugPrinter::last_log("");
+int DebugPrinter::repetition_count = 0;
 
 void DebugPrinter::printDebug(int verbosity,
-	string source,
-	string debugmsg)
+	string src, string debug_msg)
 {
 	if (verbosity <= VERBOSITY) {
 		if (verbosity == 4) cout << "DEBUG: ";
-		cout << source << ": " << debugmsg << endl;
-		DebugPrinter::record << source << ": " << debugmsg << endl;
+		string log_line = src + ": " + debug_msg;
+		if (log_line == last_log) {
+			cout << "\r" << log_line
+				<< " [" << ++repetition_count << "]"
+				<< flush;
+			DebugPrinter::record << "\r" << log_line
+				<< " [" << repetition_count << "]"
+				<< flush;
+		} else {
+			last_log = log_line;
+			repetition_count = 0;
+			cout << log_line << endl;
+			DebugPrinter::record << log_line << endl;
+		}
 	}
 }
 
 void DebugPrinter::printDebug(int verbosity,
-	const char* source,
-	const char* debugmsg)
+	const char* src, const char* debug_msg)
 {
-	printDebug(verbosity, string(source), string(debugmsg));
+	printDebug(verbosity, string(src), string(debug_msg));
 }
 
 void DebugPrinter::saveDebugLog(const char* filename)

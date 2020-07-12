@@ -16,17 +16,18 @@
 #endif
 
 class DebugPrinter {
-  public:
+public:
 	static const int VERBOSITY = CAT_VERBOSITY;
 	static std::stringstream record;
+	//use the below two variables to concatenate rapidly repeating log msgs
+	static std::string last_log;
+	static int repetition_count;
 	//prints a debugmsg like "source: debugmsg" if verbosity <= VERBOSITY
     static void printDebug(int verbosity,
-    	std::string source,
-    	std::string debugmsg);
-    static void printDebug(int verbosity,
-    	const char* source,
-    	const char* debugmsg);
-    static void saveDebugLog(const char* filename);
+		std::string source, std::string debugmsg);
+	static void printDebug(int verbosity,
+		const char* source, const char* debugmsg);
+	static void saveDebugLog(const char* filename);
 };
 
 #endif

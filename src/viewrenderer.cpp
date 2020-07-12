@@ -74,21 +74,23 @@ void ViewRenderer::render(CatClock& clk,
 
 	BeginMode3D(cam);
 	//DrawModel(testmodel, {0,0}, 1.0f, WHITE);
-	DrawGrid(1000, 10.0f);
-
-	ResBuf<Texture2D>& tex_buf = resman.getTexBuf();
-	array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE>& region_bufs
-		= resman.getRegionBufs();
 
 	for (auto& object : render_list) {
-		object.second->draw(tex_buf, region_bufs, cam);
+		object.second->draw(resman.getTexBuf(), resman.getRegionBufs(), cam);
+	}
+
+	if (debug) {
+		DrawGrid(1000, METRE);
 	}
 
 	EndMode3D();
 
 	for (auto& ui : ui_buf) {
-		ui.drawScreen(resman.getTexAt(ui.getResID()),
-			resman.getRegionAt(ui.getResID(), ui.getCurrentRegionID()),
+		ui.drawScreen(
+			resman.getTexAt(ui.getResID()),
+			resman.getRegionAt(
+				ui.getResID(),
+				ui.getCurRegionID()),
 			WHITE);
 	}
 
@@ -96,10 +98,57 @@ void ViewRenderer::render(CatClock& clk,
 	EndDrawing();
 }
 
+//call between BeginMode3D and EndMode3D
+void ViewRenderer::renderAxes()
+{
+	DrawLine3D(
+		(Vector3){METRE,METRE,METRE},
+		(Vector3) {METRE*2,METRE,METRE},
+		RED);
+	DrawLine3D(
+		(Vector3){METRE,METRE,METRE},
+		(Vector3) {METRE,METRE*2,METRE},
+		GREEN);
+	DrawLine3D(
+		(Vector3){METRE,METRE,METRE},
+		(Vector3) {METRE,METRE,METRE*2},
+		BLUE);
+}
+
+//call dis between BeginDrawing() and EndDrawing() but not in 3D
+void ViewRenderer::renderAxes2D(Vector2 screen_pos, float cam_rot)
+{
+	Rectangle line_thick = {screen_pos.x,screen_pos.y,METRE*0.25,METRE*5};
+	Vector2 origin = {line_thick.width/2, line_thick.height};
+	float font_size = font.baseSize;
+	float font_origin_y = font_size/2;
+	float font_origin_x = font_size/4;
+	Vector2 x_text = (Vector2){
+		screen_pos.x + line_thick.height	- font_origin_x,
+		screen_pos.y + line_thick.height/2	- font_origin_y
+	};
+	Vector2 y_text = (Vector2){
+		screen_pos.x - font_origin_x,
+		screen_pos.y - line_thick.height	- font_size
+	};
+	Vector2 z_text = (Vector2){
+		screen_pos.x - line_thick.height	- font_origin_x,
+		screen_pos.y + line_thick.height/2	- font_origin_y
+	};
+
+	DrawRectanglePro(line_thick, origin, 120+cam_rot, RED);
+	DrawTextEx(font, "X", x_text, font_size, 1.0f, RED);
+	DrawRectanglePro(line_thick, origin, 0, GREEN);
+	DrawTextEx(font, "Y", y_text, font_size, 1.0f, GREEN);
+	DrawRectanglePro(line_thick, origin, 240+cam_rot, BLUE);
+	DrawTextEx(font, "Z", z_text, font_size, 1.0f, BLUE);
+}
+
+//call dis between BeginDrawing() and EndDrawing() but not in 3D
 void ViewRenderer::renderDebug(CatClock& clk,
 	Environment& environment,
 	ResMan& resman)
-{ //call dis between BeginDrawing() and EndDrawing()
+{
 	stringstream debugtxt;
 	debugtxt << "fps: " << clk.fps() << "\n"
 		<< "ui sprites: " << ui_buf.size() << "\n";
@@ -117,4 +166,9 @@ void ViewRenderer::renderDebug(CatClock& clk,
 			static_cast<float>(screen_h * 0.1)
 		}, static_cast<float>(font.baseSize * 0.75), 2.0f, RED);
 
+	renderAxes2D(
+		(Vector2){
+			static_cast<float>(screen_w*0.1),
+			static_cast<float>(screen_h*0.9)
+		}, 0);
 }

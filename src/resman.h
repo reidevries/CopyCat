@@ -24,6 +24,7 @@
 #include "catclock.h"
 #include "texsprite.h"
 #include "resbuf.h"
+#include "resconstants.h"
 
 class ResMan {
 private:
@@ -36,15 +37,15 @@ private:
 
 	const bool debug;
 
-	//	-	-	TEXTURE BUFFER SECTION	-	-	-	//
 	std::queue<std::string> tex_load_queue;
 	//buffer for storing image partway through loading
 	struct ImageBuf {
+		//if ID >= Res::TEX_BUF_SIZE, buf is empty
+		uint8_t ID = Res::TEX_BUF_SIZE;
 		std::string name;
 		Image image;
+		Rectangle rect;
 		std::string atlas;
-		//if ID >= MAX_BUF_SIZE, buf is empty
-		uint8_t ID = Res::MAX_BUF_SIZE;
 	};
 	ImageBuf image_buf;
 	//used for parsing atlas file, based on .rtpa format
@@ -57,16 +58,18 @@ private:
 		trimRecWidth,		trimRecHeight
 	};
 
-	ResBuf<Texture2D> tex_buf;
-	std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs;
+	ResBuf<Texture2D, Res::TEX_BUF_SIZE> tex_buf;
+	std::array<ResBuf<Rectangle, Res::REGION_BUF_SIZE>, Res::TEX_BUF_SIZE> region_bufs;
 
 	//store a map of string to Rectangle in the region buf
 	void storeAtlas(std::string atlas_name, std::map<std::string, Rectangle>);
 	void parseAtlasString(std::string atlas);
-	//	-	-	END TEXTURE BUFFER SECTION	-	-	//
 
 	void freeTexByIndex(uint8_t index);
-	uint8_t newTex(std::string name);
+	uint8_t requestTex(std::string name);
+	std::vector<uint8_t> requestRegions(uint8_t atlas_id,
+		std::string name, uint8_t num_frames);
+	uint8_t requestRegion(uint8_t atlas_id, std::string name);
 
 public:
 	ResMan(const bool set_debug);
@@ -82,33 +85,29 @@ public:
 	//and parses the atlas string to a map of rectangles
 	void loadNextTex();
 
-	//tells the resource manager that we want a certain region
-	//returns true if region is already loaded
-	bool requestRegion(std::string atlas_name, std::string region_name);
 	//check if the given region or atlas tex is loaded yet
+	bool isRegionLoaded(uint8_t atlas_id, uint8_t region_id) const;
 	bool isRegionLoaded(std::string atlas_name,std::string region_name) const;
+	bool isTexLoaded(uint8_t atlas_id) const;
 	bool isTexLoaded(std::string atlas_name) const;
-
-	std::vector<uint8_t> getRegions(std::string atlas_name,
-		std::string region_name) const;
 
 	//get a sprite object from the data, provided it exists in memory
 	TexSprite constructSprite(std::string atlas_name,
 		std::string region_name,
+		uint8_t num_frames,
 		TexSprite::Type type,
 		Vector2 size);
 	TexSprite constructSprite(std::string atlas_name,
 		TexSprite::Type,
 		Vector2 size);
 
-	ResBuf<Texture2D>& getTexBuf() {return tex_buf;}
-	Texture2D getTexAt(uint8_t i);
-	std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE>& getRegionBufs()
-	{
-		return region_bufs;
-	}
-	Rectangle getRegionAt(uint8_t atlas_index, uint8_t region_index);
-	Model getModelAt(uint8_t id);
+	std::array<
+		ResBuf<Rectangle, Res::REGION_BUF_SIZE>,
+		Res::TEX_BUF_SIZE
+	>& getRegionBufs() { return region_bufs; }
+	Rectangle getRegionAt(uint8_t atlas_id, uint8_t region_id);
+	ResBuf<Texture2D, Res::TEX_BUF_SIZE>& getTexBuf() {return tex_buf;}
+	Texture2D getTexAt(uint8_t atlas_id);
 
 	~ResMan();
 };

@@ -19,8 +19,8 @@
 #include <cstdint>
 
 #include "catconf.h"
-#include "catdraw.h"
 #include "debugprinter.h"
+#include "quaddraw.h"
 #include "vectormath.h"
 
 
@@ -29,19 +29,19 @@ public:
 	//defines how the sprite is to be drawn
 	enum class Type {
 		screen,		//Gets drawn in 2D by drawUI
-					//It is drawn on the screen at the pixel coords of "offset"
-					//This is a candidate for being split into another class, but
-					//I think it would share too many methods
+					//It is drawn on the screen at the pixel coords of
+					//"offset" This is a candidate for being split into
+					//another class, but I think it would share too many
+					//methods
 
-		world,  	//Gets drawn in 3D as a flat plane textured with the sprite
-					//It's drawn in the world at the coordinates specified by
-					//dest_rect and "up", which is formed from
-					//offset+pos as specified in draw(Vector2, Camera)
+		world,  	//Gets drawn in 3D as a flat plane textured with the
+					//sprite. It's drawn in the world at the coordinates
+					//specified by dest_rect and "up", which is formed from
+					//offset+pos as specified in draw methods
 
 		billboard 	//gets drawn in 3D as a billboard
-					//It's drawn in the same way as "world", but it always faces
-					//the camera. Can't be rotated on any axis due to limitations
-					//of the raylib library.
+					//It's drawn in the same way as "world", but it always
+					//faces the camera.
 	};
 
 private:
@@ -49,14 +49,11 @@ private:
 	//if type==world it references a Model
 	//otherwise it's a Texture2D
 	uint8_t res_id;
+	std::vector<uint8_t> region_ids; //references which region is being used
+	uint8_t anim_index;//references the animation frame of the region name
 	std::string region_name;
 	Type type;
-	Cat::Plane plane;
-
-	//list of regions from the atlas, and the index of which one to draw
-	//only used if type is 'billboard' or 'screen'
-	std::vector<uint8_t> regions;
-	unsigned int draw_index;
+	Cat::Quad quad;
 
 	Vector2 size;
 	float up; //determines y position if rendered in 3D
@@ -70,8 +67,8 @@ private:
 	//offset position from the given "draw" position
 	Vector2 offset;
 
-	Vector3 rotation_axis;
-	float rotation_deg;
+	Vector3 rot_axis;
+	float rot_deg;
 	//scaling for all types
 	float scale = 1.0;
 
@@ -102,26 +99,17 @@ public:
 		};
 	}
 
-	TexSprite(const uint8_t resource_index,
+	TexSprite(const uint8_t res_index,
+		std::vector<uint8_t> region_indices,
 		std::string name,
 		Type type,
-		std::vector<uint8_t> regions,
-		Vector2 size);
-	//same as above, but defaulting to "screen" SpriteType
-	TexSprite(const uint8_t resource_index,
-		std::string name,
-		std::vector<uint8_t> regions,
-		Vector2 size);
-	//constructor for "world" type where 'regions' is unused
-	TexSprite(const uint8_t resource_index,
-		std::string name,
 		Vector2 size);
 
 	std::string getName() {return region_name;}
-	unsigned int getCurrentRegionID() {return regions[draw_index];}
-	void setDrawIndex(int tex_index);
-	unsigned int getDrawIndex() const {return draw_index;}
-	unsigned int getResID() const {return res_id;}
+	uint8_t getResID() const {return res_id;}
+	uint8_t getCurRegionID() const {return region_ids[anim_index];}
+	void setAnimIndex(uint8_t anim_index);
+	uint8_t getAnimIndex() const {return anim_index;}
 	Type getType() const {return type;}
 
 	void setOffset(Vector2 offset) {this->offset = offset;}
@@ -131,13 +119,13 @@ public:
 	void setScale(float scale) {this->scale = scale;}
 	float getScale() const {return scale;}
 	Vector3 getScale3D() const {return {scale,scale,scale};}
-	void setRotation(Vector3 rotation); //as vector3 of pitch,yaw,roll
-	Vector3 getRotation();
-	Vector3 getRotationAxis() {return rotation_axis;}
-	void setRotationDeg(float rotation) {this->rotation_deg = rotation;}
-	float getRotationDeg() {return rotation_deg;}
+	void setRot(Vector3 rotation); //as vector3 of pitch,yaw,roll
+	Vector3 getRot();
+	Vector3 getRotAxis() {return rot_axis;}
+	void getRotDeg(float rotation) {this->rot_deg = rotation;}
+	float getRotDeg() {return rot_deg;}
 
-	void rotatePlane(float roll, float pitch, float yaw);
+	void rotQuad(float roll, float pitch, float yaw);
 
 	void drawBillboard(Texture2D atlas,
 		Rectangle src_rect,

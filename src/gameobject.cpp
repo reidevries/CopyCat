@@ -42,7 +42,7 @@ int GameObject::getRenderDistance() const
 void GameObject::rotateSprites(float roll, float pitch, float yaw)
 {
 	for (auto& s : sprites) {
-		s.rotatePlane(roll,pitch,yaw);
+		s.rotQuad(roll,pitch,yaw);
 	}
 }
 
@@ -91,27 +91,37 @@ void GameObject::passMessages(vector<Message> messages)
 	}
 }
 
-void GameObject::draw(ResBuf<Texture2D>& tex_buf,
-	std::array<ResBuf<Rectangle>, Res::MAX_BUF_SIZE> region_bufs,
-	Camera& cam) {
+void GameObject::draw(ResBuf<Texture2D, Res::TEX_BUF_SIZE>& tex_buf,
+	std::array<
+		ResBuf<Rectangle, Res::REGION_BUF_SIZE>,
+		Res::TEX_BUF_SIZE
+	>& region_bufs,
+	Camera cam) {
 	for (auto& s : sprites) {
-		switch (s.getType()) {
-		case (TexSprite::Type::billboard):
-			s.drawBillboard(tex_buf.at(s.getResID()),
-				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
-				pos,
-				cam);
-			break;
-		case (TexSprite::Type::world):
-			s.drawWorld(tex_buf.at(s.getResID()),
-				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
-				pos,
-				cam);
-			break;
-		case (TexSprite::Type::screen):
-			s.drawScreen(tex_buf.at(s.getResID()),
-				region_bufs[s.getResID()].at(s.getCurrentRegionID()),
-				WHITE);
+		int cur_id = s.getResID();
+		int cur_region = s.getCurRegionID();
+		//only draw if the region rectangle is loaded
+		if (!region_bufs[cur_id].isFree(cur_region)) {
+			Rectangle src_rect = region_bufs[cur_id].at(cur_region);
+			switch (s.getType()) {
+			case (TexSprite::Type::billboard):
+				s.drawBillboard(tex_buf.at(s.getResID()),
+					src_rect,
+					pos,
+					cam);
+				break;
+			case (TexSprite::Type::world):
+				s.drawWorld(tex_buf.at(s.getResID()),
+					src_rect,
+					pos,
+					cam);
+				break;
+			case (TexSprite::Type::screen):
+				s.drawScreen(tex_buf.at(s.getResID()),
+					src_rect,
+					WHITE);
+				break;
+			}
 		}
 	}
 }

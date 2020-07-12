@@ -9,5 +9,5 @@ target_sources(${PROJECT_NAME} PRIVATE
 	environment.cpp
 	messagelist.cpp
 	viewrenderer.cpp
-	catdraw.cpp)
+	quaddraw.cpp)
 add_subdirectory(gameobjects)
