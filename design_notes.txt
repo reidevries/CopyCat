@@ -1,0 +1,13 @@
+Could use a Command pattern to abstract the control of characters. 
+Could eventually replace message passing parser with Command pattern, 
+leave it for now though because the current system is more flexible.
+
+
+Entity:
+	id
+	name
+	vector3 pos
+
+Instead of message passing as it is now, can build into ECS
+Each system update function can read and spit out messages
+for more specific message related functions, implement a more specific system!

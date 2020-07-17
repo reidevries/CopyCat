@@ -14,6 +14,7 @@
 #include <string>
 #include <cstdint>
 
+#include "entt/entity/registry.hpp"
 #include "gameobject.h"
 #include "debugprinter.h"
 #include "messagelist.h"

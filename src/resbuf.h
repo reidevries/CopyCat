@@ -45,7 +45,13 @@ private:
 	//not quite constant time, has to increment age
 	void insert(std::size_t i, std::string name, T entry)
 	{
-		for (int i = 0; i < buf_size; ++i) ++buf_free[i];
+		//dont increment buf_free[i] if it's = buf_size
+		//this avoids integer overflow errors
+		//hopefully this class can be optimized to use
+		//uint8_t instead of size_t
+		for (int i = 0; i < buf_size; ++i) {
+			if (buf_free[i] < buf_size) ++buf_free[i];
+		}
 
 		buf_free[i] = 0;
 		buf_by_name.insert({name, i});

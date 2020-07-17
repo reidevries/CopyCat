@@ -44,10 +44,10 @@ static std::string printVector(const Vector3 a)
 
 static std::string printRect(const Rectangle a)
 {
-	return std::to_string(a.x) + ","
-		+ std::to_string(a.y) + ","
-		+ std::to_string(a.width) + "x"
-		+ std::to_string(a.height);
+	return 	"x=" + std::to_string(a.x) + " "
+		+ 	"y=" + std::to_string(a.y) + ","
+		+ 	std::to_string(a.width) + "x"
+		+ 	std::to_string(a.height);
 }
 
 constexpr double invSqrt(const double a)

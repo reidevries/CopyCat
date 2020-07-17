@@ -1,0 +1,107 @@
+formatting:
+	PascalCase for class names
+	camelCase for function names
+	under_scores for variable names
+	UPPERCASE for any const variables
+	Curly brackets on new line for declarations (structs, functions etc)
+	Curly brackets on same line for control flow (for, if, catch)
+	Format switch statement with cases on the same line as switch keyword
+	Use 4-space wide tabs, dont use spaces. Can use tabs for visual alignment
+	Comments use only // except for documentation at the beginning of 
+		files
+	Use cstdint fixed-width integer types for all integers that are members
+		of classes. Don't need to use them for local ints or anything tho
+	Use uintx_t for all indices of arrays and ID variables
+	Order functions in .cpp files in the same order they appear in the .h file
+	.h files can contain implementations for basic getter/setters as long as
+		they don't overflow
+	In basic setters, argument name can be the same as the variable name
+		and use this-> to differentiate the variable from the arg
+	In constructors, argument name should not be the same as variable name,
+		because then initializer list setters won't work properly
+	Use DebugPrinter for printing all debug messages, use to_string or cast
+		as string to avoid instantiating stringstream, use + operator on
+		strings to append information instead
+	Always use curly brackets on if and for statements unless the whole thing
+		can fit on a single line of code
+	Dont #include "raylib.h", #include "catconf.h" which will include either
+		the static or shared raylib depending on cmake options
+	
+multi-line formatting:
+	Limit all lines to 79 characters max
+	For overflowed lines, use a single tab always
+	For overflowed function declarations, split the variables onto new lines
+		can split at any point that looks good visually
+	For overflowed constructors or struct declarations, align curly braces
+		with each variable on a new line. 
+		For example:
+			TexSprite(res_index, region_index, name, type, size); 
+		should become:
+			TexSprite(
+				res_index,
+				region_index,
+				name,
+				type,
+				size
+			);
+	For other overflows, don't put the curly brace on a new line, this helps
+		differentate a long method call from the creation of objects
+	For long templated type names, split similarly to overflowed constructors,
+		For example:
+			array<ResBuf<vector<int>>, Res::MAX_BUF_SIZE>
+		should become (if overflowed):
+			array<
+				ResBuf<vector<int>>,
+				Res::MAX_BUF_SIZE
+			>
+		or even like this if it looks better in context (probably wont tho):
+			array<
+				ResBuf<
+					vector<
+						int
+					>
+				>,
+				Res::MAX_BUF_SIZE
+			>
+	Multiline strings should be formatted with operator at the start of the
+		line, not the end.
+		For example:
+			"hello " + to_string(3) + " blind mice"
+		could become:
+			"hello "
+			+ to_string(3)
+			+ " blind mice"
+	Multiline if-statements should split every && or || onto a new line
+		For example:
+			if ((condition 
+				|| other_condition)
+				&& big_condition) {
+			}
+		But if it looks nicer, nested logical combinations can be on one line
+		For example:
+			if ((condition || other_condition)
+				&& big_condition) {
+			}
+
+standard abbreviations:
+	if an abbreviation is in this list, the long version shouldn't be used,
+		except in comments or class/namespace names or if otherwise stated
+	buffer			->		buf
+	camera			->		cam
+	texture			->		tex
+	resource		->		res
+	manager			->		man
+	quadrilateral	->		quad
+	rectangle		->		rect
+	configuration	->		conf
+	animation		->		anim
+	width			->		w		(except if confusing with Quaternion)
+	height			->		h		(except if confusing for some reason)
+	rotation		->		rot
+	degrees			->		deg
+	radians			->		rad
+	argument		->		arg
+	source			->		src
+	destination		->		dest
+	current			->		cur
+	number			->		num 	(NOT no)
