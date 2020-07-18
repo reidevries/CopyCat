@@ -12,3 +12,4 @@ This is a small game engine I'm working on in C++14, for a tactical RPG I'm desi
 * Dynamic music engine, probably based on .xm filetype for the small filesize
 * Put resource manager on a separate thread
 * Level saving/loading
+* Generate documentation somehow, I see Doxygen used a lot
