@@ -1,4 +1,4 @@
-#include "texsprite.h"
+#include "TexSprite.h"
 
 #include <iostream>
 

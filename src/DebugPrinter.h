@@ -10,7 +10,7 @@
 //0 is for critical errors, 1 is for general errors,
 //2 is for general messages, 3 is for extra messages,
 //4 is for tests/outputs that shouldn't usually be seen
-#include "catconf.h"
+#include "CatConf.h"
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
 #endif

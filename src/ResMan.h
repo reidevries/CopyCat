@@ -19,12 +19,13 @@
 #include <sstream>
 #include <cstdint>
 
-#include "catconf.h"
-#include "debugprinter.h"
-#include "catclock.h"
-#include "texsprite.h"
-#include "resbuf.h"
-#include "resconstants.h"
+#include "CatConf.h"
+#include "CatClock.h"
+#include "DebugPrinter.h"
+#include "ResBuf.h"
+#include "ResConstants.h"
+#include "TexSprite.h"
+#include "components/SpriteAnim.h"
 
 class ResMan {
 private:
@@ -59,7 +60,10 @@ private:
 	};
 
 	ResBuf<Texture2D, Res::TEX_BUF_SIZE> tex_buf;
-	std::array<ResBuf<Rectangle, Res::REGION_BUF_SIZE>, Res::TEX_BUF_SIZE> region_bufs;
+	std::array<
+		ResBuf<Rectangle, Res::REGION_BUF_SIZE>,
+		Res::TEX_BUF_SIZE
+	> region_bufs;
 
 	//store a map of string to Rectangle in the region buf
 	void storeAtlas(std::string atlas_name, std::map<std::string, Rectangle>);
@@ -67,7 +71,7 @@ private:
 
 	void freeTexByIndex(uint8_t index);
 	uint8_t requestTex(std::string name);
-	std::vector<uint8_t> requestRegions(uint8_t atlas_id,
+	std::array<uint8_t, Res::MAX_ANIM_FRAMES> requestRegions(uint8_t atlas_id,
 		std::string name, uint8_t num_frames);
 	uint8_t requestRegion(uint8_t atlas_id, std::string name);
 
@@ -92,13 +96,11 @@ public:
 	bool isTexLoaded(std::string atlas_name) const;
 
 	//get a sprite object from the data, provided it exists in memory
-	TexSprite constructSprite(std::string atlas_name,
+	SpriteAnim constructSprite(std::string atlas_name,
 		std::string region_name,
 		uint8_t num_frames,
-		TexSprite::Type type,
 		Vector2 size);
-	TexSprite constructSprite(std::string atlas_name,
-		TexSprite::Type,
+	SpriteAnim constructSprite(std::string atlas_name,
 		Vector2 size);
 
 	std::array<

@@ -1,13 +1,13 @@
 target_sources(${PROJECT_NAME} PRIVATE 
-	debugprinter.cpp
-	level.cpp
-	resman.cpp
-	texsprite.cpp
-	gameobject.cpp
-	main.cpp
-	polygon.cpp
-	environment.cpp
-	messagelist.cpp
-	viewrenderer.cpp
-	quaddraw.cpp)
-add_subdirectory(gameobjects)
+	DebugPrinter.cpp
+	Environment.cpp
+	Factory.cpp
+	Level.cpp
+	Main.cpp
+	MessageList.cpp
+	Polygon.cpp
+	QuadDraw.cpp
+	ResMan.cpp
+	TexSprite.cpp
+	ViewRenderer.cpp
+)

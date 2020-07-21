@@ -1,4 +1,4 @@
-#include "debugprinter.h"
+#include "DebugPrinter.h"
 
 using namespace std;
 

@@ -12,15 +12,16 @@
 #include <set>
 #include <string>
 
-#include "catconf.h"
-#include "gameobject.h"
-#include "polygon.h"
-#include "resman.h"
-#include "debugprinter.h"
-#include "environment.h"
-#include "level.h"
-#include "catclock.h"
-#include "resbuf.h"
+#include <entt/entity/registry.hpp>
+
+#include "CatConf.h"
+#include "ComponentList.h"
+#include "CatClock.h"
+#include "DebugPrinter.h"
+#include "Environment.h"
+#include "ResBuf.h"
+#include "ResMan.h"
+#include "QuadDraw.h"
 
 class ViewRenderer
 {
@@ -44,13 +45,12 @@ public:
 
 	void renderAxes();
 	void renderAxes2D(Vector2 pos, float cam_rot);
-	void renderDebug(CatClock& clk, Environment& environment, ResMan& resman);
+	void renderDebug(CatClock& clk, entt::registry& reg, ResMan& resman);
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
 	void addSprite(TexSprite ui_sprite);
-	void render(CatClock& clk, Environment& environment, ResMan& resman);
-	void drawObject(std::shared_ptr<GameObject> object, ResMan& resman);
+	void render(CatClock& clk, entt::registry& reg, ResMan& resman);
 };
 
 #endif /* SRC_VIEWRENDERER_H_ */

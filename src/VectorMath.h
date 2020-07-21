@@ -8,7 +8,7 @@
 #include <cmath>
 #include <cstdint>
 
-#include "catconf.h"
+#include "CatConf.h"
 
 namespace VectorMath {
 constexpr double DEG_TO_RAD = 0.01745329252;
@@ -163,6 +163,23 @@ constexpr Vector2 dot(Vector2 a, Vector4 mat)
 	return {
 		a.x*mat.w + a.y*mat.x,
 		a.x*mat.y + a.y*mat.z
+	};
+}
+
+//0 < fade < 1
+constexpr Vector2 fade(Vector2 a, Vector2 b, float fade)
+{
+	return {
+		a.x*(1-fade) + b.x*fade,
+		a.y*(1-fade) + b.y*fade
+	};
+}
+constexpr Vector3 fade(Vector3 a, Vector3 b, float fade)
+{
+	return {
+		a.x*(1-fade) + b.x*fade,
+		a.y*(1-fade) + b.y*fade,
+		a.z*(1-fade) + a.y*fade
 	};
 }
 
@@ -360,6 +377,18 @@ static Color hsvToRgb(const unsigned char h,
 static double sqrdist(const Vector2 a, const Vector2 b)
 {
 	return pow(b.x-a.x,2) + pow(b.y-a.y, 2);
+}
+
+static bool rectContains(const Rectangle a, const Rectangle b)
+{
+	return (b.x >= a.x && b.x < a.x+a.width && b.width <= a.width
+		&&	b.y >= a.y && b.y < a.y+a.height && b.height <= a.height);
+}
+
+static bool rectContains(const Rectangle a, const Vector2 b)
+{
+	return (b.x >= a.x && b.x < a.x+a.width
+		&&	b.y >= a.y && b.y < a.y+a.height);
 }
 
 static Vector2 convert3Dto2Dcoord(const Vector3 a,

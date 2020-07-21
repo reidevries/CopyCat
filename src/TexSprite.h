@@ -18,10 +18,10 @@
 #include <vector>
 #include <cstdint>
 
-#include "catconf.h"
-#include "debugprinter.h"
-#include "quaddraw.h"
-#include "vectormath.h"
+#include "CatConf.h"
+#include "DebugPrinter.h"
+#include "QuadDraw.h"
+#include "VectorMath.h"
 
 
 class TexSprite {
@@ -57,12 +57,6 @@ private:
 
 	Vector2 size;
 	float up; //determines y position if rendered in 3D
-	/* This vector stores all the regions of textures that can be drawn
-	 * by this texsprite. Using the same shared_ptr to draw multiple
-	 * regions should be fine, because it will automatically handle
-	 * deletion without having to store multiple copies of the resources.
-	 * src_rect is ignored for "world" type drawing
-	 */
 
 	//offset position from the given "draw" position
 	Vector2 offset;

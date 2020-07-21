@@ -14,7 +14,8 @@
 #include <map>
 #include <vector>
 #include <sstream>
-#include "debugprinter.h"
+
+#include "DebugPrinter.h"
 
 struct Message
 {

@@ -6,7 +6,7 @@
  *      Implementation of a resource manager
  */
 
-#include "resman.h"
+#include "ResMan.h"
 
 using namespace std;
 
@@ -110,14 +110,17 @@ uint8_t ResMan::requestTex(string name)
 	return atlas_id;
 }
 
-vector<uint8_t> ResMan::requestRegions(uint8_t atlas_id, string name,
-	uint8_t num_frames) {
-	vector<uint8_t> accumulator;
+array<uint8_t, Res::MAX_ANIM_FRAMES> ResMan::requestRegions(
+	uint8_t atlas_id,
+	string name,
+	uint8_t num_frames)
+{
+	array<uint8_t, Res::MAX_ANIM_FRAMES> accumulator;
 	//don't queue regions for nonexistent atlas
 	if (!tex_buf.isFree(atlas_id)) {
 		if (debug && region_bufs[atlas_id].has(name)) {
 			DebugPrinter::printDebug(0, "ResMan::requestRegions",
-				"Oi, Rei u made a boo-boo somewhere, " + name
+				"Oi, Rei made a boo-boo somewhere, " + name
 				+ " should have a suffix, should look like "
 				+ name + "0");
 		}
@@ -127,8 +130,8 @@ vector<uint8_t> ResMan::requestRegions(uint8_t atlas_id, string name,
 
 		for (int i = 0; i < num_frames; ++i) {
 			string frame_name = name+to_string(i);
-			accumulator.push_back(
-				region_bufs[atlas_id].findOrPush(frame_name, Rectangle()));
+			accumulator[i]
+				= region_bufs[atlas_id].findOrPush(frame_name, Rectangle());
 		}
 	} else {
 		DebugPrinter::printDebug(0, "ResMan::queueRegions",
@@ -279,31 +282,35 @@ bool ResMan::isTexLoaded(string atlas_name) const
 	} else return false;
 }
 
-TexSprite ResMan::constructSprite(string atlas_name,
+SpriteAnim ResMan::constructSprite(string atlas_name,
 	string region_name,
 	uint8_t num_frames,
-	TexSprite::Type type,
 	Vector2 size)
 {
 	//if the atlas/regions are already loaded, queueTex and queueRegions will
 	//spit out the existing ids instead of queuing them
 	uint8_t cur_id = requestTex(atlas_name);
-	vector<uint8_t> region_ids = requestRegions(cur_id, region_name,
-		num_frames);
+	array<uint8_t, Res::MAX_ANIM_FRAMES> region_ids
+		= requestRegions(cur_id, region_name,num_frames);
 	if (region_ids.size() == 0) {
 		DebugPrinter::printDebug(0, "ResMan::constructSprite",
 			"BIG error, requestRegions(" + to_string(cur_id) + ",'"
 			+ region_name + "'," + to_string(num_frames)
 			+ ") didn't return any region ids!");
 	}
-	return TexSprite(cur_id, region_ids, region_name, type, size);
+	return {
+		region_name,
+		cur_id,
+		region_ids,
+		0,
+		num_frames
+	};
 }
 
-TexSprite ResMan::constructSprite(string atlas_name,
-	TexSprite::Type type,
+SpriteAnim ResMan::constructSprite(string atlas_name,
 	Vector2 size)
 {
-	return constructSprite(atlas_name, atlas_name, 0, type, size);
+	return constructSprite(atlas_name, atlas_name, 0, size);
 }
 
 Rectangle ResMan::getRegionAt(uint8_t atlas_id, uint8_t region_id)

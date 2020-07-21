@@ -5,7 +5,11 @@
  *      Author: rei de vries
  *	Provides constant-time member access by ID,
  *	or logn time member access by a name string
- *	raises an error if it runs out of space
+ *	raises an error if it runs out of space.
+ *
+ *	data is stored on the stack, the container is deliberately fixed size
+ *	data is never deleted in this class, u have to do that urself
+ *	or use the "clear" methods
  */
 
 #ifndef SRC_RESBUF_H_
@@ -22,42 +26,63 @@ template <class T, std::size_t buf_size>
 class ResBuf {
 private:
 	std::array<T, buf_size> buf;
-	//buf_free represents the age of the element
-	//any integer >= MAX_BUF_SIZE means it's free
-	//increments by 1 every time a new elem is inserted
-	//if none are free, report error
-	std::array<std::size_t, buf_size> buf_free;
+	//buf_free represents whether the element is valid
+	//the element will still exist in memory, but not be used
+	std::array<bool, buf_size> buf_free;
 	std::array<std::string, buf_size> buf_names;
 	std::map<std::string, std::size_t> buf_by_name;
 
 	//not the capacity of the buf, but the number of nonfree elements
 	std::size_t entry_counter = 0;
 
+	//round robin counter to keep track of oldest elements
+	std::size_t rr = 0;
+
+	void incRR()
+	{
+		rr = (rr+1)%buf_size;
+	}
+
 	//constant time
 	void freeEntry(std::size_t i)
 	{
-		buf_free[i] = buf_size;
+		buf_free[i] = true;
 		buf_by_name.erase(buf_names[i]);
 		buf_names[i] = "empty";
 		--entry_counter;
 	}
 
-	//not quite constant time, has to increment age
+	//constant time, inserts into a specific index
 	void insert(std::size_t i, std::string name, T entry)
 	{
-		//dont increment buf_free[i] if it's = buf_size
-		//this avoids integer overflow errors
-		//hopefully this class can be optimized to use
-		//uint8_t instead of size_t
-		for (int i = 0; i < buf_size; ++i) {
-			if (buf_free[i] < buf_size) ++buf_free[i];
-		}
-
-		buf_free[i] = 0;
+		buf_free[i] = false;
 		buf_by_name.insert({name, i});
 		buf_names[i] = name;
 		buf[i] = entry;
 		++entry_counter;
+	}
+
+	//constant time, inserts based on round robin counter
+	std::size_t insert(std::string name, T entry)
+	{
+		std::size_t index = getFreeIndex();
+		insert(index, name, entry);
+		incRR();
+		return index;
+	}
+
+	std::size_t forceInsert(std::string name, T entry)
+	{
+		std::size_t index = rr;
+		insert(index, name, entry);
+		incRR();
+		return index;
+	}
+
+	//for printing debug output
+	std::string printBufFree(std::size_t i)
+	{
+		return (buf_free[i])?std::string("true"):std::string("false");
 	}
 
 public:
@@ -74,47 +99,37 @@ public:
 	}
 
 	//return number of nonfree elements in the buf
-	unsigned int count() const
+	std::size_t count() const
 	{
 		return entry_counter;
 	}
 
-	unsigned int getBufSize() const
+	std::size_t getBufSize() const
 	{
 		return buf_size;
 	}
 
-	unsigned int getFreeIndex() const
+	std::size_t getFreeIndex() const
 	{
 		for (int i = 0; i < buf_size; ++i) {
-			if (buf_free[i] >= buf_size) {
-				return i;
+			if (buf_free[(i+rr)%buf_size]) {
+				return (i+rr)%buf_size;
 			}
 		}
 		return buf_size;
 	}
 
-	unsigned int getOldestNonFree() const
+	std::size_t getOldestNonFree() const
 	{
-		unsigned int oldest_index = 0;
-		unsigned int oldest_age = 0;
-		for (int i = 0; i < buf_size; ++i) {
-			//only find oldest age for non-free indices
-			if (buf_free[i] > oldest_age
-				&& buf_free[i] < buf_size) {
-				oldest_age = buf_free[i];
-				oldest_index = i;
-			}
-		}
-		return oldest_index;
+		return rr;
 	}
 
 	//figure out whether index of buf is free or not
 	bool isFree(unsigned int index) const
 	{
 		if (index >= buf_size) return false;
-		if (buf_free[index] < buf_size) return false;
-		return true;
+		if (buf_free[index]) return true;
+		return false;
 	}
 
 	//constant time access, by copying rather than reference
@@ -136,7 +151,7 @@ public:
 	}
 
 	//logn time
-	int find(std::string name) const
+	std::size_t find(std::string name) const
 	{
 		return buf_by_name.at(name);
 	}
@@ -161,18 +176,22 @@ public:
 	}
 
 	//returns chosen index on success, MAX_BUF_SIZE on fail
-	unsigned int push(std::string name, T entry)
+	std::size_t push(std::string name, T entry)
 	{
-		unsigned int free_index = getFreeIndex();
-		if (free_index < buf_size) {
-			insert(free_index, name, entry);
-		}
-		return free_index;
+		return insert(name, entry);
+	}
+
+	//same as above, but replaces the oldest member even if it's not free
+	//warning - if this class stores a pointer, the old pointer
+	//may never be freed
+	std::size_t forcePush(std::string name, T entry)
+	{
+		return forceInsert(name, entry);
 	}
 
 	//if "name" exists in the buffer, return it,
 	//otherwise push new entry into the buffer
-	unsigned int findOrPush(std::string name, T entry)
+	std::size_t findOrPush(std::string name, T entry)
 	{
 		if (has(name)) {
 			return find(name);
@@ -182,12 +201,14 @@ public:
 	}
 
 	//only do this if u know what ur doin
+	//warning - if this class stores a pointer, the old pointer
+	//may never be freed
 	void replace(std::size_t index, T entry)
 	{
 		if (isFree(index)) {
 			std::cout << "ResBuf::replace error: " << index
-				<< " is free, but trying to replace entry. "
-				<< " U obviously didn't read the comment in resbuf.h"
+				<< " is free, but trying to replace entry."
+				<< " the dev(s) obviously didn't read the comment in ResBuf.h"
 				<< std::endl;
 			return;
 		}
@@ -222,9 +243,8 @@ public:
 
 	//run pop(getOldestNonFree())
 	T& popOldest() {
-		int oldest_index = getOldestNonFree();
-		freeEntry(oldest_index);
-		return buf[oldest_index];
+		freeEntry(rr);
+		return buf[rr];
 	}
 
 	std::array<T, buf_size>& popAll()
@@ -249,7 +269,7 @@ public:
 		for (int i = 0; i < buf_size; ++i) {
 			output << i << "\t"
 				<< buf[i] << "\t"
-				<< static_cast<int>(buf_free[i]) << "\t"
+				<< printBufFree(i) << "\t"
 				<< buf_names[i] << "\t" << std::endl;
 		}
 		return output.str();

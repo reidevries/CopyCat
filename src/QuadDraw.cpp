@@ -5,17 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "quaddraw.h"
-
-Cat::Quad::Quad(Rectangle rect)
-{
-	float h_half = rect.height/2;
-	float w_half = rect.width/2;
-	a = {rect.x-w_half, rect.y+h_half, rect.x+w_half};
-	b = {rect.x+w_half, rect.y+h_half, rect.x-w_half};
-	c = {rect.x+w_half, rect.y-h_half, rect.x-w_half};
-	d = {rect.x-w_half, rect.y-h_half, rect.x+w_half};
-}
+#include "QuadDraw.h"
 
 Cat::Quad::Quad(Rectangle rect, Orthog dir)
 {
@@ -44,7 +34,19 @@ Cat::Quad::Quad(Rectangle rect, Orthog dir)
 		c = {rect.x+w_half, rect.y-h_half, 0.0};
 		d = {rect.x-w_half, rect.y-h_half, 0.0};
 		break;
+	case facing_cam:
+		a = {rect.x-w_half, rect.y+h_half, rect.x-w_half};
+		b = {rect.x+w_half, rect.y+h_half, rect.x+w_half};
+		c = {rect.x+w_half, rect.y-h_half, rect.x+w_half};
+		d = {rect.x-w_half, rect.y-h_half, rect.x-w_half};
+		break;
 	}
+}
+
+Cat::Quad::Quad(Rectangle rect, Vector3 dir)
+{
+	Quad(rect, Orthog::up);
+	rotate(orthogToVector3(Orthog::up), dir);
 }
 
 void Cat::Quad::scale(float scale)
@@ -79,6 +81,15 @@ void Cat::Quad::rotate(float roll,float pitch,float yaw)
 void Cat::Quad::rotate(Vector3 from, Vector3 to)
 {
 	rotate(QuaternionFromVector3ToVector3(from,to));
+}
+
+Vector3 Cat::Quad::getPos3D(Vector2 pos) const
+{
+	return VectorMath::fade(
+		VectorMath::fade(d,c,pos.x),
+		VectorMath::fade(a,b,pos.x),
+		pos.y
+	);
 }
 
 void Cat::drawQuad(Texture2D tex, Rectangle src_rect,
@@ -149,4 +160,48 @@ void Cat::drawQuad(Texture2D tex, Vector3 center, Quad plane)
 {
 	Color tint = WHITE;
 	Cat::drawQuad(tex,center,plane,tint);
+}
+
+//havent used or tested this yet
+void Cat::drawQuadTiled(Texture2D tex, Rectangle src_rect, Rectangle dest_rect,
+	Vector3 center, Orthog dir, Color tint)
+{
+
+	if (VectorMath::rectContains(src_rect, dest_rect)) {
+		Quad q = Quad(src_rect, dir);
+		int x_num = dest_rect.width/src_rect.width;
+		int x_num_lower = x_num/2;
+		int x_num_upper = x_num-x_num/2;
+		int y_num = dest_rect.height/src_rect.height;
+		int y_num_lower = x_num/2;
+		int y_num_upper = x_num-x_num/2;
+
+		Vector2 pos_uv = {
+			src_rect.width/2,
+			src_rect.height/2
+		};
+		Vector3 pos_3D = posOnPlane(pos_uv, dir);
+
+		Vector2 offset_u = {src_rect.width, 0};
+		Vector2 offset_v = {src_rect.height,0};
+		Vector3 offset_u3D = posOnPlane(offset_u, dir);
+		Vector3 offset_v3D = posOnPlane(offset_v, dir);
+
+		pos_3D = VectorMath::sub(pos_3D,
+			VectorMath::scale(offset_u3D, x_num_lower));
+		pos_3D = VectorMath::sub(pos_3D,
+			VectorMath::scale(offset_v3D, y_num_lower));
+		pos_3D = VectorMath::add(pos_3D, center);
+
+		for (int u = -x_num_lower; u < x_num_upper; ++u) {
+			pos_3D = VectorMath::add(pos_3D, offset_u3D);
+			for (int v = -y_num_lower; v < y_num_upper; ++v) {
+				pos_3D = VectorMath::add(pos_3D, offset_v3D);
+				Cat::drawQuad(tex, src_rect, pos_3D, q);
+			}
+		}
+	} else {
+		Quad q = Quad(dest_rect, dir);
+		Cat::drawQuad(tex, src_rect, center, q);
+	}
 }

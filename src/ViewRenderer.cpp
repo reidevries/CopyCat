@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "viewrenderer.h"
+#include "ViewRenderer.h"
 
 using namespace std;
 
@@ -63,20 +63,23 @@ void ViewRenderer::addSprite(TexSprite ui_sprite)
 }
 
 void ViewRenderer::render(CatClock& clk,
-	Environment& environment,
+	entt::registry& reg,
 	ResMan& resman)
 {
 	BeginDrawing();
 	ClearBackground(RAYWHITE);
 
-	multimap<int, shared_ptr<GameObject> > render_list
-		= environment.getObjectsInBoxForRender(getCameraFrustrum());
+	const auto render_list = reg.view<SpriteAnim, WorldPos, SpriteQuad>();
 
 	BeginMode3D(cam);
 	//DrawModel(testmodel, {0,0}, 1.0f, WHITE);
 
-	for (auto& object : render_list) {
-		object.second->draw(resman.getTexBuf(), resman.getRegionBufs(), cam);
+	for (const entt::entity e : render_list) {
+		const SpriteAnim sprite = render_list.get<SpriteAnim>(e);
+		Cat::drawQuad( resman.getTexAt(sprite.res_id),
+			resman.getRegionAt(sprite.res_id, sprite.getCurRegion()),
+			render_list.get<WorldPos>(e).pos,
+			render_list.get<SpriteQuad>(e).quad );
 	}
 
 	if (debug) {
@@ -94,7 +97,7 @@ void ViewRenderer::render(CatClock& clk,
 			WHITE);
 	}
 
-	if (debug) renderDebug(clk, environment, resman);
+	if (debug) renderDebug(clk, reg, resman);
 	EndDrawing();
 }
 
@@ -146,15 +149,16 @@ void ViewRenderer::renderAxes2D(Vector2 screen_pos, float cam_rot)
 
 //call dis between BeginDrawing() and EndDrawing() but not in 3D
 void ViewRenderer::renderDebug(CatClock& clk,
-	Environment& environment,
+	entt::registry& reg,
 	ResMan& resman)
 {
 	stringstream debugtxt;
 	debugtxt << "fps: " << clk.fps() << "\n"
 		<< "ui sprites: " << ui_buf.size() << "\n";
 
-	for (auto const& object : environment.getAllObjects()) {
-		debugtxt << object->getInfo() << "\n";
+	const auto view = reg.view<SpriteAnim>();
+	for (const entt::entity e : view) {
+		debugtxt << view.get<SpriteAnim>(e).region_name << "\n";
 	}
 
 	Color c = VectorMath::hsvToRgb(128, 222, 250, 128);

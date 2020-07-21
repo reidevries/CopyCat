@@ -4,14 +4,15 @@
 #include <vector>
 #include <memory>
 
-class Level {
-private:
-	int level_id = -1;
-	int food_num = 0;
-public:
-	Level();
-	Level(int levelnum);
-	void clearFood();
+#include <entt/entity/registry.hpp>
+#include "Factory.h"
+#include "ResMan.h"
+
+namespace Level
+{
+	void loadTest(entt::registry& reg, ResMan& res_man);
+
+	void load(entt::registry& reg, ResMan& res_man, std::string filename);
 };
 
 #endif
