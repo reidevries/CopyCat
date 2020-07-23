@@ -7,9 +7,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 	Main.cpp
 	MessageList.cpp
 	Polygon.cpp
+	Quad.cpp
 	QuadDraw.cpp
 	ResMan.cpp
-	TexSprite.cpp
 	ViewRenderer.cpp
-	RaylibSerialize.h
 )

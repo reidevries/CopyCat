@@ -24,7 +24,7 @@
 #include "DebugPrinter.h"
 #include "ResBuf.h"
 #include "ResConstants.h"
-#include "TexSprite.h"
+#include "VectorMath.h"
 #include "components/SpriteAnim.h"
 
 class ResMan {

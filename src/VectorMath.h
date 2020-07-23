@@ -21,6 +21,75 @@ constexpr Matrix identity = {
     0.0f, 0.0f, 0.0f, 1.0f
 };
 
+constexpr Quaternion roll_180 = {0.893997,0,0,-0.448074};
+constexpr Quaternion pitch_180 = {0,0.893997,0,-0.448074};
+constexpr Quaternion yaw_180 = {0,0,0.893997,-0.448074};
+
+/*          up
+ *    west  |  south
+ *        \ | /
+ *          *
+ *         / \
+ *        /   \
+ *   north     east
+ */
+enum Orthog {
+	up,
+	down,
+	north,
+	east,
+	south,
+	west,
+	facing_cam //assumes camera is at a specific angle rn
+};
+
+//finds a Vector3 on the surface of a plane facing the given direction
+constexpr Vector3 posOnPlane(Vector2 v, Orthog dir)
+{
+	switch (dir) {
+	case up:
+		return { v.x, 0.0, v.y };
+	case down:
+		return {-v.x, 0.0,-v.y };
+	case north:
+		return { 0.0, v.y, v.x };
+	case south:
+		return { 0.0,-v.y,-v.y };
+	case east:
+		return { v.x, v.y, 0.0 };
+	case west:
+		return {-v.x,-v.y, 0.0 };
+	case facing_cam:
+		return { v.x, v.y, v.x};
+	default:
+		return {0,0,0};
+	}
+}
+
+//returns a 3D normal vector facing in the given dir
+constexpr Vector3 orthogToVector3(Orthog dir)
+{
+	switch(dir) {
+	case up:
+		return { 0.0, 1.0, 0.0 };
+	case down:
+		return { 0.0,-1.0, 0.0 };
+	case north:
+		return {-1.0, 0.0, 0.0 };
+	case south:
+		return { 1.0, 0.0, 0.0 };
+	case east:
+		return { 0.0, 0.0,-1.0 };
+	case west:
+		return { 0.0, 0.0, 1.0 };
+	case facing_cam:
+		return {-0.70710678119, 0.0, -0.70710678119};
+	default:
+		return {0,0,0};
+	}
+}
+
+
 constexpr double degToRad(double deg)
 {
 	return deg*DEG_TO_RAD;

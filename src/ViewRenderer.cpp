@@ -57,11 +57,6 @@ ViewRenderer::ViewRenderer(const int screen_w, const int screen_h,
 	testmodel.materials[0].maps[MAP_ALBEDO].texture = texture;
 }
 
-void ViewRenderer::addSprite(TexSprite ui_sprite)
-{
-	ui_buf.push_back(ui_sprite);
-}
-
 void ViewRenderer::render(CatClock& clk,
 	entt::registry& reg,
 	ResMan& resman)
@@ -76,7 +71,7 @@ void ViewRenderer::render(CatClock& clk,
 
 	for (const entt::entity e : render_list) {
 		const SpriteAnim sprite = render_list.get<SpriteAnim>(e);
-		Cat::drawQuad( resman.getTexAt(sprite.res_id),
+		ReiDV::drawQuad( resman.getTexAt(sprite.res_id),
 			resman.getRegionAt(sprite.res_id, sprite.getCurRegion()),
 			render_list.get<WorldPos>(e).pos,
 			render_list.get<SpriteQuad>(e).quad );
@@ -87,15 +82,6 @@ void ViewRenderer::render(CatClock& clk,
 	}
 
 	EndMode3D();
-
-	for (auto& ui : ui_buf) {
-		ui.drawScreen(
-			resman.getTexAt(ui.getResID()),
-			resman.getRegionAt(
-				ui.getResID(),
-				ui.getCurRegionID()),
-			WHITE);
-	}
 
 	if (debug) renderDebug(clk, reg, resman);
 	EndDrawing();
@@ -153,8 +139,7 @@ void ViewRenderer::renderDebug(CatClock& clk,
 	ResMan& resman)
 {
 	stringstream debugtxt;
-	debugtxt << "fps: " << clk.fps() << "\n"
-		<< "ui sprites: " << ui_buf.size() << "\n";
+	debugtxt << "fps: " << clk.fps() << "\n";
 
 	const auto view = reg.view<SpriteAnim>();
 	for (const entt::entity e : view) {

@@ -40,7 +40,6 @@ public:
 
 	Model testmodel;
 
-	std::vector<TexSprite> ui_buf;
 	Font font;
 
 	void renderAxes();
@@ -49,7 +48,6 @@ public:
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
-	void addSprite(TexSprite ui_sprite);
 	void render(CatClock& clk, entt::registry& reg, ResMan& resman);
 };
 

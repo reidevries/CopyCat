@@ -10,17 +10,18 @@
 
 #include <entt/entity/registry.hpp>
 
+#include "VectorMath.h"
 #include "QuadDraw.h"
 #include "ComponentList.h"
 #include <array>
 
-namespace Cat
+namespace ReiDV
 {
 entt::entity makePlane(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect,
-	Cat::Orthog dir);
+	VectorMath::Orthog dir);
 
 entt::entity makeFloor(entt::registry& reg,
 	SpriteAnim sprite,

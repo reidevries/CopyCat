@@ -7,11 +7,11 @@
 
 #include "Factory.h"
 
-entt::entity Cat::makePlane(entt::registry& reg,
+entt::entity ReiDV::makePlane(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect,
-	Cat::Orthog dir)
+	VectorMath::Orthog dir)
 {
 	const entt::entity e = reg.create();
 
@@ -24,10 +24,10 @@ entt::entity Cat::makePlane(entt::registry& reg,
 	return e;
 }
 
-entt::entity Cat::makeFloor(entt::registry& reg,
+entt::entity ReiDV::makeFloor(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect)
 {
-	return Cat::makePlane(reg, sprite, pos, rect, Cat::Orthog::up);
+	return ReiDV::makePlane(reg, sprite, pos, rect, VectorMath::Orthog::up);
 }
