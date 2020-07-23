@@ -9,6 +9,7 @@
 #define SRC_QUAD_H_
 
 #include "CatConf.h"
+#include "IncludeJson.h"
 #include "raymath.h"
 #include "VectorMath.h"
 
@@ -30,6 +31,10 @@ struct Quad {
 	void rotate(float roll, float pitch, float yaw);
 	void rotate(Vector3 from, Vector3 to);
 	Vector3 getPos3D(Vector2 pos) const; //pos is {0,0} to {1,1}
+	std::string print() const;
 };
+
+void to_json(json& j, const Quad& q);
+void from_json(const json& j, Quad& q);
 
 #endif /* SRC_QUAD_H_ */

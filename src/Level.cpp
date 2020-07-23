@@ -13,7 +13,7 @@ void Level::loadTest(entt::registry& reg, ResMan& res_man)
 					string("floor"),
 					1,
 					(Vector2){16,16}),
-				(Vector3){u*16.0,0,v*16.0},
+				(Vector3){u*16.0f,0,v*16.0f},
 				(Rectangle){0,0,16,16}
 				);
 		}

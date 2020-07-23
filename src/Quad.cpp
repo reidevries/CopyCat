@@ -7,6 +7,8 @@
 
 #include "Quad.h"
 
+using namespace std;
+
 Quad::Quad(Rectangle rect, VectorMath::Orthog dir)
 {
 	float h_half = rect.height/2;
@@ -90,4 +92,30 @@ Vector3 Quad::getPos3D(Vector2 pos) const
 		VectorMath::fade(a,b,pos.x),
 		pos.y
 	);
+}
+
+string Quad::print() const
+{
+	return  "a=" + VectorMath::printVector(a) + "\n"
+		+ "\tb=" + VectorMath::printVector(b) + "\n"
+		+ "\tc=" + VectorMath::printVector(c) + "\n"
+		+ "\td=" + VectorMath::printVector(d) + "\n";
+}
+
+void to_json(json& j, const Quad& q)
+{
+	j = {
+		{"Quad.a", q.a},
+		{"Quad.b", q.b},
+		{"Quad.c", q.c},
+		{"Quad.d", q.d}
+	};
+}
+
+void from_json(const json& j, Quad& q)
+{
+	j.at("Quad.a").get_to(q.a);
+	j.at("Quad.b").get_to(q.b);
+	j.at("Quad.c").get_to(q.c);
+	j.at("Quad.d").get_to(q.d);
 }

@@ -12,15 +12,16 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
+
 #include <entt/entity/registry.hpp>
 
+#include "CatConf.h"
+#include "IncludeJson.h"
 #include "DebugPrinter.h"
 #include "VectorMath.h"
+#include "Quad.h"
 #include "ComponentNames.h"
 #include "ComponentList.h"
-#include "RaylibSerialize.h"
 #include "ResMan.h"
 
 class JsonComponents
