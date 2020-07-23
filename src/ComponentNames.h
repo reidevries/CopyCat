@@ -11,9 +11,9 @@
 
 namespace Cat
 {
-	int NUM_COMPONENT_TYPES = 5;
+	constexpr int NUM_COMPONENT_TYPES = 5;
 
-	std::string component_names = {
+	static std::string component_names[] = {
 		"WorldPos",
 		"SpriteAnim",
 		"SpriteSizeRot",

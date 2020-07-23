@@ -2,6 +2,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	DebugPrinter.cpp
 	Environment.cpp
 	Factory.cpp
+	JsonComponents.cpp
 	Level.cpp
 	Main.cpp
 	MessageList.cpp
@@ -10,4 +11,5 @@ target_sources(${PROJECT_NAME} PRIVATE
 	ResMan.cpp
 	TexSprite.cpp
 	ViewRenderer.cpp
+	RaylibSerialize.h
 )

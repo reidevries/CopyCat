@@ -10,6 +10,7 @@
 #include "MessageList.h"
 #include "ResMan.h"
 #include "ViewRenderer.h"
+#include "JsonComponents.h"
 
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
@@ -50,6 +51,8 @@ int main(int argc, char* argv[])
 
     SetTargetFPS(60);
 	
+    JsonComponents::test();
+
     CatClock clk;
 
     bool waiting_to_load_test_region = true;

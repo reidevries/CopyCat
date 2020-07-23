@@ -10,14 +10,28 @@
 #define SRC_JSONCOMPONENTS_H_
 
 #include <string>
+#include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
+using json = nlohmann::json;
+#include <entt/entity/registry.hpp>
 
+#include "DebugPrinter.h"
+#include "VectorMath.h"
 #include "ComponentNames.h"
 #include "ComponentList.h"
+#include "RaylibSerialize.h"
+#include "ResMan.h"
 
-class SaveComponents
+class JsonComponents
 {
+private:
+	json loadLevel(entt::registry& reg,
+		ResMan& res_man, std::string file_name);
+	void saveLevel(entt::registry& reg, std::string file_name);
 
+public:
+	static void test();
 };
 
 #endif /* SRC_JSONCOMPONENTS_H_ */

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <cmath>
 #include <cstdint>
 
@@ -42,12 +43,72 @@ static std::string printVector(const Vector3 a)
 		+ "," + std::to_string(a.z);
 }
 
+static std::string printVector(const Vector4 a)
+{
+	return std::to_string(a.x)
+		+ "," + std::to_string(a.y)
+		+ "," + std::to_string(a.z)
+		+ "," + std::to_string(a.w);
+}
+
+static std::string printMat(const Matrix a)
+{
+	return "\t" + std::to_string(a.m0)
+		+ " " + std::to_string(a.m4)
+		+ " " + std::to_string(a.m8)
+		+ " " + std::to_string(a.m12)
+		+ "\n\t" + std::to_string(a.m1)
+		+ " " + std::to_string(a.m5)
+		+ " " + std::to_string(a.m9)
+		+ " " + std::to_string(a.m13)
+		+ "\n\t" + std::to_string(a.m2)
+		+ " " + std::to_string(a.m6)
+		+ " " + std::to_string(a.m10)
+		+ " " + std::to_string(a.m14)
+		+ "\n\t" + std::to_string(a.m3)
+		+ " " + std::to_string(a.m7)
+		+ " " + std::to_string(a.m11)
+		+ " " + std::to_string(a.m15);
+}
+
+static std::string printMatOneLine(const Matrix a)
+{
+	return std::to_string(a.m0)
+		+ " " + std::to_string(a.m4)
+		+ " " + std::to_string(a.m8)
+		+ " " + std::to_string(a.m12)
+		+ " - " + std::to_string(a.m1)
+		+ " " + std::to_string(a.m5)
+		+ " " + std::to_string(a.m9)
+		+ " " + std::to_string(a.m13)
+		+ " - " + std::to_string(a.m2)
+		+ " " + std::to_string(a.m6)
+		+ " " + std::to_string(a.m10)
+		+ " " + std::to_string(a.m14)
+		+ " - " + std::to_string(a.m3)
+		+ " " + std::to_string(a.m7)
+		+ " " + std::to_string(a.m11)
+		+ " " + std::to_string(a.m15);
+}
+
 static std::string printRect(const Rectangle a)
 {
 	return 	"x=" + std::to_string(a.x) + " "
 		+ 	"y=" + std::to_string(a.y) + ","
 		+ 	std::to_string(a.width) + "x"
 		+ 	std::to_string(a.height);
+}
+
+static std::string printColor(const Color c)
+{
+	std::stringstream ss;
+	ss << "#" << std::setw(2) << std::hex << static_cast<int>(c.r)
+		<< std::setw(2) << std::hex << static_cast<int>(c.g)
+		<< std::setw(2) << std::hex << static_cast<int>(c.b);
+	if (c.a < 255) {
+		ss << " alpha=" << std::setw(2) << std::hex << static_cast<int>(c.a);
+	}
+	return ss.str();
 }
 
 constexpr double invSqrt(const double a)
