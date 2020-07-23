@@ -33,6 +33,7 @@ void JsonComponents::saveLevel(entt::registry& reg, std::string file_name)
 
 void JsonComponents::test()
 {
+	cout << endl;
 	cout << "------JsonComponents::test()------RUNNING--------------" << endl;
 	Vector2 v2 = {12.345, 6.789};
 	Vector3 v3 = {1.98, 2.76, 3.54};
@@ -42,6 +43,8 @@ void JsonComponents::test()
 	Rectangle r = {11.11, 22.22, 32.0, 32.0};
 	NPatchInfo n = {{9,10,11,11}, 4, 3, 2, 1, NPT_3PATCH_HORIZONTAL};
 	Quad q(Rectangle{0,0,3,7});
+	SpriteAnim sa;
+	sa.region_name = "test region name";
 
 	json j;
 	j["test1"] = v2;
@@ -52,6 +55,7 @@ void JsonComponents::test()
 	j["test6"] = r;
 	j["test7"] = n;
 	j["test8"] = q;
+	j["test9"] = sa;
 	cout << j.dump(4) << endl;
 
 	Vector2 v2_test = j["test1"].get<Vector2>();
@@ -62,6 +66,7 @@ void JsonComponents::test()
 	Rectangle r_test = j["test6"].get<Rectangle>();
 	NPatchInfo n_test = j["test7"].get<NPatchInfo>();
 	Quad q_test = j["test8"].get<Quad>();
+	SpriteAnim sa_test = j["test9"].get<SpriteAnim>();
 	cout << "test1: " << VectorMath::printVector(v2_test) << endl;
 	cout << "test2: " << VectorMath::printVector(v3_test) << endl;
 	cout << "test3: " << VectorMath::printVector(v4_test) << endl;
@@ -76,6 +81,9 @@ void JsonComponents::test()
 		<< endl
 		<< "\tNPatch type is " << n.type << endl;
 	cout << "test8: " << q_test.print();
+	cout << "test9: " << sa_test.region_name << endl;
+
 	cout << "------JsonComponents::test()------FINISHED-------------" << endl;
+	cout << endl;
 
 }

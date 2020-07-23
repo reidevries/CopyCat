@@ -4,8 +4,6 @@
  * generate_component_names.py
  */
 
-#ifndef SRC_COMPONENTLIST_H_
-#define SRC_COMPONENTLIST_H_
 
 #include "components/WorldPos.h"
 #include "components/SpriteAnim.h"
@@ -13,4 +11,3 @@
 #include "components/SpriteQuad.h"
 #include "components/ScreenPos.h"
 
-#endif /* SRC_COMPONENTLIST_H_ */

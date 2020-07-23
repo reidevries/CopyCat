@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 
     SetTargetFPS(60);
 	
-    JsonComponents::test();
+    if (CAT_VERBOSITY >= 3) JsonComponents::test();
 
     CatClock clk;
 

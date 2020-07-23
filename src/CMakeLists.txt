@@ -1,4 +1,5 @@
 target_sources(${PROJECT_NAME} PRIVATE 
+	ComponentSerialize.cpp
 	DebugPrinter.cpp
 	Environment.cpp
 	Factory.cpp

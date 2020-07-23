@@ -22,6 +22,7 @@
 #include "Quad.h"
 #include "ComponentNames.h"
 #include "ComponentList.h"
+#include "ComponentSerialize.h"
 #include "ResMan.h"
 
 class JsonComponents
