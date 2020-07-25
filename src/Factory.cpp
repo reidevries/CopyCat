@@ -7,13 +7,26 @@
 
 #include "Factory.h"
 
-entt::entity ReiDV::makePlane(entt::registry& reg,
+using namespace std;
+
+int Factory::level_id_counter = 0;
+
+entt::entity Factory::makeLevelObject(entt::registry& reg, string name)
+{
+	const entt::entity e = reg.create();
+	stringstream ss;
+	ss << setfill('0') << setw(4) << ++level_id_counter << "-" << name;
+	reg.emplace<LevelID>(e, ss.str());
+	return e;
+}
+
+entt::entity Factory::makePlane(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect,
 	VectorMath::Orthog dir)
 {
-	const entt::entity e = reg.create();
+	const entt::entity e = Factory::makeLevelObject(reg, "plane");
 
 	reg.emplace<SpriteAnim>(e, sprite);
 	reg.emplace<WorldPos>(e, WorldPos(pos));
@@ -24,10 +37,18 @@ entt::entity ReiDV::makePlane(entt::registry& reg,
 	return e;
 }
 
-entt::entity ReiDV::makeFloor(entt::registry& reg,
+entt::entity Factory::makeFloor(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect)
 {
-	return ReiDV::makePlane(reg, sprite, pos, rect, VectorMath::Orthog::up);
+	const entt::entity e = Factory::makeLevelObject(reg, "floor");
+
+	reg.emplace<SpriteAnim>(e, sprite);
+	reg.emplace<WorldPos>(e, WorldPos(pos));
+
+	SpriteQuad& quad = reg.emplace<SpriteQuad>(e);
+	quad.quad = Quad(rect, VectorMath::Orthog::up);
+
+	return e;
 }

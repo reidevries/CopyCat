@@ -50,7 +50,7 @@ private:
 	};
 	ImageBuf image_buf;
 	//used for parsing atlas file, based on .rtpa format
-	enum AtlasTok {s,		nameID,
+	enum class AtlasTok {s,	nameID,
 		originX, 			originY,
 		positionX, 			positionY,
 		sourceSizeWidth, 	sourceSizeHeight,

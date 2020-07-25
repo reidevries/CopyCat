@@ -1,0 +1,15 @@
+/*
+ * ComponentSerialize.cpp
+ *
+ *  Created on: Jul 23, 2020
+ *      Author: rei de vries
+ */
+
+#ifndef SRC_COMPONENTSERIALIZE_CPP_
+#define SRC_COMPONENTSERIALIZE_CPP_
+
+#include "ComponentSerialize.h"
+
+//INSERT1
+
+#endif /* SRC_COMPONENTSERIALIZE_H_ */

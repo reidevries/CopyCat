@@ -20,7 +20,7 @@ string Message::print() const
 	stringstream ss;
 	ss << "src: " << src_id
 		<< " dest: " << dest_id
-		<< " type: " << type_text[type]
+		<< " type: " << type_text[static_cast<int>(type)]
 		<< " contents: " << message;
 	return ss.str();
 }

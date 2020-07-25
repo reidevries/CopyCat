@@ -48,6 +48,8 @@ int main(int argc, char* argv[])
     ViewRenderer view(screen_w, screen_h, debug);
     Environment environment(8, 128);
     environment.initLevel(res_man, string("test"));
+    JsonComponents::saveLevel(environment.getReg(), "test.json");
+
 
     SetTargetFPS(60);
 	

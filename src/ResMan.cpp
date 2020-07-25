@@ -46,7 +46,7 @@ void ResMan::parseAtlasString(string atlas)
 	stringstream ss(atlas);
 	string buf;
 	uint8_t region_id = Res::REGION_BUF_SIZE;
-	AtlasTok cur_token = s;
+	AtlasTok cur_token = AtlasTok::s;
 	Rectangle cur_rectangle;
 	string cur_name;
 	//parse the atlas word by word
@@ -54,29 +54,29 @@ void ResMan::parseAtlasString(string atlas)
 		//lines that start with "s" represent a region of the atlas
 		if (buf.compare("s") == 0) {
 			region_id = (region_id+1)%Res::REGION_BUF_SIZE;
-			cur_token = s;
+			cur_token = AtlasTok::s;
 			cur_rectangle = {0,0,0,0};
 			cur_name = "";
 		}
 
 		switch(cur_token) {
-		case (nameID):
+		case (AtlasTok::nameID):
 			cur_name = buf;
 			//if the last character isn't a digit, append '0'
 			if (!isdigit(cur_name.back())) {
 				cur_name = cur_name + "0";
 			}
 			break;
-		case (positionX):
+		case (AtlasTok::positionX):
 			cur_rectangle.x = stoi(buf);
 			break;
-		case (positionY):
+		case (AtlasTok::positionY):
 			cur_rectangle.y = stoi(buf);
 			break;
-		case (sourceSizeWidth):
+		case (AtlasTok::sourceSizeWidth):
 			cur_rectangle.width = stoi(buf);
 			break;
-		case (sourceSizeHeight):
+		case (AtlasTok::sourceSizeHeight):
 			cur_rectangle.height = stoi(buf);
 			//this is the last value we need to parse,
 			//so we can now add the rectangle to the regions list
@@ -86,7 +86,7 @@ void ResMan::parseAtlasString(string atlas)
 			break;
 		}
 
-		cur_token = static_cast<AtlasTok>(cur_token+1);
+		cur_token = static_cast<AtlasTok>(static_cast<int>(cur_token)+1);
 	}
 
 }
@@ -287,24 +287,24 @@ SpriteAnim ResMan::constructSprite(string atlas_name,
 	uint8_t num_frames,
 	Vector2 size)
 {
+	SpriteAnim s;
+	s.atlas_name = atlas_name;
+	s.region_name = region_name;
+
 	//if the atlas/regions are already loaded, queueTex and queueRegions will
 	//spit out the existing ids instead of queuing them
-	uint8_t cur_id = requestTex(atlas_name);
-	array<uint8_t, Res::MAX_ANIM_FRAMES> region_ids
-		= requestRegions(cur_id, region_name,num_frames);
-	if (region_ids.size() == 0) {
+	s.res_id = requestTex(atlas_name);
+	s.region_ids = requestRegions(s.res_id, region_name,num_frames);
+	if (s.region_ids.size() == 0) {
 		DebugPrinter::printDebug(0, "ResMan::constructSprite",
-			"BIG error, requestRegions(" + to_string(cur_id) + ",'"
+			"BIG error, requestRegions(" + to_string(s.res_id) + ",'"
 			+ region_name + "'," + to_string(num_frames)
 			+ ") didn't return any region ids!");
+		return s; //this return will be considered invalid cuz num_frames=0
 	}
-	return {
-		region_name,
-		cur_id,
-		region_ids,
-		0,
-		num_frames
-	};
+
+	s.num_frames = num_frames;
+	return s;
 }
 
 SpriteAnim ResMan::constructSprite(string atlas_name,

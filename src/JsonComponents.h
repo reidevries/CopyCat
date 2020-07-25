@@ -12,27 +12,32 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 #include <entt/entity/registry.hpp>
 
 #include "CatConf.h"
+#include "ComponentIncludes.h"
 #include "IncludeJson.h"
 #include "DebugPrinter.h"
 #include "VectorMath.h"
 #include "Quad.h"
 #include "ComponentNames.h"
-#include "ComponentList.h"
 #include "ComponentSerialize.h"
 #include "ResMan.h"
+#include "Factory.h"
 
 class JsonComponents
 {
 private:
-	json loadLevel(entt::registry& reg,
-		ResMan& res_man, std::string file_name);
-	void saveLevel(entt::registry& reg, std::string file_name);
+	static const std::string level_directory;
+
+	//specialised entity parsers
+	static json fromFloor(entt::registry&, const entt::entity);
 
 public:
+	static json loadLevel(entt::registry& reg, std::string file_name);
+	static void saveLevel(entt::registry& reg, std::string file_name);
 	static void test();
 };
 

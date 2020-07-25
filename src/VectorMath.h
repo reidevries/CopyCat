@@ -33,7 +33,7 @@ constexpr Quaternion yaw_180 = {0,0,0.893997,-0.448074};
  *        /   \
  *   north     east
  */
-enum Orthog {
+enum class Orthog {
 	up,
 	down,
 	north,
@@ -47,19 +47,19 @@ enum Orthog {
 constexpr Vector3 posOnPlane(Vector2 v, Orthog dir)
 {
 	switch (dir) {
-	case up:
+	case Orthog::up:
 		return { v.x, 0.0, v.y };
-	case down:
+	case Orthog::down:
 		return {-v.x, 0.0,-v.y };
-	case north:
+	case Orthog::north:
 		return { 0.0, v.y, v.x };
-	case south:
+	case Orthog::south:
 		return { 0.0,-v.y,-v.y };
-	case east:
+	case Orthog::east:
 		return { v.x, v.y, 0.0 };
-	case west:
+	case Orthog::west:
 		return {-v.x,-v.y, 0.0 };
-	case facing_cam:
+	case Orthog::facing_cam:
 		return { v.x, v.y, v.x};
 	default:
 		return {0,0,0};
@@ -70,19 +70,19 @@ constexpr Vector3 posOnPlane(Vector2 v, Orthog dir)
 constexpr Vector3 orthogToVector3(Orthog dir)
 {
 	switch(dir) {
-	case up:
+	case Orthog::up:
 		return { 0.0, 1.0, 0.0 };
-	case down:
+	case Orthog::down:
 		return { 0.0,-1.0, 0.0 };
-	case north:
+	case Orthog::north:
 		return {-1.0, 0.0, 0.0 };
-	case south:
+	case Orthog::south:
 		return { 1.0, 0.0, 0.0 };
-	case east:
+	case Orthog::east:
 		return { 0.0, 0.0,-1.0 };
-	case west:
+	case Orthog::west:
 		return { 0.0, 0.0, 1.0 };
-	case facing_cam:
+	case Orthog::facing_cam:
 		return {-0.70710678119, 0.0, -0.70710678119};
 	default:
 		return {0,0,0};

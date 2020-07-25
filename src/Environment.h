@@ -18,8 +18,8 @@
 #include <entt/entity/fwd.hpp>
 
 #include "CatConf.h"
-#include "ComponentList.h"
 #include "CatClock.h"
+#include "ComponentIncludes.h"
 #include "DebugPrinter.h"
 #include "MessageList.h"
 #include "ResMan.h"

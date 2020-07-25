@@ -9,8 +9,25 @@
 
 using namespace std;
 
-json JsonComponents::loadLevel(entt::registry& reg,
-	ResMan& res_man, std::string file_name)
+const std::string JsonComponents::level_directory = "level/";
+
+//-----------------methods to parse entities to json------------------------//
+
+json JsonComponents::fromFloor(entt::registry& reg,
+	const entt::entity entity)
+{
+	json j;
+
+	ReiDV::getToJson<WorldPos>(reg, entity, j, "WorldPos");
+
+	return j;
+}
+
+
+
+//-----------------public functions to load and save levels/game state------//
+
+json JsonComponents::loadLevel(entt::registry& reg, std::string file_name)
 {
 	json j;
 	ifstream f(file_name);
@@ -23,11 +40,36 @@ json JsonComponents::loadLevel(entt::registry& reg,
 	return j;
 }
 
+
+
 void JsonComponents::saveLevel(entt::registry& reg, std::string file_name)
 {
-	reg.each([](auto entity) {
-	    // ...
-	});
+	std::string full_name = level_directory + file_name;
+	DebugPrinter::printDebug(3, "JsonComponents::saveLevel",
+		"saving current level to " + full_name + "...");
+
+	json j;
+	auto view = reg.view<LevelID>();
+	for (auto entity : view) {
+		string level_id = view.get<LevelID>(entity).name;
+
+		//check to see if level id corresponds to a known object, to reduce
+		//the amount of necessary data to save as a lot of it can be inferred
+		if (level_id.substr(level_id.size()-5, 5) == string("floor")) {
+			j[level_id] = fromFloor(reg, entity);
+		} else {
+			j[level_id] = ReiDV::entityToJson(reg, entity);
+		}
+	}
+
+	ofstream f(full_name);
+	if (f.good()) {
+		f << setw(4) << j;
+	} else {
+		DebugPrinter::printDebug(0, "JsonComponents::saveLevel",
+			full_name + " is an invalid filename, printing here instead:\n"
+			+ j.dump());
+	}
 }
 
 
@@ -44,6 +86,7 @@ void JsonComponents::test()
 	NPatchInfo n = {{9,10,11,11}, 4, 3, 2, 1, NPT_3PATCH_HORIZONTAL};
 	Quad q(Rectangle{0,0,3,7});
 	SpriteAnim sa;
+	sa.atlas_name = "test atlas name";
 	sa.region_name = "test region name";
 
 	json j;

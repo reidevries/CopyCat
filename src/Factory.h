@@ -12,21 +12,28 @@
 
 #include "VectorMath.h"
 #include "QuadDraw.h"
-#include "ComponentList.h"
 #include <array>
+#include <sstream>
+#include "ComponentIncludes.h"
 
-namespace ReiDV
+class Factory
 {
-entt::entity makePlane(entt::registry& reg,
-	SpriteAnim sprite,
-	Vector3 pos,
-	Rectangle rect,
-	VectorMath::Orthog dir);
+private:
+	static int level_id_counter;
 
-entt::entity makeFloor(entt::registry& reg,
-	SpriteAnim sprite,
-	Vector3 pos,
-	Rectangle rect);
+public:
+	static entt::entity makeLevelObject(entt::registry& reg, std::string name);
+
+	static entt::entity makePlane(entt::registry& reg,
+		SpriteAnim sprite,
+		Vector3 pos,
+		Rectangle rect,
+		VectorMath::Orthog dir);
+
+	static entt::entity makeFloor(entt::registry& reg,
+		SpriteAnim sprite,
+		Vector3 pos,
+		Rectangle rect);
 };
 
 #endif /* SRC_FACTORY_H_ */

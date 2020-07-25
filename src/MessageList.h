@@ -19,7 +19,7 @@
 
 struct Message
 {
-	enum Type{say, inspect, inspect_response, debug};
+	enum class Type{say, inspect, inspect_response, debug};
 	static const std::string type_text[];
 
 	const int src_id; 	//0 for system messages

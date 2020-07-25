@@ -8,7 +8,7 @@ void Level::loadTest(entt::registry& reg, ResMan& res_man)
 {
 	for (int u = -10; u < 10; u=u+2) {
 		for (int v = -10; v < 10; v=v+2) {
-			ReiDV::makeFloor(reg,
+			Factory::makeFloor(reg,
 				res_man.constructSprite(string("tiles"),
 					string("floor"),
 					1,

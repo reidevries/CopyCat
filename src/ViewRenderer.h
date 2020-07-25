@@ -15,8 +15,8 @@
 #include <entt/entity/registry.hpp>
 
 #include "CatConf.h"
-#include "ComponentList.h"
 #include "CatClock.h"
+#include "ComponentIncludes.h"
 #include "DebugPrinter.h"
 #include "Environment.h"
 #include "ResBuf.h"
