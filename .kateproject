@@ -1,0 +1,10 @@
+{
+  "name": "CopyCat"
+, "files": [ { "git": 1 } ]
+, "build": {
+    "directory": ""
+  , "build": "cmake --build ./build"
+  , "clean": "cmake --clean ./build"
+  , "config": "cmake -DCMAKE_BUILD_TYPE=Debug"
+  }
+}

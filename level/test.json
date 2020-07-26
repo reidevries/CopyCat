@@ -1,0 +1,1302 @@
+{
+    "0001-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0002-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0003-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0004-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0005-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0006-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0007-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0008-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0009-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0010-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -160.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0011-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0012-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0013-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0014-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0015-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0016-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0017-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0018-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0019-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0020-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0021-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0022-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0023-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0024-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0025-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0026-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0027-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0028-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0029-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0030-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0031-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0032-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0033-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0034-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0035-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0036-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0037-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0038-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0039-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0040-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0041-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0042-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0043-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0044-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0045-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0046-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0047-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0048-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0049-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0050-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": -32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0051-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0052-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0053-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0054-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0055-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0056-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0057-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0058-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0059-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0060-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 0.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0061-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0062-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0063-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0064-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0065-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0066-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0067-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0068-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0069-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0070-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 32.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0071-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0072-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0073-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0074-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0075-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0076-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0077-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0078-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0079-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0080-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 64.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0081-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0082-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0083-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0084-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0085-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0086-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0087-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0088-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0089-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0090-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 96.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    },
+    "0091-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -160.0
+            }
+        }
+    },
+    "0092-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -128.0
+            }
+        }
+    },
+    "0093-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -96.0
+            }
+        }
+    },
+    "0094-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -64.0
+            }
+        }
+    },
+    "0095-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": -32.0
+            }
+        }
+    },
+    "0096-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 0.0
+            }
+        }
+    },
+    "0097-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 32.0
+            }
+        }
+    },
+    "0098-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 64.0
+            }
+        }
+    },
+    "0099-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 96.0
+            }
+        }
+    },
+    "0100-floor": {
+        "SpriteAnim": {
+            "atlas_name": "tiles",
+            "region_name": "floor"
+        },
+        "WorldPos": {
+            "pos": {
+                "Vector3.x": 128.0,
+                "Vector3.y": 0.0,
+                "Vector3.z": 128.0
+            }
+        }
+    }
+}
