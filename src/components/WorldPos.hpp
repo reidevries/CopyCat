@@ -9,12 +9,13 @@
 #ifndef SRC_COMPONENTS_WORLDPOS_H_
 #define SRC_COMPONENTS_WORLDPOS_H_
 
-#include "CatConf.h"
+#include "CatConf.hpp"
 
 struct WorldPos
 {
 	Vector3 pos;
 
+	WorldPos() : pos({0,0,0}) {}
 	WorldPos(Vector3 set_pos) : pos(set_pos) {}
 };
 

@@ -9,7 +9,7 @@
 #include <cmath>
 #include <cstdint>
 
-#include "CatConf.h"
+#include "CatConf.hpp"
 
 namespace VectorMath {
 constexpr double DEG_TO_RAD = 0.01745329252;

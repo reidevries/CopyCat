@@ -15,7 +15,7 @@
 #include <vector>
 #include <sstream>
 
-#include "DebugPrinter.h"
+#include "DebugPrinter.hpp"
 
 struct Message
 {

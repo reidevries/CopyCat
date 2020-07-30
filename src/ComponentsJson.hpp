@@ -16,16 +16,16 @@
 
 #include <entt/entity/registry.hpp>
 
-#include "CatConf.h"
-#include "ComponentIncludes.h"
-#include "IncludeJson.h"
-#include "DebugPrinter.h"
-#include "VectorMath.h"
-#include "Quad.h"
-#include "ComponentNames.h"
-#include "ComponentSerialize.h"
-#include "ResMan.h"
-#include "Factory.h"
+#include "CatConf.hpp"
+#include "ComponentIncludes.hpp"
+#include "IncludeJson.hpp"
+#include "DebugPrinter.hpp"
+#include "VectorMath.hpp"
+#include "Quad.hpp"
+#include "ComponentNames.hpp"
+#include "ComponentSerialize.hpp"
+#include "ResMan.hpp"
+#include "Factory.hpp"
 
 class JsonComponents
 {

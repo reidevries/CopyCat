@@ -8,7 +8,7 @@
 #ifndef SRC_COMPONENTSERIALIZE_CPP_
 #define SRC_COMPONENTSERIALIZE_CPP_
 
-#include "ComponentSerialize.h"
+#include "ComponentSerialize.hpp"
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(WorldPos, pos)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpriteSizeRot, size, rot)

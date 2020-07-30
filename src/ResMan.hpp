@@ -20,13 +20,13 @@
 #include <sstream>
 #include <cstdint>
 
-#include "CatConf.h"
-#include "CatClock.h"
-#include "DebugPrinter.h"
-#include "ResBuf.h"
-#include "ResConstants.h"
-#include "VectorMath.h"
-#include "components/SpriteAnim.h"
+#include "CatConf.hpp"
+#include "CatClock.hpp"
+#include "DebugPrinter.hpp"
+#include "ResBuf.hpp"
+#include "ResConstants.hpp"
+#include "VectorMath.hpp"
+#include "components/SpriteAnim.hpp"
 
 class ResMan {
 private:

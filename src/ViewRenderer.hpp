@@ -14,14 +14,14 @@
 
 #include <entt/entity/registry.hpp>
 
-#include "CatConf.h"
-#include "CatClock.h"
-#include "ComponentIncludes.h"
-#include "DebugPrinter.h"
-#include "Environment.h"
-#include "ResBuf.h"
-#include "ResMan.h"
-#include "QuadDraw.h"
+#include "CatConf.hpp"
+#include "CatClock.hpp"
+#include "ComponentIncludes.hpp"
+#include "DebugPrinter.hpp"
+#include "Environment.hpp"
+#include "ResBuf.hpp"
+#include "ResMan.hpp"
+#include "QuadDraw.hpp"
 
 class ViewRenderer
 {

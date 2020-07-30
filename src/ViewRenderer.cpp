@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "ViewRenderer.h"
+#include "ViewRenderer.hpp"
 
 using namespace std;
 

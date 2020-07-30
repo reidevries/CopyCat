@@ -10,11 +10,11 @@
 #ifndef SRC_QUADDRAW_H_
 #define SRC_QUADDRAW_H_
 
-#include "CatConf.h"
+#include "CatConf.hpp"
 #include "rlgl.h"
-#include "Quad.h"
+#include "Quad.hpp"
 
-#include "VectorMath.h"
+#include "VectorMath.hpp"
 
 namespace ReiDV {
 	void drawQuad(Texture2D tex, Rectangle src_rect, Vector3 center,

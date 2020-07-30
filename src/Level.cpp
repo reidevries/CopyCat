@@ -1,6 +1,6 @@
-#include "Level.h"
+#include "Level.hpp"
 
-#include "VectorMath.h"
+#include "VectorMath.hpp"
 
 using namespace std;
 

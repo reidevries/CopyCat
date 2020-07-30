@@ -15,10 +15,13 @@
 #include <cstdint>
 #include <string>
 
-#include "../ResConstants.h"
+#include "../ResConstants.hpp"
 
 struct SpriteAnim
 {
+	//name of the atlas
+	std::string atlas_name;
+
 	//name of the region
 	std::string region_name;
 
@@ -32,6 +35,14 @@ struct SpriteAnim
 	//represents how many frames are used in the animation
 	//must be < Res::MAX_ANIM_FRAMES
 	std::size_t num_frames;
+
+	SpriteAnim()
+		: res_id(Res::MAX_ANIM_FRAMES),
+		anim_index(0),
+		num_frames(0)
+	{
+		for (auto& id : region_ids) id = Res::MAX_ANIM_FRAMES;
+	}
 
 	uint8_t getCurRegion() const
 	{

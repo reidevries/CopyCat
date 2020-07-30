@@ -4,7 +4,7 @@
  *  Created on: Jun 10, 2020
  *      Author: rei de vries
  */
-#include "MessageList.h"
+#include "MessageList.hpp"
 
 using namespace std;
 

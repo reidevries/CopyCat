@@ -9,8 +9,8 @@
 #include <sstream>
 #include <algorithm>
 
-#include "CatConf.h"
-#include "VectorMath.h"
+#include "CatConf.hpp"
+#include "VectorMath.hpp"
 
 class Polygon {
 	private:

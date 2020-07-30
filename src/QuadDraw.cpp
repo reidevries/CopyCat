@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "QuadDraw.h"
+#include "QuadDraw.hpp"
 
 void ReiDV::drawQuad(Texture2D tex, Rectangle src_rect,
 	Vector3 center, Quad p, Color tint)

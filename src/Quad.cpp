@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "Quad.h"
+#include "Quad.hpp"
 
 using namespace std;
 

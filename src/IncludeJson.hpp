@@ -7,5 +7,5 @@
  */
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-#include "RaylibSerialize.h"
+#include "RaylibSerialize.hpp"
 

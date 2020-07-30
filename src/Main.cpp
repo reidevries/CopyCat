@@ -4,13 +4,13 @@
 #include <string.h>
 #include <memory>
 
-#include "CatConf.h"
-#include "CatClock.h"
-#include "Environment.h"
-#include "MessageList.h"
-#include "ResMan.h"
-#include "ViewRenderer.h"
-#include "JsonComponents.h"
+#include "CatConf.hpp"
+#include "CatClock.hpp"
+#include "Environment.hpp"
+#include "MessageList.hpp"
+#include "ResMan.hpp"
+#include "ViewRenderer.hpp"
+#include "JsonComponents.hpp"
 
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0

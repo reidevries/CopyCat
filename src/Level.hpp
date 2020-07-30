@@ -5,8 +5,8 @@
 #include <memory>
 
 #include <entt/entity/registry.hpp>
-#include "Factory.h"
-#include "ResMan.h"
+#include "Factory.hpp"
+#include "ResMan.hpp"
 
 namespace Level
 {

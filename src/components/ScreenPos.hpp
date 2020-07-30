@@ -10,12 +10,12 @@
 #ifndef SRC_COMPONENTS_SCREENPOS_H_
 #define SRC_COMPONENTS_SCREENPOS_H_
 
-#include "CatConf.h"
 
 struct ScreenPos
 {
 	Vector2 pos;
 
+	ScreenPos() : pos({0,0}) {}
 	ScreenPos(Vector2 set_pos) : pos(set_pos) {}
 };
 

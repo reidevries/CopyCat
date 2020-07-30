@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "JsonComponents.h"
+#include "JsonComponents.hpp"
 
 using namespace std;
 

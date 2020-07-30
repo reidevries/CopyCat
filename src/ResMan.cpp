@@ -6,7 +6,7 @@
  *      Implementation of a resource manager
  */
 
-#include "ResMan.h"
+#include "ResMan.hpp"
 
 using namespace std;
 

@@ -12,10 +12,10 @@
 #define SRC_COMPONENNAMES_H_
 
 #include <entt/entity/registry.hpp>
-#include "IncludeJson.h"
+#include "IncludeJson.hpp"
 
-#include "ComponentIncludes.h"
-#include "ComponentSerialize.h"
+#include "ComponentIncludes.hpp"
+#include "ComponentSerialize.hpp"
 
 namespace ReiDV
 {

@@ -10,11 +10,11 @@
 
 #include <entt/entity/registry.hpp>
 
-#include "VectorMath.h"
-#include "QuadDraw.h"
+#include "VectorMath.hpp"
+#include "QuadDraw.hpp"
 #include <array>
 #include <sstream>
-#include "ComponentIncludes.h"
+#include "ComponentIncludes.hpp"
 
 class Factory
 {

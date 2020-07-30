@@ -6,9 +6,9 @@
  * component.
  */
 
-#include "components/WorldPos.h"
-#include "components/SpriteSizeRot.h"
-#include "components/SpriteQuad.h"
-#include "components/SpriteAnim.h"
-#include "components/ScreenPos.h"
-#include "components/LevelID.h"
+#include "components/WorldPos.hpp"
+#include "components/SpriteSizeRot.hpp"
+#include "components/SpriteQuad.hpp"
+#include "components/SpriteAnim.hpp"
+#include "components/ScreenPos.hpp"
+#include "components/LevelID.hpp"

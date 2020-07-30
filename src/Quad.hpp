@@ -8,10 +8,10 @@
 #ifndef SRC_QUAD_H_
 #define SRC_QUAD_H_
 
-#include "CatConf.h"
-#include "IncludeJson.h"
+#include "CatConf.hpp"
+#include "IncludeJson.hpp"
 #include "raymath.h"
-#include "VectorMath.h"
+#include "VectorMath.hpp"
 
 //stores vertices of a quadrilateral for drawing,
 //positioned relative to the center of the plane

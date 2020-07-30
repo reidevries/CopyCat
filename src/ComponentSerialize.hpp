@@ -8,8 +8,8 @@
 #ifndef SRC_COMPONENTSERIALIZE_H_
 #define SRC_COMPONENTSERIALIZE_H_
 
-#include "IncludeJson.h"
-#include "ComponentIncludes.h"
+#include "IncludeJson.hpp"
+#include "ComponentIncludes.hpp"
 
 void from_json(const json&, WorldPos&);
 void to_json(json&, const WorldPos&);

@@ -11,7 +11,7 @@
 #ifndef SRC_COMPONENTS_SPRITESIZEROT_H_
 #define SRC_COMPONENTS_SPRITESIZEROT_H_
 
-#include "CatConf.h"
+#include "CatConf.hpp"
 
 struct SpriteSizeRot
 {

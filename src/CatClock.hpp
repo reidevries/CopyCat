@@ -1,5 +1,5 @@
 /*
- * timing.h
+ * CatClock.hpp
  *
  *  Created on: Jun 22, 2020
  *      Author: rei de vries

@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "Environment.h"
+#include "Environment.hpp"
 
 using namespace std;
 

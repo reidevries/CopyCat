@@ -31,7 +31,7 @@
 #ifndef SRC_RAYLIBSERIALIZE_H_
 #define SRC_RAYLIBSERIALIZE_H_
 
-#include "CatConf.h"
+#include "CatConf.hpp"
 #include <nlohmann/json.hpp>
 #include <iostream>
 

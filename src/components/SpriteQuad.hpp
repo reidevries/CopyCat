@@ -10,11 +10,11 @@
 #ifndef SRC_COMPONENTS_SPRITEQUAD_H_
 #define SRC_COMPONENTS_SPRITEQUAD_H_
 
-#include "../QuadDraw.h"
+#include "../Quad.hpp"
 
 struct SpriteQuad
 {
-	Cat::Quad quad;
+	Quad quad;
 };
 
 

@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "Factory.h"
+#include "Factory.hpp"
 
 using namespace std;
 

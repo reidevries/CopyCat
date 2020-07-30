@@ -17,13 +17,13 @@
 #include <entt/entity/registry.hpp>
 #include <entt/entity/fwd.hpp>
 
-#include "CatConf.h"
-#include "CatClock.h"
-#include "ComponentIncludes.h"
-#include "DebugPrinter.h"
-#include "MessageList.h"
-#include "ResMan.h"
-#include "Level.h"
+#include "CatConf.hpp"
+#include "CatClock.hpp"
+#include "ComponentIncludes.hpp"
+#include "DebugPrinter.hpp"
+#include "MessageList.hpp"
+#include "ResMan.hpp"
+#include "Level.hpp"
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
 #endif
