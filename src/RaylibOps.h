@@ -5,3 +5,10 @@
  *      Author: rei de vries
  *      This overloads operators for raylib structs
  */
+
+#ifndef SRC_RAYLIBOPS_H_
+#define SRC_RAYLIBOPS_H_
+
+
+
+#endif
