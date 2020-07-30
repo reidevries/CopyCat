@@ -10,7 +10,7 @@
 
 namespace Res {
 	static const int TEX_BUF_SIZE = 32;
-	static const int REGION_BUF_SIZE = 32;
+	static const int REGION_BUF_SIZE = 64;
 	static const int MAX_ANIM_FRAMES = 8;
 }
 

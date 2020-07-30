@@ -33,412 +33,413 @@
 
 #include "CatConf.h"
 #include <nlohmann/json.hpp>
+#include <iostream>
 
 namespace nlohmann
 {
-	//Vector2
-	template <>
-	struct adl_serializer<Vector2>
+//Vector2
+template <>
+struct adl_serializer<Vector2>
+{
+	static void to_json(json& j, const Vector2& opt)
 	{
-		static void to_json(json& j, const Vector2& opt)
-		{
-			j = {
-				{"Vector2.x", opt.x},
-				{"Vector2.y", opt.y}
-			};
-		}
+		
+		j["Vector2"] = {
+			{"x", opt.x},
+			{"y", opt.y}
+		};
+	}
 
-		static void from_json(const json& j, Vector2& opt)
-		{
-			j.at("Vector2.x").get_to(opt.x);
-			j.at("Vector2.y").get_to(opt.y);
-		}
-	};
-
-	//Vector3
-	template <>
-	struct adl_serializer<Vector3>
+	static void from_json(const json& j, Vector2& opt)
 	{
-		static void to_json(json& j, const Vector3& opt)
-		{
-			j = {
-				{"Vector3.x", opt.x},
-				{"Vector3.y", opt.y},
-				{"Vector3.z", opt.z}
-			};
-		}
+		const json& vector_2 = j.at("Vector2");
+		vector_2.at("x").get_to(opt.x);
+		vector_2.at("y").get_to(opt.y);
+	}
+};
 
-		static void from_json(const json& j, Vector3& opt)
-		{
-			j.at("Vector3.x").get_to(opt.x);
-			j.at("Vector3.y").get_to(opt.y);
-			j.at("Vector3.z").get_to(opt.z);
-		}
-	};
-
-	//Vector4
-	template <>
-	struct adl_serializer<Vector4>
+//Vector3
+template <>
+struct adl_serializer<Vector3>
+{
+	static void to_json(json& j, const Vector3& opt)
 	{
-		static void to_json(json& j, const Vector4& opt)
-		{
-			j = {
-				{"Vector4.x", opt.x},
-				{"Vector4.y", opt.y},
-				{"Vector4.z", opt.z},
-				{"Vector4.w", opt.w}
-			};
-		}
+		
+		j["Vector3"] = {
+			{"x", opt.x},
+			{"y", opt.y},
+			{"z", opt.z}
+		};
+	}
 
-		static void from_json(const json& j, Vector4& opt)
-		{
-			j.at("Vector4.x").get_to(opt.x);
-			j.at("Vector4.y").get_to(opt.y);
-			j.at("Vector4.z").get_to(opt.z);
-			j.at("Vector4.w").get_to(opt.w);
-		}
-	};
-
-	//Matrix 4x4
-	template <>
-	struct adl_serializer<Matrix>
+	static void from_json(const json& j, Vector3& opt)
 	{
-		static void to_json(json& j, const Matrix& opt)
-		{
-			j = {
-				{"Matrix.m0", opt.m0},
-				{"Matrix.m1", opt.m1},
-				{"Matrix.m2", opt.m2},
-				{"Matrix.m3", opt.m3},
-				{"Matrix.m4", opt.m4},
-				{"Matrix.m5", opt.m5},
-				{"Matrix.m6", opt.m6},
-				{"Matrix.m7", opt.m7},
-				{"Matrix.m8", opt.m8},
-				{"Matrix.m9", opt.m9},
-				{"Matrix.m10", opt.m10},
-				{"Matrix.m11", opt.m11},
-				{"Matrix.m12", opt.m12},
-				{"Matrix.m13", opt.m13},
-				{"Matrix.m14", opt.m14},
-				{"Matrix.m15", opt.m15}
-			};
-		}
+		const json& vector_3 = j.at("Vector3");
+		vector_3.at("x").get_to(opt.x);
+		vector_3.at("y").get_to(opt.y);
+		vector_3.at("z").get_to(opt.z);
+	}
+};
 
-		static void from_json(const json& j, Matrix& opt)
-		{
-			j.at("Matrix.m0").get_to(opt.m0);
-			j.at("Matrix.m1").get_to(opt.m1);
-			j.at("Matrix.m2").get_to(opt.m2);
-			j.at("Matrix.m3").get_to(opt.m3);
-			j.at("Matrix.m4").get_to(opt.m4);
-			j.at("Matrix.m5").get_to(opt.m5);
-			j.at("Matrix.m6").get_to(opt.m6);
-			j.at("Matrix.m7").get_to(opt.m7);
-			j.at("Matrix.m8").get_to(opt.m8);
-			j.at("Matrix.m9").get_to(opt.m9);
-			j.at("Matrix.m10").get_to(opt.m10);
-			j.at("Matrix.m11").get_to(opt.m11);
-			j.at("Matrix.m12").get_to(opt.m12);
-			j.at("Matrix.m13").get_to(opt.m13);
-			j.at("Matrix.m14").get_to(opt.m14);
-			j.at("Matrix.m15").get_to(opt.m15);
-		}
-	};
-
-	//Color
-	template <>
-	struct adl_serializer<Color>
+//Vector4
+template <>
+struct adl_serializer<Vector4>
+{
+	static void to_json(json& j, const Vector4& opt)
 	{
-		static void to_json(json& j, const Color& opt)
-		{
-			j = {
-				{"Color.r", opt.r},
-				{"Color.g", opt.g},
-				{"Color.b", opt.b},
-				{"Color.a", opt.a}
-			};
-		}
+		
+		j["Vector4"] = {
+			{"x", opt.x},
+			{"y", opt.y},
+			{"z", opt.z},
+			{"w", opt.w}
+		};
+	}
 
-		static void from_json(const json& j, Color& opt)
-		{
-			j.at("Color.r").get_to(opt.r);
-			j.at("Color.g").get_to(opt.g);
-			j.at("Color.b").get_to(opt.b);
-			j.at("Color.a").get_to(opt.a);
-		}
-	};
-
-	//Rectangle
-	template <>
-	struct adl_serializer<Rectangle>
+	static void from_json(const json& j, Vector4& opt)
 	{
-		static void to_json(json& j, const Rectangle& opt)
-		{
-			j = {
-				{"Rectangle.x", opt.x},
-				{"Rectangle.y", opt.y},
-				{"Rectangle.width", opt.width},
-				{"Rectangle.height", opt.height}
-			};
-		}
+		const json& vector_4 = j.at("Vector4");
+		vector_4.at("x").get_to(opt.x);
+		vector_4.at("y").get_to(opt.y);
+		vector_4.at("z").get_to(opt.z);
+		vector_4.at("w").get_to(opt.w);
+	}
+};
 
-		static void from_json(const json& j, Rectangle& opt)
-		{
-			j.at("Rectangle.x").get_to(opt.x);
-			j.at("Rectangle.y").get_to(opt.y);
-			j.at("Rectangle.width").get_to(opt.width);
-			j.at("Rectangle.height").get_to(opt.height);
-		}
-	};
-
-	//NPatchInfo
-	template <>
-	struct adl_serializer<NPatchInfo>
+//Matrix 4x4
+template <>
+struct adl_serializer<Matrix>
+{
+	static void to_json(json& j, const Matrix& opt)
 	{
-		static void to_json(json& j, const NPatchInfo& opt)
-		{
-			j = {
-				{"NPatchInfo.sourceRec", opt.sourceRec},
-				{"NPatchInfo.left", opt.left},
-				{"NPatchInfo.top", opt.top},
-				{"NPatchInfo.right", opt.right},
-				{"NPatchInfo.bottom", opt.bottom},
-				{"NPatchInfo.type", opt.type}
-			};
-		}
+		
+		j["Matrix"] = {
+			{"m0", opt.m0},
+			{"m1", opt.m1},
+			{"m2", opt.m2},
+			{"m3", opt.m3},
+			{"m4", opt.m4},
+			{"m5", opt.m5},
+			{"m6", opt.m6},
+			{"m7", opt.m7},
+			{"m8", opt.m8},
+			{"m9", opt.m9},
+			{"m10", opt.m10},
+			{"m11", opt.m11},
+			{"m12", opt.m12},
+			{"m13", opt.m13},
+			{"m14", opt.m14},
+			{"m15", opt.m15}
+		};
+	}
 
-		static void from_json(const json& j, NPatchInfo& opt)
-		{
-			j.at("NPatchInfo.sourceRec").get_to(opt.sourceRec);
-			j.at("NPatchInfo.left").get_to(opt.left);
-			j.at("NPatchInfo.top").get_to(opt.top);
-			j.at("NPatchInfo.right").get_to(opt.right);
-			j.at("NPatchInfo.bottom").get_to(opt.bottom);
-			j.at("NPatchInfo.type").get_to(opt.type);
-		}
-	};
-
-	//Camera3D
-	template <>
-	struct adl_serializer<Camera3D>
+	static void from_json(const json& j, Matrix& opt)
 	{
-		static void to_json(json& j, const Camera3D& opt)
-		{
-			j = {
-				{"Camera3D.position", opt.position},
-				{"Camera3D.target", opt.target},
-				{"Camera3D.up", opt.up},
-				{"Camera3D.fovy", opt.fovy},
-				{"Camera3D.type", opt.type}
-			};
-		}
+		const json& matrix = j.at("Matrix");
+		matrix.at("m0").get_to(opt.m0);
+		matrix.at("m1").get_to(opt.m1);
+		matrix.at("m2").get_to(opt.m2);
+		matrix.at("m3").get_to(opt.m3);
+		matrix.at("m4").get_to(opt.m4);
+		matrix.at("m5").get_to(opt.m5);
+		matrix.at("m6").get_to(opt.m6);
+		matrix.at("m7").get_to(opt.m7);
+		matrix.at("m8").get_to(opt.m8);
+		matrix.at("m9").get_to(opt.m9);
+		matrix.at("m10").get_to(opt.m10);
+		matrix.at("m11").get_to(opt.m11);
+		matrix.at("m12").get_to(opt.m12);
+		matrix.at("m13").get_to(opt.m13);
+		matrix.at("m14").get_to(opt.m14);
+		matrix.at("m15").get_to(opt.m15);
+	}
+};
 
-		static void from_json(const json& j, Camera3D& opt)
-		{
-			j.at("Camera3D.position").get_to(opt.position);
-			j.at("Camera3D.target").get_to(opt.target);
-			j.at("Camera3D.up").get_to(opt.up);
-			j.at("Camera3D.fovy").get_to(opt.fovy);
-			j.at("Camera3D.type").get_to(opt.type);
-
-		}
-	};
-
-	//Camera2D
-	template <>
-	struct adl_serializer<Camera2D>
+//Color
+template <>
+struct adl_serializer<Color>
+{
+	static void to_json(json& j, const Color& opt)
 	{
-		static void to_json(json& j, const Camera2D& opt)
-		{
-			j = {
-				{"Camera2D.offset", opt.offset},
-				{"Camera2D.target", opt.target},
-				{"Camera2D.rotation", opt.rotation},
-				{"Camera2D.zoom", opt.zoom},
-			};
-		}
+		
+		j["Color"] = {
+			{"r", opt.r},
+			{"g", opt.g},
+			{"b", opt.b},
+			{"a", opt.a}
+		};
+	}
 
-		static void from_json(const json& j, Camera2D& opt)
-		{
-			j.at("Camera2D.offset").get_to(opt.offset);
-			j.at("Camera2D.target").get_to(opt.target);
-			j.at("Camera2D.rotation").get_to(opt.rotation);
-			j.at("Camera2D.zoom").get_to(opt.zoom);
-
-		}
-	};
-
-	//Transform
-	template <>
-	struct adl_serializer<Transform>
+	static void from_json(const json& j, Color& opt)
 	{
-		static void to_json(json& j, const Transform& opt)
-		{
-			j = {
-				{"Transform.translation", opt.translation},
-				{"Transform.rotation", opt.rotation},
-				{"Transform.scale", opt.scale}
-			};
-		}
+		const json& color = j.at("Color");
+		color.at("r").get_to(opt.r);
+		color.at("g").get_to(opt.g);
+		color.at("b").get_to(opt.b);
+		color.at("a").get_to(opt.a);
+	}
+};
 
-		static void from_json(const json& j, Transform& opt)
-		{
-			j.at("Transform.translation").get_to(opt.translation);
-			j.at("Transform.rotation").get_to(opt.rotation);
-			j.at("Transform.scale").get_to(opt.scale);
-		}
-	};
-
-	//Ray
-	template <>
-	struct adl_serializer<Ray>
+//Rectangle
+template <>
+struct adl_serializer<Rectangle>
+{
+	static void to_json(json& j, const Rectangle& opt)
 	{
-		static void to_json(json& j, const Ray& opt)
-		{
-			j = {
-				{"Ray.position", opt.position},
-				{"Ray.direction", opt.direction}
-			};
-		}
+		
+		j["Rectangle"] =  {
+			{"x", opt.x},
+			{"y", opt.y},
+			{"width", opt.width},
+			{"height", opt.height}
+		};
+	}
 
-		static void from_json(const json& j, Ray& opt)
-		{
-			j.at("Ray.position").get_to(opt.position);
-			j.at("Ray.direction").get_to(opt.direction);
-		}
-	};
-
-	//RayHitInfo
-	template <>
-	struct adl_serializer<RayHitInfo>
+	static void from_json(const json& j, Rectangle& opt)
 	{
-		static void to_json(json& j, const RayHitInfo& opt)
-		{
-			j = {
-				{"RayHitInfo.hit", opt.hit},
-				{"RayHitInfo.distance", opt.distance},
-				{"RayHitInfo.position", opt.position},
-				{"RayHitInfo.normal", opt.normal}
-			};
-		}
+		const json& rect = j.at("Rectangle");
+		rect.at("x").get_to(opt.x);
+		rect.at("y").get_to(opt.y);
+		rect.at("width").get_to(opt.width);
+		rect.at("height").get_to(opt.height);
+	}
+};
 
-		static void from_json(const json& j, RayHitInfo& opt)
-		{
-			j.at("RayHitInfo.hit").get_to(opt.hit);
-			j.at("RayHitInfo.distance").get_to(opt.distance);
-			j.at("RayHitInfo.position").get_to(opt.position);
-			j.at("RayHitInfo.normal").get_to(opt.normal);
-		}
-	};
-
-	//BoundingBox
-	template <>
-	struct adl_serializer<BoundingBox>
+//NPatchInfo
+template <>
+struct adl_serializer<NPatchInfo>
+{
+	static void to_json(json& j, const NPatchInfo& opt)
 	{
-		static void to_json(json& j, const BoundingBox& opt)
-		{
-			j = {
-				{"BoundingBox.min", opt.min},
-				{"BoundingBox.max", opt.max}
-			};
-		}
+		
+		j["NPatchInfo"] = {
+			{"sourceRec", opt.sourceRec},
+			{"left", opt.left},
+			{"top", opt.top},
+			{"right", opt.right},
+			{"bottom", opt.bottom},
+			{"type", opt.type}
+		};	
+	}
 
-		static void from_json(const json& j, BoundingBox& opt)
-		{
-			j.at("BoundingBox.min").get_to(opt.min);
-			j.at("BoundingBox.max").get_to(opt.max);
-		}
-	};
-
-	//VrDeviceInfo
-	template <>
-	struct adl_serializer<VrDeviceInfo>
+	static void from_json(const json& j, NPatchInfo& opt)
 	{
-		static void to_json(json& j, const VrDeviceInfo& opt)
-		{
-			j = {
-				{"VrDeviceInfo.hResolution", opt.hResolution},
-				{"VrDeviceInfo.vResolution", opt.vResolution},
-				{"VrDeviceInfo.hScreenSize", opt.hScreenSize},
-				{"VrDeviceInfo.vScreenSize", opt.vScreenSize},
-				{"VrDeviceInfo.vScreenCenter", opt.vScreenCenter},
-				{"VrDeviceInfo.eyeToScreenDistance", opt.eyeToScreenDistance},
+		const json& n_patch_info = j.at("NPatchInfo");
+		n_patch_info.at("sourceRec").get_to(opt.sourceRec);
+		n_patch_info.at("left").get_to(opt.left);
+		n_patch_info.at("top").get_to(opt.top);
+		n_patch_info.at("right").get_to(opt.right);
+		n_patch_info.at("bottom").get_to(opt.bottom);
+		n_patch_info.at("type").get_to(opt.type);
+	}
+};
+
+//Camera3D
+template <>
+struct adl_serializer<Camera3D>
+{
+	static void to_json(json& j, const Camera3D& opt)
+	{
+		
+		j["Camera3D"] = {
+			{"position", opt.position},
+			{"target", opt.target},
+			{"up", opt.up},
+			{"fovy", opt.fovy},
+			{"type", opt.type}
+		};
+	}
+
+	static void from_json(const json& j, Camera3D& opt)
+	{
+		const json& cam_3d = j.at("Camera3D");
+		cam_3d.at("position").get_to(opt.position);
+		cam_3d.at("target").get_to(opt.target);
+		cam_3d.at("up").get_to(opt.up);
+		cam_3d.at("fovy").get_to(opt.fovy);
+		cam_3d.at("type").get_to(opt.type);
+
+	}
+};
+
+//Camera2D
+template <>
+struct adl_serializer<Camera2D>
+{
+	static void to_json(json& j, const Camera2D& opt)
+	{
+		
+		j["Camera2D"] = {
+			{"offset", opt.offset},
+			{"target", opt.target},
+			{"rotation", opt.rotation},
+			{"zoom", opt.zoom}
+		};
+	}
+
+	static void from_json(const json& j, Camera2D& opt)
+	{
+		const json& cam_2d = j.at("Camera2D");
+		cam_2d.at("offset").get_to(opt.offset);
+		cam_2d.at("target").get_to(opt.target);
+		cam_2d.at("rotation").get_to(opt.rotation);
+		cam_2d.at("zoom").get_to(opt.zoom);
+	}
+};
+
+//Transform
+template <>
+struct adl_serializer<Transform>
+{
+	static void to_json(json& j, const Transform& opt)
+	{
+		
+		j["Transform"] = {
+			{"translation", opt.translation},
+			{"rotation", opt.rotation},
+			{"scale", opt.scale}
+		};
+	}
+
+	static void from_json(const json& j, Transform& opt)
+	{
+		const json& transform = j.at("Transform");
+		transform.at("translation").get_to(opt.translation);
+		transform.at("rotation").get_to(opt.rotation);
+		transform.at("scale").get_to(opt.scale);
+	}
+};
+
+//Ray
+template <>
+struct adl_serializer<Ray>
+{
+	static void to_json(json& j, const Ray& opt)
+	{
+		
+		j["Ray"] = {
+			{"position", opt.position},
+			{"direction", opt.direction}
+		};
+	}
+
+	static void from_json(const json& j, Ray& opt)
+	{
+		const json& ray = j.at("Ray");
+		ray.at("position").get_to(opt.position);
+		ray.at("direction").get_to(opt.direction);
+	}
+};
+
+//RayHitInfo
+template <>
+struct adl_serializer<RayHitInfo>
+{
+	static void to_json(json& j, const RayHitInfo& opt)
+	{
+		
+		j["RayHitInfo"] = {
+			{"hit", opt.hit},
+			{"distance", opt.distance},
+			{"position", opt.position},
+			{"normal", opt.normal}
+		};
+	}
+
+	static void from_json(const json& j, RayHitInfo& opt)
+	{
+		const json& ray_hit_info = j.at("RayHitInfo");
+		ray_hit_info.at("hit").get_to(opt.hit);
+		ray_hit_info.at("distance").get_to(opt.distance);
+		ray_hit_info.at("position").get_to(opt.position);
+		ray_hit_info.at("normal").get_to(opt.normal);
+	}
+};
+
+//BoundingBox
+template <>
+struct adl_serializer<BoundingBox>
+{
+	static void to_json(json& j, const BoundingBox& opt)
+	{
+		
+		j["BoundingBox"] = {
+			{"min", opt.min},
+			{"max", opt.max}
+		};
+	}
+
+	static void from_json(const json& j, BoundingBox& opt)
+	{
+		const json& bounding_box = j.at("BoundingBox");
+		bounding_box.at("min").get_to(opt.min);
+		bounding_box.at("max").get_to(opt.max);
+	}
+};
+
+//VrDeviceInfo
+template <>
+struct adl_serializer<VrDeviceInfo>
+{
+	static void to_json(json& j, const VrDeviceInfo& opt)
+	{
+		
+		j["VrDeviceInfo"] = {
+			{"hResolution", opt.hResolution},
+			{"vResolution", opt.vResolution},
+			{"hScreenSize", opt.hScreenSize},
+			{"vScreenSize", opt.vScreenSize},
+			{"vScreenCenter", opt.vScreenCenter},
+			{"eyeToScreenDistance", opt.eyeToScreenDistance},
+			{
+				"lensSeparationDistance",
+				opt.lensSeparationDistance
+			},
+			{
+				"interpupillaryDistance",
+				opt.interpupillaryDistance
+			},
+			{
+				"lensDistortionValues",
 				{
-					"VrDeviceInfo.lensSeparationDistance",
-					opt.lensSeparationDistance
-				},
-				{
-					"VrDeviceInfo.interpupillaryDistance",
-					opt.interpupillaryDistance
-				},
-				{
-					"VrDeviceInfo.lensDistortionValues0",
-					opt.lensDistortionValues[0]
-				},
-				{
-					"VrDeviceInfo.lensDistortionValues1",
-					opt.lensDistortionValues[1]
-				},
-				{
-					"VrDeviceInfo.lensDistortionValues2",
-					opt.lensDistortionValues[2]
-				},
-				{
-					"VrDeviceInfo.lensDistortionValues3",
+					opt.lensDistortionValues[0], 
+					opt.lensDistortionValues[1],
+					opt.lensDistortionValues[2],
 					opt.lensDistortionValues[3]
-				},
+				}
+			},
+			{
+				"chromaAbCorrection",
 				{
-					"VrDeviceInfo.chromaAbCorrection0",
-					opt.chromaAbCorrection[0]
-				},
-				{
-					"VrDeviceInfo.chromaAbCorrection1",
-					opt.chromaAbCorrection[1]
-				},
-				{
-					"VrDeviceInfo.chromaAbCorrection2",
-					opt.chromaAbCorrection[2]
-				},
-				{
-					"VrDeviceInfo.chromaAbCorrection3",
+					opt.chromaAbCorrection[0],
+					opt.chromaAbCorrection[1],
+					opt.chromaAbCorrection[2],
 					opt.chromaAbCorrection[3]
 				}
-			};
-		}
+			}
+		};
+	}
 
-		static void from_json(const json& j, VrDeviceInfo& opt)
-		{
-			j.at("VrDeviceInfo.hResolution").get_to(opt.hResolution);
-			j.at("VrDeviceInfo.vResolution").get_to(opt.vResolution);
-			j.at("VrDeviceInfo.hScreenSize").get_to(opt.hScreenSize);
-			j.at("VrDeviceInfo.vScreenSize").get_to(opt.vScreenSize);
-			j.at("VrDeviceInfo.vScreenCenter").get_to(opt.vScreenCenter);
-			j.at("VrDeviceInfo.eyeToScreenDistance")
-				.get_to(opt.eyeToScreenDistance);
-			j.at("VrDeviceInfo.lensSeparationDistance")
-				.get_to(opt.lensSeparationDistance);
-			j.at("VrDeviceInfo.interpupillaryDistance")
-				.get_to(opt.interpupillaryDistance);
-			j.at("VrDeviceInfo.lensDistortionValues0")
-				.get_to(opt.lensDistortionValues[0]);
-			j.at("VrDeviceInfo.lensDistortionValues1")
-				.get_to(opt.lensDistortionValues[1]);
-			j.at("VrDeviceInfo.lensDistortionValues2")
-				.get_to(opt.lensDistortionValues[2]);
-			j.at("VrDeviceInfo.lensDistortionValues3")
-				.get_to(opt.lensDistortionValues[3]);
-			j.at("VrDeviceInfo.chromaAbCorrection0")
-				.get_to(opt.chromaAbCorrection[0]);
-			j.at("VrDeviceInfo.chromaAbCorrection1")
-				.get_to(opt.chromaAbCorrection[1]);
-			j.at("VrDeviceInfo.chromaAbCorrection2")
-				.get_to(opt.chromaAbCorrection[2]);
-			j.at("VrDeviceInfo.chromaAbCorrection3")
-				.get_to(opt.chromaAbCorrection[3]);
-		}
-	};
-
+	static void from_json(const json& j, VrDeviceInfo& opt)
+	{
+		const json& vr_device_info = j.at("VrDeviceInfo");
+		vr_device_info.at("hResolution").get_to(opt.hResolution);
+		vr_device_info.at("vResolution").get_to(opt.vResolution);
+		vr_device_info.at("hScreenSize").get_to(opt.hScreenSize);
+		vr_device_info.at("vScreenSize").get_to(opt.vScreenSize);
+		vr_device_info.at("vScreenCenter").get_to(opt.vScreenCenter);
+		vr_device_info.at("eyeToScreenDistance")
+			.get_to(opt.eyeToScreenDistance);
+		vr_device_info.at("lensSeparationDistance")
+			.get_to(opt.lensSeparationDistance);
+		vr_device_info.at("interpupillaryDistance")
+			.get_to(opt.interpupillaryDistance);
+		vr_device_info.at("lensDistortionValues")
+			.get_to(opt.lensDistortionValues);
+		vr_device_info.at("chromaAbCorrection")
+			.get_to(opt.chromaAbCorrection);
+	}
+};
 }
 
 #endif /* SRC_RAYLIBSERIALIZE_H_ */

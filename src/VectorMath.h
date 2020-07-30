@@ -180,7 +180,7 @@ static std::string printColor(const Color c)
 	return ss.str();
 }
 
-constexpr double invSqrt(const double a)
+static double invSqrt(const double a)
 {
 #ifdef QUAKE
 	//stolen from quake lol
@@ -204,7 +204,7 @@ constexpr double dot(Vector2 a, Vector2 b)
 	return a.x*b.x+a.y*b.y;
 }
 
-constexpr double dist(Vector2 a, Vector2 b)
+static double dist(Vector2 a, Vector2 b)
 {
 	return sqrt( pow(b.x-a.x, 2) + pow(b.y-a.y, 2) );
 }
@@ -337,13 +337,13 @@ static bool checkPointInPolygon(const Vector2 point,
 	return (counter%2 == 1);
 }
 
-constexpr Vector2 normalise(Vector2 a)
+static Vector2 normalise(Vector2 a)
 {
 	double dist = invSqrt(a.x*a.x+a.y*a.y);
 	return VectorMath::scale(a, dist);
 }
 
-constexpr Vector3 normalise(Vector3 a)
+static Vector3 normalise(Vector3 a)
 {
 	double dist = invSqrt(a.x*a.x+a.y*a.y+a.z*a.z);
 	return VectorMath::scale(a,dist);
@@ -429,7 +429,7 @@ static double distanceToLine(const Vector2 a_1,
 	// use dist(nearestPointOnSegment()) instead
 	Vector2 a_d = {a_2.x-a_1.x, a_2.y-a_1.y};
 	float divisor = invSqrt(pow(a_d.y, 2) + pow(a_d.x, 2));
-	return abs(a_d.y*b.x - a_d.x*b.y + a_2.x*a_1.y - a_2.y*a_1.x)*divisor;
+	return std::abs(a_d.y*b.x - a_d.x*b.y + a_2.x*a_1.y - a_2.y*a_1.x)*divisor;
 }
 
 static double distanceToSegment(const Vector2 a_1,

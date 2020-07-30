@@ -20,7 +20,7 @@
 
 using namespace std;
 
-const bool debug = (CAT_VERBOSITY > 0);
+const bool debug = (ReiDV::VERBOSITY > 0);
 
 void parseSystemMessages(vector<Message> messages) {
 	for (auto const& message: messages) {
@@ -47,24 +47,27 @@ int main(int argc, char* argv[])
     ResMan res_man(debug);
     ViewRenderer view(screen_w, screen_h, debug);
     Environment environment(8, 128);
-    environment.initLevel(res_man, string("test"));
     JsonComponents::saveLevel(environment.getReg(), "test.json");
 
 
     SetTargetFPS(60);
 	
-    if (CAT_VERBOSITY >= 3) JsonComponents::test();
+    if (ReiDV::VERBOSITY >= 3) JsonComponents::test();
 
     CatClock clk;
 
-    bool waiting_to_load_test_region = true;
+    bool waiting_to_load = true;
 
+    // request floor texture be loaded in advance
+    res_man.requestTex("tile/floor");
+    
     while (!WindowShouldClose()) {
     	clk.tick(GetFrameTime());
     	res_man.loadNextImage();
 
-		if (waiting_to_load_test_region) {
-			waiting_to_load_test_region = false;
+		if (waiting_to_load && res_man.isTexLoaded("tile/floor")) {
+			environment.initLevel(res_man, string("test"));
+			waiting_to_load = false;
 		}
 
 		view.render(clk, environment.getReg(), res_man);

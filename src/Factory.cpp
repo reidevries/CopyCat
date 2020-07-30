@@ -39,8 +39,7 @@ entt::entity Factory::makePlane(entt::registry& reg,
 
 entt::entity Factory::makeFloor(entt::registry& reg,
 	SpriteAnim sprite,
-	Vector3 pos,
-	Rectangle rect)
+	Vector3 pos)
 {
 	const entt::entity e = Factory::makeLevelObject(reg, "floor");
 
@@ -48,7 +47,7 @@ entt::entity Factory::makeFloor(entt::registry& reg,
 	reg.emplace<WorldPos>(e, WorldPos(pos));
 
 	SpriteQuad& quad = reg.emplace<SpriteQuad>(e);
-	quad.quad = Quad(rect, VectorMath::Orthog::up);
+	quad.quad = Quad({0, 0, 32, 32}, VectorMath::Orthog::up);
 
 	return e;
 }

@@ -21,9 +21,13 @@
 #include <sstream>
 #include <iostream>
 #include <cstdint>
+#include <stdexcept>
 
 template <class T, std::size_t buf_size>
 class ResBuf {
+public:
+	static constexpr const char* free_entry_name = "_empty";
+	
 private:
 	std::array<T, buf_size> buf;
 	//buf_free represents whether the element is valid
@@ -42,35 +46,43 @@ private:
 	{
 		rr = (rr+1)%buf_size;
 	}
+	
+	void setRR(int rr)
+	{
+		this->rr = (rr+1) % buf_size;
+	}
 
 	//constant time
-	void freeEntry(std::size_t i)
+	void release(std::size_t i)
 	{
+		entry_counter -= 1-static_cast<int>(buf_free[i]);
 		buf_free[i] = true;
 		buf_by_name.erase(buf_names[i]);
-		buf_names[i] = "empty";
-		--entry_counter;
+		buf_names[i] = free_entry_name;
 	}
 
 	//constant time, inserts into a specific index
 	void insert(std::size_t i, std::string name, T entry)
 	{
+		//no increment will occur if buf is not free, without branching
+		entry_counter += static_cast<int>(buf_free[i]);
 		buf_free[i] = false;
 		buf_by_name.insert({name, i});
 		buf_names[i] = name;
 		buf[i] = entry;
-		++entry_counter;
 	}
 
-	//constant time, inserts based on round robin counter
+	//linear time, down to constant time if entries are never released
 	std::size_t insert(std::string name, T entry)
 	{
 		std::size_t index = getFreeIndex();
 		insert(index, name, entry);
-		incRR();
+		setRR(index);
 		return index;
 	}
 
+	//constant time, inserts based on round robin counter without finding
+	//a free index
 	std::size_t forceInsert(std::string name, T entry)
 	{
 		std::size_t index = rr;
@@ -80,17 +92,17 @@ private:
 	}
 
 	//for printing debug output
-	std::string printBufFree(std::size_t i)
+	const char* printBufFree(std::size_t i)
 	{
-		return (buf_free[i])?std::string("true"):std::string("false");
+		return (buf_free[i])?"true":"false";
 	}
 
 public:
 	ResBuf()
 	{
 		buf_free.fill(buf_size);
-		buf_names.fill("empty");
-		entry_counter = 0;
+		buf_names.fill(free_entry_name);
+		entry_counter = 0; 
 	}
 
 	ResBuf(T default_object) : ResBuf()
@@ -108,7 +120,12 @@ public:
 	{
 		return buf_size;
 	}
-
+	
+	std::array<std::string, buf_size> getNames() const
+	{
+		return buf_names;
+	}
+	
 	std::size_t getFreeIndex() const
 	{
 		for (int i = 0; i < buf_size; ++i) {
@@ -125,7 +142,7 @@ public:
 	}
 
 	//figure out whether index of buf is free or not
-	bool isFree(unsigned int index) const
+	bool isFree(std::size_t index) const
 	{
 		if (index >= buf_size) return false;
 		if (buf_free[index]) return true;
@@ -136,6 +153,12 @@ public:
 	T get(std::size_t index) const
 	{
 		return buf[index];
+	}
+	
+	//logn time access
+	T get(std::string name)
+	{
+		return buf[buf_by_name.at(name)];
 	}
 
 	//constant time access
@@ -178,6 +201,13 @@ public:
 	//returns chosen index on success, MAX_BUF_SIZE on fail
 	std::size_t push(std::string name, T entry)
 	{
+		if (entry_counter >= buf_size) {
+			throw std::range_error("no free space in buf");
+		}
+		if (buf_by_name.count(name) > 0) {
+			throw std::invalid_argument("buf already contains " + name
+				+ ", use pushOrReplace(string, T) to replace it");
+		}
 		return insert(name, entry);
 	}
 
@@ -206,13 +236,22 @@ public:
 	void replace(std::size_t index, T entry)
 	{
 		if (isFree(index)) {
-			std::cout << "ResBuf::replace error: " << index
-				<< " is free, but trying to replace entry."
-				<< " the dev(s) obviously didn't read the comment in ResBuf.h"
-				<< std::endl;
+			throw std::invalid_argument("index of " + std::to_string(index) 
+				+ " is free, obviously the devs didn't read the comment");
 			return;
 		}
 		buf.at(index) = entry;
+	}
+	
+	std::size_t pushOrReplace(std::string name,  T entry)
+	{
+		if (has(name)) {
+			int index = find(name);
+			replace(index, entry);
+			return index;
+		} else {
+			return push(name, entry);
+		}
 	}
 
 	//fetches a reference to the element at the given index
@@ -222,35 +261,29 @@ public:
 	T& pop(std::size_t index)
 	{
 		if (index > buf_size) {
-			std::cout << "ResBuf error: " << index
-				<< " out of range, max size is " << buf_size
-				<< std::endl;
-			std::cout << "Returning first element in array";
-			return buf[0];
+			throw std::out_of_range("index " + std::to_string(index)
+				+ "exceeds buf size of " + std::to_string(buf_size));
 		}
 
 		if (isFree(index)) {
-			std::cout << "ResBuf error: "
-				<< index << " already free"
-				<< std::endl;
-			std::cout << "Returning first element in array";
-			return buf[0];
+			throw std::invalid_argument("index of " + std::to_string(index) 
+				+ " is already free");
 		}
 
-		freeEntry(index);
+		release(index);
 		return buf[index];
 	}
 
 	//run pop(getOldestNonFree())
 	T& popOldest() {
-		freeEntry(rr);
+		release(rr);
 		return buf[rr];
 	}
 
 	std::array<T, buf_size>& popAll()
 	{
 		for (int i = 0; i < buf_size; ++i) {
-			freeEntry(i);
+			release(i);
 		}
 		return buf;
 	}
@@ -258,19 +291,21 @@ public:
 	void clear()
 	{
 		for (int i = 0; i < buf_size; ++i) {
-			freeEntry(i);
+			release(i);
 		}
 	}
 
 	//for debugging
 	std::string printBuf() {
 		std::stringstream output;
-		output << "index:\tvalue:\tage:\tname:\t" << std::endl;
+		output << "index:\tvalue:\tfree:\tname:\t" << std::endl;
 		for (int i = 0; i < buf_size; ++i) {
 			output << i << "\t"
 				<< buf[i] << "\t"
 				<< printBufFree(i) << "\t"
-				<< buf_names[i] << "\t" << std::endl;
+				<< buf_names[i] << "\t";
+			if (i == rr) output <<  "*";
+			output << std::endl;
 		}
 		return output.str();
 	}

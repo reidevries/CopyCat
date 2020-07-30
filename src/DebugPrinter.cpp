@@ -9,7 +9,7 @@ int DebugPrinter::repetition_count = 0;
 void DebugPrinter::printDebug(int verbosity,
 	string src, string debug_msg)
 {
-	if (verbosity <= VERBOSITY) {
+	if (verbosity <= ReiDV::VERBOSITY) {
 		if (verbosity == 4) cout << "DEBUG: ";
 		string log_line = src + ": " + debug_msg;
 		if (log_line == last_log) {

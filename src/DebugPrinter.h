@@ -17,7 +17,6 @@
 
 class DebugPrinter {
 public:
-	static const int VERBOSITY = CAT_VERBOSITY;
 	static std::stringstream record;
 	//use the below two variables to concatenate rapidly repeating log msgs
 	static std::string last_log;

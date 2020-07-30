@@ -1,6 +1,6 @@
 // the configured options and settings
+#ifndef CATCONF_H
 #define CATCONF_H
-#cmakedefine CAT_VERBOSITY @CAT_VERBOSITY@
 #define COPYCAT_VERSION_MAJOR @copycat_VERSION_MAJOR@
 #define COPYCAT_VERSION_MINOR @copycat_VERSION_MINOR@
 
@@ -9,4 +9,10 @@
 #include "raylib.h"
 #else
 #include <raylib.h>
+#endif
+
+namespace ReiDV
+{
+	const int VERBOSITY = @CAT_VERBOSITY@;
+}
 #endif
