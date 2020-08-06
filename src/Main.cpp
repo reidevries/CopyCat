@@ -8,9 +8,11 @@
 #include "CatClock.hpp"
 #include "Environment.hpp"
 #include "MessageList.hpp"
-#include "ResMan.hpp"
+#include "ManTex.hpp"
 #include "ViewRenderer.hpp"
-#include "JsonComponents.hpp"
+#include "ComponentsJson.hpp"
+#include "IncludeSystems.hpp"
+#include "InputData.hpp"
 
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
@@ -44,35 +46,43 @@ int main(int argc, char* argv[])
     //we are not loading models in this game
 	rlDisableBackfaceCulling();
 
-    ResMan res_man(debug);
-    ViewRenderer view(screen_w, screen_h, debug);
-    Environment environment(8, 128);
-    JsonComponents::saveLevel(environment.getReg(), "test.json");
-
+    ManTex man_tex(debug);
+    ManAudio man_audio(debug);
+    ViewRenderer view_renderer(screen_w, screen_h, debug);
+    Environment environment;
+    ComponentsJson::saveLevel(environment.getReg(), "test.json");
+	InputData input_data;
 
     SetTargetFPS(60);
 	
-    if (ReiDV::VERBOSITY >= 3) JsonComponents::test();
+    if (ReiDV::VERBOSITY >= 3) ComponentsJson::test();
 
     CatClock clk;
 
     bool waiting_to_load = true;
-
-    // request floor texture be loaded in advance
-    res_man.requestTex("tile/floor");
     
     while (!WindowShouldClose()) {
     	clk.tick(GetFrameTime());
-    	res_man.loadNextImage();
+    	man_tex.loadNextImage();
+		input_data.updateValues(view_renderer.getCam());
 
-		if (waiting_to_load && res_man.isTexLoaded("tile/floor")) {
-			environment.initLevel(res_man, string("test"));
+		if (waiting_to_load) {
+			environment.initLevel(man_tex, man_audio, string("test"));
 			waiting_to_load = false;
 		}
 
-		view.render(clk, environment.getReg(), res_man);
-
-		res_man.loadNextTex();
+		// system update methods
+		Systems::soundOnHover(environment.getReg(), 	
+			input_data.getMouseData(), 
+			man_audio.getAudioBuf());
+		// end of system update methods
+		
+		// this is still technically a system update method, but
+		// it should definitely go last
+		view_renderer.render(clk, environment.getReg(), man_tex);
+		
+		man_audio.loadNextAudio();
+		man_tex.loadNextTex();
     }
     
     CloseWindow();

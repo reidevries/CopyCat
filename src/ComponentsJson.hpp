@@ -6,8 +6,8 @@
  *      Class for saving/loading component/entities to JSON files
  */
 
-#ifndef SRC_JSONCOMPONENTS_H_
-#define SRC_JSONCOMPONENTS_H_
+#ifndef SRC_COMPONENTSJSON_H_
+#define SRC_COMPONENTSJSON_H_
 
 #include <string>
 #include <fstream>
@@ -17,17 +17,16 @@
 #include <entt/entity/registry.hpp>
 
 #include "CatConf.hpp"
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
 #include "IncludeJson.hpp"
 #include "DebugPrinter.hpp"
 #include "VectorMath.hpp"
 #include "Quad.hpp"
 #include "ComponentNames.hpp"
 #include "ComponentSerialize.hpp"
-#include "ResMan.hpp"
 #include "Factory.hpp"
 
-class JsonComponents
+class ComponentsJson
 {
 private:
 	static const std::string level_directory;
@@ -41,4 +40,4 @@ public:
 	static void test();
 };
 
-#endif /* SRC_JSONCOMPONENTS_H_ */
+#endif /* SRC_COMPONENTSJSON_H_ */

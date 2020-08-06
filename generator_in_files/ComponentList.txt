@@ -1,6 +1,8 @@
+HitBox box
 LevelID name
 ScreenPos pos
 SpriteAnim atlas_name region_name
 SpriteQuad quad
 SpriteSizeRot size rot
 WorldPos pos
+HoverSound sound

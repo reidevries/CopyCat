@@ -8,13 +8,13 @@
  *      getToJson/getFromJson non-template version implementations
  */
 
-#ifndef SRC_COMPONENNAMES_H_
-#define SRC_COMPONENNAMES_H_
+#ifndef SRC_COMPONENTNAMES_H_
+#define SRC_COMPONENTNAMES_H_
 
 #include <entt/entity/registry.hpp>
 #include "IncludeJson.hpp"
 
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
 #include "ComponentSerialize.hpp"
 
 namespace ReiDV

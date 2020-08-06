@@ -31,14 +31,14 @@ ViewRenderer::ViewRenderer(const int screen_w, const int screen_h,
 {
 	this->screen_w = screen_w;
 	this->screen_h = screen_h;
-	screen_scale = screen_h / WORLD_H;
-	world_w = WORLD_H * (screen_w / screen_h);
+	screen_scale = screen_h / World::HEIGHT;
+	world_w = World::HEIGHT * (screen_w / screen_h);
 
 	cam = { };
 	cam.up = { 0.0f, 1.0f, 0.0f };
 	cam.fovy = world_w;
 	cam.type = CAMERA_ORTHOGRAPHIC;
-	pointCameraAt( { world_w / 10.0f, WORLD_H / 10.0f });
+	pointCameraAt( { world_w / 2.0f, World::HEIGHT / 2.0f });
 
 	font = LoadFontEx("font/Andika/Andika-R.ttf",
 		int(6 * screen_scale), 0, 0);
@@ -59,7 +59,7 @@ ViewRenderer::ViewRenderer(const int screen_w, const int screen_h,
 
 void ViewRenderer::render(CatClock& clk,
 	entt::registry& reg,
-	ResMan& resman)
+	ManTex& man_tex)
 {
 	BeginDrawing();
 	ClearBackground(RAYWHITE);
@@ -71,19 +71,19 @@ void ViewRenderer::render(CatClock& clk,
 
 	for (const entt::entity e : render_list) {
 		const SpriteAnim sprite = render_list.get<SpriteAnim>(e);
-		ReiDV::drawQuad( resman.getTexAt(sprite.res_id),
-			resman.getRegionAt(sprite.res_id, sprite.getCurRegion()),
+		ReiDV::drawQuad( man_tex.getTexAt(sprite.res_id),
+			man_tex.getRegionAt(sprite.res_id, sprite.getCurRegion()),
 			render_list.get<WorldPos>(e).pos,
 			render_list.get<SpriteQuad>(e).quad );
 	}
 
 	if (debug) {
-		DrawGrid(1000, METRE);
+		DrawGrid(1000, World::METRE);
 	}
 
 	EndMode3D();
 
-	if (debug) renderDebug(clk, reg, resman);
+	if (debug) renderDebug(clk, reg, man_tex);
 	EndDrawing();
 }
 
@@ -91,23 +91,28 @@ void ViewRenderer::render(CatClock& clk,
 void ViewRenderer::renderAxes()
 {
 	DrawLine3D(
-		(Vector3){METRE,METRE,METRE},
-		(Vector3) {METRE*2,METRE,METRE},
+		(Vector3){World::METRE,World::METRE,World::METRE},
+		(Vector3) {World::METRE*2,World::METRE,World::METRE},
 		RED);
 	DrawLine3D(
-		(Vector3){METRE,METRE,METRE},
-		(Vector3) {METRE,METRE*2,METRE},
+		(Vector3){World::METRE,World::METRE,World::METRE},
+		(Vector3) {World::METRE,World::METRE*2,World::METRE},
 		GREEN);
 	DrawLine3D(
-		(Vector3){METRE,METRE,METRE},
-		(Vector3) {METRE,METRE,METRE*2},
+		(Vector3){World::METRE,World::METRE,World::METRE},
+		(Vector3) {World::METRE,World::METRE,World::METRE*2},
 		BLUE);
 }
 
 //call dis between BeginDrawing() and EndDrawing() but not in 3D
 void ViewRenderer::renderAxes2D(Vector2 screen_pos, float cam_rot)
 {
-	Rectangle line_thick = {screen_pos.x,screen_pos.y,METRE*0.25,METRE*5};
+	Rectangle line_thick = {
+		screen_pos.x,
+		screen_pos.y,
+		World::METRE*0.25,
+		World::METRE*5
+	};
 	Vector2 origin = {line_thick.width/2, line_thick.height};
 	float font_size = font.baseSize;
 	float font_origin_y = font_size/2;
@@ -136,7 +141,7 @@ void ViewRenderer::renderAxes2D(Vector2 screen_pos, float cam_rot)
 //call dis between BeginDrawing() and EndDrawing() but not in 3D
 void ViewRenderer::renderDebug(CatClock& clk,
 	entt::registry& reg,
-	ResMan& resman)
+	ManTex& man_tex)
 {
 	stringstream debugtxt;
 	debugtxt << "fps: " << clk.fps() << "\n";

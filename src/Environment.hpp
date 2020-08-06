@@ -1,5 +1,5 @@
 /*
- * environment.h
+ * Environment.hpp
  *
  *  Created on: Jun 9, 2020
  *      Author: rei de vries
@@ -19,11 +19,14 @@
 
 #include "CatConf.hpp"
 #include "CatClock.hpp"
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
 #include "DebugPrinter.hpp"
 #include "MessageList.hpp"
-#include "ResMan.hpp"
+#include "ManTex.hpp"
+#include "ManAudio.hpp"
 #include "Level.hpp"
+#include "WorldConstants.hpp"
+
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
 #endif
@@ -37,21 +40,22 @@ private:
 	const int world_size;	//in buckets
 	entt::registry reg;
 
-
 public:
 	Environment(const int set_bucket_size, const int set_world_size)
 		: bucket_size(set_bucket_size), world_size(set_world_size) {}
 	Environment()
-		: Environment(8,128) {}
+		: Environment(World::BUCKET_SIZE,World::METRE) {}
 
 	entt::registry& getReg() {return reg;}
 
-	void initLevel(ResMan& res_man, std::string level_name);
+	void initLevel(ManTex& man_tex, 
+		ManAudio& man_audio, 
+		std::string level_name);
 
 	void distributeMessages(MessageList messages);
 
 	//updates all the gameobjects and accumulates their sent messages
-	MessageList update(CatClock& clk, ResMan& resman);
+	MessageList update(CatClock& clk, ManTex& man_tex);
 };
 
 #endif /* SRC_ENVIRONMENT_H_ */

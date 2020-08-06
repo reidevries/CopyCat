@@ -9,8 +9,10 @@
 
 using namespace std;
 
-void Environment::initLevel(ResMan& res_man, std::string level_name)
+void Environment::initLevel(ManTex& man_tex, 
+	ManAudio& man_audio, 
+	string level_name)
 {
-	Level::loadTest(reg, res_man);
+	Level::loadTest(reg, man_tex,  man_audio);
 }
 

@@ -5,15 +5,15 @@
  *      Author: rei de vries
  */
 
-#include "JsonComponents.hpp"
+#include "ComponentsJson.hpp"
 
 using namespace std;
 
-const std::string JsonComponents::level_directory = "level/";
+const std::string ComponentsJson::level_directory = "level/";
 
 //-----------------methods to parse entities to json------------------------//
 
-json JsonComponents::fromFloor(entt::registry& reg,
+json ComponentsJson::fromFloor(entt::registry& reg,
 	const entt::entity entity)
 {
 	json j;
@@ -28,7 +28,7 @@ json JsonComponents::fromFloor(entt::registry& reg,
 
 //-----------------public functions to load and save levels/game state------//
 
-json JsonComponents::loadLevel(entt::registry& reg, std::string file_name)
+json ComponentsJson::loadLevel(entt::registry& reg, std::string file_name)
 {
 	json j;
 	ifstream f(file_name);
@@ -48,7 +48,7 @@ json JsonComponents::loadLevel(entt::registry& reg, std::string file_name)
 			}
 		}
 	} else {
-		DebugPrinter::printDebug(0, "JsonComponents::parseLevel",
+		DebugPrinter::printDebug(0, "ComponentsJson::parseLevel",
 			file_name + " is an invalid filename, returning empty json");
 	}
 	return j;
@@ -56,10 +56,10 @@ json JsonComponents::loadLevel(entt::registry& reg, std::string file_name)
 
 
 
-void JsonComponents::saveLevel(entt::registry& reg, std::string file_name)
+void ComponentsJson::saveLevel(entt::registry& reg, std::string file_name)
 {
 	std::string full_name = level_directory + file_name;
-	DebugPrinter::printDebug(3, "JsonComponents::saveLevel",
+	DebugPrinter::printDebug(3, "ComponentsJson::saveLevel",
 		"saving current level to " + full_name + "...");
 
 	json j;
@@ -80,17 +80,17 @@ void JsonComponents::saveLevel(entt::registry& reg, std::string file_name)
 	if (f.good()) {
 		f << setw(4) << j;
 	} else {
-		DebugPrinter::printDebug(0, "JsonComponents::saveLevel",
+		DebugPrinter::printDebug(0, "ComponentsJson::saveLevel",
 			full_name + " is an invalid filename, printing here instead:\n"
 			+ j.dump());
 	}
 }
 
 
-void JsonComponents::test()
+void ComponentsJson::test()
 {
 	cout << endl;
-	cout << "------JsonComponents::test()------RUNNING--------------" << endl;
+	cout << "------ComponentsJson::test()------RUNNING--------------" << endl;
 	Vector2 v2 = {12.345, 6.789};
 	Vector3 v3 = {1.98, 2.76, 3.54};
 	Vector4 v4 = {1,2,3,4};
@@ -230,7 +230,7 @@ void JsonComponents::test()
 		<< "," << vr_dev_test.chromaAbCorrection[2]
 		<< "," << vr_dev_test.chromaAbCorrection[3] << "}" << endl;
 	
-	cout << "------JsonComponents::test()------FINISHED-------------" << endl;
+	cout << "------ComponentsJson::test()------FINISHED-------------" << endl;
 	cout << endl;
 
 }

@@ -33,6 +33,7 @@ entt::entity Factory::makePlane(entt::registry& reg,
 
 	SpriteQuad& quad = reg.emplace<SpriteQuad>(e);
 	quad.quad = Quad(rect, dir);
+	reg.emplace<HitBox>(e, quad.quad.getBoundingBox(pos));
 
 	return e;
 }
@@ -47,7 +48,9 @@ entt::entity Factory::makeFloor(entt::registry& reg,
 	reg.emplace<WorldPos>(e, WorldPos(pos));
 
 	SpriteQuad& quad = reg.emplace<SpriteQuad>(e);
-	quad.quad = Quad({0, 0, 32, 32}, VectorMath::Orthog::up);
+	quad.quad = Quad({0, 0, World::METRE, World::METRE}, 
+		VectorMath::Orthog::up);
+	reg.emplace<HitBox>(e, quad.quad.getBoundingBox(pos));
 
 	return e;
 }

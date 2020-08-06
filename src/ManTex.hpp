@@ -1,11 +1,13 @@
 /*
- * resman.h
+ * ManTex.hpp
  *
  *  Created on: Mar 23, 2020
  *      Author: rei de vries
- *      This is the resource manager,
- *      it loads resources (textures, sounds etc) from files,
- *      unloads resources if they haven't been used for a long time
+ *      This creates sprites, automatically loads texture atlases and regions
+ * 		based on a filename requested by the user. If the file has already been
+ * 		loaded, it gives the user its resource ID, otherwise, it queues it to
+ * 		be loaded and gives the user the resource ID to use when it is loaded.
+ * 		User can also request resources in advance
  */
 
 #ifndef SRC_RESMAN_H_
@@ -28,14 +30,13 @@
 #include "VectorMath.hpp"
 #include "components/SpriteAnim.hpp"
 
-class ResMan {
+class ManTex 
+{
 private:
 	static const std::string tex_directory;
 
-	std::string constructAtlasFilename(
-		std::string) const;
-	std::string constructImageFilename(
-		std::string) const;
+	std::string constructAtlasFilename(std::string) const;
+	std::string constructImageFilename(std::string) const;
 
 	const bool debug;
 
@@ -78,11 +79,12 @@ private:
 	uint8_t requestRegion(uint8_t atlas_id, const std::string& name);
 
 public:
-	ResMan(const bool set_debug);
-	ResMan();
+	ManTex(const bool set_debug);
+	ManTex();
 	
 	uint8_t requestTex(const std::string& name);
 	
+	// get IDs in const-fashion without requesting them
 	uint8_t getAtlasID(const std::string& name) const;
 	uint8_t getRegionID(const std::string& atlas_name, 
 						const std::string& region_name) const;
@@ -124,7 +126,7 @@ public:
 	ResBuf<Texture2D, Res::TEX_BUF_SIZE>& getTexBuf() {return tex_buf;}
 	Texture2D getTexAt(uint8_t atlas_id);
 
-	~ResMan();
+	~ManTex();
 };
 
 #endif /* SRC_RESMAN_H_ */

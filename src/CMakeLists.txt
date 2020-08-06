@@ -1,16 +1,20 @@
 target_sources(${PROJECT_NAME} PRIVATE 
 	ComponentNames.cpp
 	ComponentSerialize.cpp
+	ComponentsJson.cpp
 	DebugPrinter.cpp
 	Environment.cpp
 	Factory.cpp
-	JsonComponents.cpp
+	InputData.cpp
 	Level.cpp
 	Main.cpp
+	ManAudio.cpp
+	ManTex.cpp
 	MessageList.cpp
 	Polygon.cpp
 	Quad.cpp
 	QuadDraw.cpp
-	ResMan.cpp
+	SoundRes.cpp
 	ViewRenderer.cpp
 )
+add_subdirectory(systems)

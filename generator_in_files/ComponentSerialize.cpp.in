@@ -8,7 +8,7 @@
 #ifndef SRC_COMPONENTSERIALIZE_CPP_
 #define SRC_COMPONENTSERIALIZE_CPP_
 
-#include "ComponentSerialize.h"
+#include "ComponentSerialize.hpp"
 
 //INSERT1
 

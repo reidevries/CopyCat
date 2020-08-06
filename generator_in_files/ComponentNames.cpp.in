@@ -6,7 +6,7 @@
  * serializing each component to/from json
  */
 
-#include "ComponentNames.h"
+#include "ComponentNames.hpp"
 
 using namespace std;
 

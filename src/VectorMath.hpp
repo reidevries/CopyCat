@@ -10,6 +10,7 @@
 #include <cstdint>
 
 #include "CatConf.hpp"
+#include "RaylibOps.hpp"
 
 namespace VectorMath {
 constexpr double DEG_TO_RAD = 0.01745329252;
@@ -201,70 +202,61 @@ static double invSqrt(const double a)
 
 constexpr double dot(Vector2 a, Vector2 b)
 {
-	return a.x*b.x+a.y*b.y;
+	return a*b;
 }
 
 static double dist(Vector2 a, Vector2 b)
 {
-	return sqrt( pow(b.x-a.x, 2) + pow(b.y-a.y, 2) );
+	Vector2 a_b = b-a;
+	return sqrt( a_b.x*a_b.x + a_b.y*a_b.y );
+}
+
+static double dist(Vector3 a, Vector3 b)
+{
+	Vector3 a_b = b-a;
+	return sqrt( a_b.x*a_b.x + a_b.y*a_b.y + a_b.z*a_b.z );
+}
+
+constexpr Vector2 addModulo(Vector2 a, Vector2 b, int m)
+{
+	Vector2 sum = a+b;
+	return sum % m;
+}
+
+constexpr Vector3 addModulo(Vector3 a, Vector3 b, int m)
+{
+	Vector3 sum = a+b;
+	return sum % m;
 }
 
 constexpr Vector2 add(Vector2 a, Vector2 b)
 {
-	return (Vector2){a.x+b.x, a.y+b.y};
-}
-
-constexpr Vector2 addModulo(Vector2 a, Vector2 b, unsigned int m)
-{
-	Vector2 sum = {a.x+b.x, a.y+b.y};
-	Vector2 decimal_part = {
-		sum.x-static_cast<int>(sum.x),
-		sum.y-static_cast<int>(sum.y)
-	};
-	return (Vector2) {
-		decimal_part.x + (static_cast<int>(sum.x)%m),
-		decimal_part.y + (static_cast<int>(sum.y)%m)
-	};
-}
-
-constexpr Vector3 addModulo(Vector3 a, Vector3 b, unsigned int m)
-{
-	Vector3 sum = {a.x+b.x, a.y+b.y, a.z+b.z};
-	Vector3 decimal_part = {
-		sum.x-static_cast<int>(sum.x),
-		sum.y-static_cast<int>(sum.y),
-		sum.z-static_cast<int>(sum.z)
-	};
-	return (Vector3) {
-		decimal_part.x + (static_cast<int>(sum.x)%m),
-		decimal_part.y + (static_cast<int>(sum.y)%m),
-		decimal_part.z + (static_cast<int>(sum.z)%m)
-	};
+	return a+b;
 }
 
 constexpr Vector3 add(Vector3 a, Vector3 b)
 {
-	return (Vector3){a.x+b.x, a.y+b.y, a.z+b.z};
+	return a+b;
 }
 
 constexpr Vector2 sub(Vector2 a, Vector2 b)
 {
-	return (Vector2){a.x-b.x, a.y-b.y};
+	return a-b;
 }
 
 constexpr Vector3 sub(Vector3 a, Vector3 b)
 {
-	return (Vector3){a.x-b.x, a.y-b.y, a.z-b.z};
+	return a-b;
 }
 
 constexpr Vector2 scale(Vector2 a, float b)
 {
-	return (Vector2){a.x*b, a.y*b};
+	return a*b;
 }
 
 constexpr Vector3 scale(Vector3 a, float b)
 {
-	return (Vector3){a.x*b, a.y*b, a.z*b};
+	return a*b;
 }
 
 constexpr Vector2 scale(Vector2 a, Vector2 b)
@@ -277,23 +269,54 @@ constexpr Vector3 scale(Vector3 a, Vector3 b)
 	return (Vector3){a.x*b.x, a.y*b.y, a.z*b.z};
 }
 
-constexpr float max(Vector2 a)
+constexpr float max_axis(Vector2 a)
 {
 	return (a.x>a.y)?a.x:a.y;
 }
 
-constexpr float max(Vector3 a)
+constexpr float max_axis(Vector3 a)
 {
 	return (a.x>a.y)?
 		((a.x>a.z)?a.x:a.z):((a.y>a.z)?a.y:a.z);
 }
 
-constexpr Vector2 dot(Vector2 a, Vector4 mat)
+constexpr Vector2 max(Vector2 a, Vector2 b)
 {
 	return {
-		a.x*mat.w + a.y*mat.x,
-		a.x*mat.y + a.y*mat.z
+		(a.x>b.x) ? a.x : b.x, 
+		(a.y>b.y) ? a.y : b.y
 	};
+}
+
+constexpr Vector3 max(Vector3 a, Vector3 b)
+{
+	return {
+		(a.x>b.x) ? a.x : b.x, 
+		(a.y>b.y) ? a.y : b.y, 
+		(a.z>b.z) ? a.z : b.z, 
+	};
+}
+
+constexpr Vector2 min(Vector2 a, Vector2 b)
+{
+	return {
+		(a.x<b.x) ? a.x : b.x, 
+		(a.y<b.y) ? a.y : b.y
+	};
+}
+
+constexpr Vector3 min(Vector3 a, Vector3 b)
+{
+	return {
+		(a.x<b.x) ? a.x : b.x, 
+		(a.y<b.y) ? a.y : b.y, 
+		(a.z<b.z) ? a.z : b.z, 
+	};
+}
+
+constexpr Vector2 dot(Vector2 a, Vector4 mat)
+{
+	return a*mat;
 }
 
 //0 < fade < 1
@@ -311,6 +334,25 @@ constexpr Vector3 fade(Vector3 a, Vector3 b, float fade)
 		a.y*(1-fade) + b.y*fade,
 		a.z*(1-fade) + a.y*fade
 	};
+}
+
+constexpr Vector3 cross(Vector3 a, Vector3 b)
+{
+	return {
+		a.y*b.z-a.z*b.y, 
+		a.z*b.x-a.x*b.z, 
+		a.x*b.y-a.y*b.x
+	};
+}
+
+constexpr Vector3 project(Vector3 a, Vector3 dir)
+{
+	return dir * ((dir*a)/(dir*dir));
+}
+
+constexpr Vector2 project(Vector2 a, Vector2 dir)
+{
+	return dir * ((dir*a)/(dir*dir));
 }
 
 static bool checkPointInPolygon(const Vector2 point,
@@ -351,7 +393,7 @@ static Vector3 normalise(Vector3 a)
 
 constexpr Vector3 normalize_shit_fast(Vector3 a)
 {
-	return VectorMath::scale(a, 1/max(a));
+	return VectorMath::scale(a, 1/max_axis(a));
 }
 
 static Vector2 intersectLines(const Vector2 a_1,
@@ -401,6 +443,27 @@ static Vector2 intersectLines(const Vector2 a_1,
 		} else {
 			return (Vector2){-1,-1};
 		}
+	}
+}
+
+static RayHitInfo intersectRayPlane(const Ray& r, 
+	const Vector3& plane_p, 
+	const Vector3& plane_n)
+{
+	RayHitInfo hit;
+	hit.position = {0, 0, 0};
+	hit.distance = 0;
+	hit.normal = plane_n;
+	Vector3 r_p = plane_p - r.position;
+	float k = (r_p*plane_n)/(r.direction*plane_n);
+	if (k < 0) {
+		hit.hit = false;
+		return hit;
+	} else {
+		hit.hit = true;
+		hit.position = r.position + k*r.direction;
+		hit.distance = dist(r.position, hit.position);
+		return hit;
 	}
 }
 
@@ -519,6 +582,22 @@ static bool rectContains(const Rectangle a, const Vector2 b)
 {
 	return (b.x >= a.x && b.x < a.x+a.width
 		&&	b.y >= a.y && b.y < a.y+a.height);
+}
+
+static bool boxContains(const BoundingBox a, const Vector3 b)
+{
+	// get vector from b to a.max and a.min
+	Vector3 d_max = a.max-b;
+	Vector3 d_min = a.min-b;
+	
+	// reorder the variables just in case a.min > a.max
+	Vector3 t_max = VectorMath::max(d_max, d_min);
+	Vector3 t_min = VectorMath::min(d_max, d_min);
+	
+	// now t_max should be >=0 and t_min should be <=0
+	return (t_max.x >= 0 && t_min.x <= 0)
+		&& (t_max.y >= 0 && t_min.y <= 0)
+		&& (t_max.z >= 0 && t_min.z <= 0);
 }
 
 static Vector2 convert3Dto2Dcoord(const Vector3 a,

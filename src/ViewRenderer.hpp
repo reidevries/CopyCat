@@ -16,23 +16,20 @@
 
 #include "CatConf.hpp"
 #include "CatClock.hpp"
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
 #include "DebugPrinter.hpp"
 #include "Environment.hpp"
 #include "ResBuf.hpp"
-#include "ResMan.hpp"
+#include "ManTex.hpp"
 #include "QuadDraw.hpp"
+#include "WorldConstants.hpp"
 
 class ViewRenderer
 {
 public:
-	//world height is fixed to 128 units.
-	//world width is scaled depending on aspect ratio
-	static const int WORLD_H = 128;
-	static const int METRE = 16;
 	int screen_w, screen_h;
+	int world_w;
 	float screen_scale;
-	float world_w;
 	const bool debug;
 	Camera cam;
 	void pointCameraAt(const Vector2 coords);
@@ -44,11 +41,12 @@ public:
 
 	void renderAxes();
 	void renderAxes2D(Vector2 pos, float cam_rot);
-	void renderDebug(CatClock& clk, entt::registry& reg, ResMan& resman);
+	void renderDebug(CatClock& clk, entt::registry& reg, ManTex& man_tex);
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
-	void render(CatClock& clk, entt::registry& reg, ResMan& resman);
+	void render(CatClock& clk, entt::registry& reg, ManTex& man_tex);
+	const Camera& getCam() const {return cam;}
 };
 
 #endif /* SRC_VIEWRENDERER_H_ */

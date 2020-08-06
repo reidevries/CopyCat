@@ -156,7 +156,7 @@ public:
 	}
 	
 	//logn time access
-	T get(std::string name)
+	T get(const std::string& name) const
 	{
 		return buf[buf_by_name.at(name)];
 	}
@@ -164,23 +164,23 @@ public:
 	//constant time access
 	T& at(std::size_t index)
 	{
-		return buf[index];
+		return buf.at(index);
 	}
 
 	//logn time access
-	T& at(std::string name)
+	T& at(const std::string& name)
 	{
 		return buf[buf_by_name.at(name)];
 	}
 
 	//logn time
-	std::size_t find(std::string name) const
+	std::size_t find(const std::string& name) const
 	{
 		return buf_by_name.at(name);
 	}
 
 	//figure out whether buf has a certain name in logn time
-	bool has(std::string name) const
+	bool has(const std::string& name) const
 	{
 		return (buf_by_name.count(name) > 0);
 	}

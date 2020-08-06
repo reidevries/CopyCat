@@ -9,8 +9,10 @@
 #define SRC_COMPONENTSERIALIZE_H_
 
 #include "IncludeJson.hpp"
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
 
+void from_json(const json&, HoverSound&);
+void to_json(json&, const HoverSound&);
 void from_json(const json&, WorldPos&);
 void to_json(json&, const WorldPos&);
 void from_json(const json&, SpriteSizeRot&);
@@ -23,5 +25,7 @@ void from_json(const json&, ScreenPos&);
 void to_json(json&, const ScreenPos&);
 void from_json(const json&, LevelID&);
 void to_json(json&, const LevelID&);
+void from_json(const json&, HitBox&);
+void to_json(json&, const HitBox&);
 
 #endif /* SRC_COMPONENTSERIALIZE_H_ */

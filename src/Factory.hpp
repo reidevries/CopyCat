@@ -14,7 +14,8 @@
 #include "QuadDraw.hpp"
 #include <array>
 #include <sstream>
-#include "ComponentIncludes.hpp"
+#include "IncludeComponents.hpp"
+#include "WorldConstants.hpp"
 
 class Factory
 {
