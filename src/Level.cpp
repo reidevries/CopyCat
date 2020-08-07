@@ -2,8 +2,11 @@
 
 using namespace std;
 
+
 void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 {
+	auto lattice = genLattice<SIZE_X,SIZE_Y>(cols, rows);
+
 	SpriteAnim sa = man_tex.constructSprite(
 		"box_placeholder_generic",
 		(Vector2){World::METRE,World::METRE});
