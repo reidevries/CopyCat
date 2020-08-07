@@ -14,22 +14,6 @@ SoundRes::SoundRes(string set_name)
 {
 }
 
-Sound SoundRes::getSound(
-	const ResBuf<Sound, Res::AUDIO_BUF_SIZE>& audio_buf) const
-{
-	Sound s;
-	if (res_id < Res::AUDIO_BUF_SIZE) {
-		s = audio_buf.get(res_id);
-		SetSoundPitch(s, pitch);
-		SetSoundVolume(s, vol);
-	} else {
-		stringstream ss;
-		ss << "invalid res_id of sound with name " << name;
-		throw out_of_range(ss.str());
-	}
-	return s;
-}
-
 void to_json(json& j, const SoundRes& s)
 {
 	j["SoundRes"] = {

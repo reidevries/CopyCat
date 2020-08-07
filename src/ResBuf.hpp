@@ -280,19 +280,17 @@ public:
 		return buf[rr];
 	}
 
-	std::array<T, buf_size>& popAll()
-	{
-		for (int i = 0; i < buf_size; ++i) {
-			release(i);
-		}
-		return buf;
-	}
-
 	void clear()
 	{
 		for (int i = 0; i < buf_size; ++i) {
 			release(i);
 		}
+	}
+
+	std::array<T, buf_size>& popAll()
+	{
+		clear();
+		return buf;
 	}
 
 	//for debugging

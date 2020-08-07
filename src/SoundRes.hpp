@@ -26,8 +26,6 @@ public:
 	//Pitch and volume params for playing the sound
 	float pitch;
 	float vol;
-	
-	Sound getSound(const ResBuf<Sound, Res::AUDIO_BUF_SIZE>&) const;
 };
 
 void to_json(json& j, const SoundRes& s);

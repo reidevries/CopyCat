@@ -16,6 +16,8 @@ struct CatClock {
 	uint16_t time_m;		//time in minutes since process began, max 45 days
 	uint8_t time_s;			//time in seconds since last minute tick, max 60
 	float time_ms;			//time in ms since last second tick, max 1000
+	// time in ms since start of last beat
+	float time_beat;
 
 	uint32_t time_f;		//time in frames since process began
 
@@ -25,18 +27,27 @@ struct CatClock {
 	//in the object itself.
 	bool tock_m;
 	bool tock_s;
+	bool tock_beat;
 
 	//constants for converting between units
 	static const int MS_S = 1000;
 	static const int S_M = 60;
 	static constexpr float S_MS = 1/MS_S;
 	static constexpr float M_S = 1/S_M;
+	static const int MSPB = 68;                               // ms per beat
 
 	//call this at the beginning of every frame to update the clock
 	void tick(float dt_s) {
 		this->dt_s = dt_s;
 		tock_m = false;
 		tock_s = false;
+		tock_beat = false;
+		
+		time_beat += dt_s*MS_S;
+		if (time_beat >= MSPB) {
+			time_beat = 0;
+			tock_beat = true;
+		}
 
 		++time_f;
 

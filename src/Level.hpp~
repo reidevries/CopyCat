@@ -23,13 +23,32 @@ static std::array<std::array<float, size_y>, size_x> genLattice(
 	const float y_axis[size_y])
 {
 	std::array<std::array<float, size_y>, size_x> lattice;
-	for ( int i=0; i < size_x; ++i ) {
-		for ( int j=0; j < size_y; ++j ) {
+	for ( int i=0; i < size_x, ++i ) {
+		for ( int j=0; j < size_y, ++j ) {
 			lattice[i][j] = x_axis[i]*y_axis[j];
 		}
 	}
 	return lattice;
 }
+
+static const float[SIZE_X][SIZE_Y] lattice = {
+	{	1,				5/4,				25/16,				125/64,
+			729/343,			81/49,				9/7						},
+	{	3/2,			15/8,				75/32,				375/128,
+			2187/686,			243/98,				27/14					}, 
+	{	9/4,			45/16,				225/64,				1125/256,
+			6561/1372,			729/196,			81/28					},
+	{	27/8,			135/32,				675/128,			3375/512,
+			19683/2744,			2187/392,			243/56					},
+	{	81/16,			405/64,				2025/256,			10125/1024,
+			59049/5488,			6561/784,			729/112					},
+	{	64/27,			80/27,				100/27,				125/27,
+			1728/343,			192/49,				64/21					},
+	{	16/9,			20/9,				25/9,				125/36,
+			1296/343,			144/49,				16/7					},
+	{	4/3,			5/3,				25/12,				125/48,
+			2876/1029,			108/49,				12/7					}
+};
 
 void loadTest(entt::registry& reg, ManTex& man_tex,  ManAudio& man_audio);
 

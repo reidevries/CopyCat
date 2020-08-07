@@ -46,15 +46,6 @@ ViewRenderer::ViewRenderer(const int screen_w, const int screen_h,
 	if (debug)
 		cout << "screen scale set to " << screen_scale << " i am happy"
 			<< endl;
-
-	Image checked = LoadImage("sprite/tile/floor_dirt.png");
-	Texture2D texture = LoadTextureFromImage(checked);
-	UnloadImage(checked);
-
-	testmodel = LoadModelFromMesh(
-		static_cast<Mesh>(GenMeshPlane(211.0, 211.0, 1, 1))
-	);
-	testmodel.materials[0].maps[MAP_ALBEDO].texture = texture;
 }
 
 void ViewRenderer::render(CatClock& clk,

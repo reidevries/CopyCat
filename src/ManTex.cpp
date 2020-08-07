@@ -286,6 +286,9 @@ void ManTex::loadNextImage()
 	//first, load the png into Image data on the CPU
 	string image_filename = constructImageFilename(to_load);
 	if (FileExists(image_filename.c_str())) {
+		// if there is still an image in the buf somehow, unload it first
+		if (image_buf.ID < Res::TEX_BUF_SIZE) UnloadImage(image_buf.image);
+	 
 		image_buf.name = to_load;
 		image_buf.image = LoadImage(image_filename.c_str());
 		image_buf.rect = {

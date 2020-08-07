@@ -42,6 +42,7 @@ int main(int argc, char* argv[])
 		<< "." << int(COPYCAT_VERSION_MINOR);
 
     InitWindow(screen_w, screen_h, window_title.str().c_str());
+    InitAudioDevice();
     //globally disable backface culling
     //we are not loading models in this game
 	rlDisableBackfaceCulling();
@@ -73,8 +74,9 @@ int main(int argc, char* argv[])
 
 		// system update methods
 		Systems::soundOnHover(environment.getReg(), 	
+			clk, 
 			input_data.getMouseData(), 
-			man_audio.getAudioBuf());
+			man_audio);
 		// end of system update methods
 		
 		// this is still technically a system update method, but
@@ -85,6 +87,7 @@ int main(int argc, char* argv[])
 		man_tex.loadNextTex();
     }
     
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

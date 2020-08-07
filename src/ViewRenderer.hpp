@@ -35,8 +35,6 @@ public:
 	void pointCameraAt(const Vector2 coords);
 	Rectangle getCameraFrustrum();
 
-	Model testmodel;
-
 	Font font;
 
 	void renderAxes();

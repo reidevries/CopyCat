@@ -30,8 +30,6 @@ private:
 	
 	ResBuf<Sound, Res::AUDIO_BUF_SIZE> audio_buf;
 	
-	std::array<float, Res::AUDIO_BUF_SIZE> old_pitches;
-	
 	void freeAudioByIndex(const uint8_t index);
 
 public:

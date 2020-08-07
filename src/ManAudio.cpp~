@@ -113,9 +113,7 @@ void ManAudio::playSound(const SoundRes& sound)
 {
 	if (sound.res_id < Res::AUDIO_BUF_SIZE) {
 		Sound s = getAudioAt(sound.res_id);
-		if (old_pitches[sound.res_id] != sound.pitch) {
-			SetSoundPitch(s, sound.pitch);
-		}
+		SetSoundPitch(s, sound.pitch);
 		old_pitches[sound.res_id] = sound.pitch;
 		SetSoundVolume(s, sound.vol);
 		PlaySound(s);
