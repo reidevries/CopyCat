@@ -6,38 +6,29 @@
 #include "Systems.hpp"
 
 using namespace std;
+using namespace VectorMath;
 
-void Systems::soundOnHover(entt::registry& reg, 
-	const InputData::Mouse& mouse, 
+void Systems::playDroneSound(entt::registry& reg, 
+	const CatClock& clk,
 	ManAudio& man_audio)
 {
-	//if mouse is not moving, there couldn't possibly be a new ray hit
-	if (!mouse.moving) return;
+	if (!clk.tock_beat) return;
 	
-	//first check the entity currently under the mouse to see if it is still
-	//under the mouse. If so, don't bother to check other entities
-	//this means only one entity can be under the mouse at once, which is fine
-	//for audio game jam game
-	if (sound_on_hover_hit.has_value()) {
-		Vector3 e_pos = reg.get<WorldPos>(*sound_on_hover_hit).pos;
-		Quad e_quad = reg.get<SpriteQuad>(*sound_on_hover_hit).quad;
-		if (e_quad.getRayHit(mouse.ray, e_pos).hit) {
-			return;
-		} else {
-			sound_on_hover_hit = std::nullopt;
-		}
+	auto view = reg.view<DroneSound>();
+
+	float limiting = 0;
+	for (const entt::entity e : view) {
+		ResSound sound = view.get<DroneSound>(e).sound;
+		limiting += sound.vol;
 	}
 	
-	auto view = reg.view<HoverSound, SpriteQuad, WorldPos>();
+	limiting = 3.0f/(2.0f+limiting);//values of 3 and 2 approximate sqrt(1/l)
+	if (limiting > 1.0f) limiting = 1.0f;
 	
 	for (const entt::entity e : view) {
-		Vector3 e_pos = view.get<WorldPos>(e).pos;
-		Quad e_quad = view.get<SpriteQuad>(e).quad;
-		if (e_quad.getRayHit(mouse.ray, e_pos).hit) {
-			SoundRes s = view.get<HoverSound>(e).sound;
-			man_audio.playSound(s);
-			sound_on_hover_hit = e;
-			break; //only one hoversound can be hit by a ray at a time
+		ResSound sound = view.get<DroneSound>(e).sound;
+		if (sound.vol >= CLOSE_ENUF*2) {
+			man_audio.playSound(sound, limiting);
 		}
 	}
 }

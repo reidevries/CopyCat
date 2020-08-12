@@ -24,6 +24,12 @@ void Systems::soundOnHover(entt::registry& reg,
 		if (e_quad.getRayHit(mouse.ray, e_pos).hit) {
 			return;
 		} else {
+			reg.get<SpriteAnim>(*sound_on_hover_hit).sprite.tint = {
+				255,
+				255,
+				255,
+				255
+			};
 			sound_on_hover_hit = std::nullopt;
 		}
 	}
@@ -34,9 +40,15 @@ void Systems::soundOnHover(entt::registry& reg,
 		Vector3 e_pos = view.get<WorldPos>(e).pos;
 		Quad e_quad = view.get<SpriteQuad>(e).quad;
 		if (e_quad.getRayHit(mouse.ray, e_pos).hit) {
-			SoundRes s = view.get<HoverSound>(e).sound;
+			ResSound s = view.get<HoverSound>(e).sound;
 			man_audio.playSound(s);
 			sound_on_hover_hit = e;
+			reg.get<SpriteAnim>(*sound_on_hover_hit).sprite.tint = {
+				255,
+				255,
+				255,
+				128
+			};
 			break; //only one hoversound can be hit by a ray at a time
 		}
 	}
