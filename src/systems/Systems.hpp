@@ -46,7 +46,7 @@ public:
 	void playDroneSound(entt::registry&,
 		const CatClock& clk,
 		ManAudio&);
-	void animateSprites(entt::registry&,
+	void BatAI(entt::registry&,
 		const CatClock& clk);
 };
 
