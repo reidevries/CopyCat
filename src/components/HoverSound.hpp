@@ -12,11 +12,11 @@
 #include <string>
 #include <cstdint>
 
-#include "../SoundRes.hpp"
+#include "../ResSound.hpp"
 
 struct HoverSound 
 {
-	SoundRes sound;
+	ResSound sound;
 };
 
 #endif
