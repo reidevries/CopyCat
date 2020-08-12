@@ -1,0 +1,28 @@
+/*
+ * Created: 02/08 2020
+ *  by Rei de Vries
+ */
+
+#include "SoundOnHover.hpp"
+
+using namespace std;
+
+void Systems::soundOnHover(entt::registry& reg, 
+	const CatClock& clk, 
+	const InputData::Mouse& mouse, 
+	ManAudio& man_audio)
+{
+	if (!clk.tock_beat) return;
+	auto view = reg.view<HoverSound, SpriteQuad, WorldPos>();
+	
+	for (const entt::entity e : view) {
+		Vector3 e_pos = view.get<WorldPos>(e).pos;
+		Quad sprite_quad = view.get<SpriteQuad>(e).quad;
+		RayHitInfo ray_hit = sprite_quad.getRayHit(mouse.ray, e_pos);
+		if (ray_hit.hit) {
+			SoundRes s = view.get<HoverSound>(e).sound;
+			man_audio.playSound(s);
+			break;
+		}
+	}
+}

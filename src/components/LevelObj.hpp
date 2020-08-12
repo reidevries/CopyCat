@@ -1,5 +1,5 @@
 /*
- * LevelObject.h
+ * LevelObj.hpp
  *
  *  Created on: Jul 25, 2020
  *      Author: rei de vries
@@ -9,13 +9,13 @@
  *      while the game is running. It contains a string-format id
  */
 
-#ifndef SRC_COMPONENTS_LEVELOBJECT_H_
-#define SRC_COMPONENTS_LEVELOBJECT_H_
+#ifndef SRC_COMPONENTS_LEVELOBJ_H_
+#define SRC_COMPONENTS_LEVELOBJ_H_
 
 #include <string>
 
-struct LevelID {
+struct LevelObj {
 	std::string name;
 };
 
-#endif /* SRC_COMPONENTS_LEVELOBJECT_H_ */
+#endif /* SRC_COMPONENTS_LEVELOBJ_H_ */

@@ -118,6 +118,16 @@ constexpr Vector2 operator/( const Vector2& v1,  const Vector2& v2 )
 	};
 }
 
+constexpr bool operator==(const Vector2& v1, const Vector2& v2 )
+{
+	return (v1.x==v2.x)&&(v1.y==v2.y);
+}
+
+constexpr bool operator!=(const Vector2& v1, const Vector2& v2 )
+{
+	return !(v1==v2);
+}
+
 inline
 std::ostream& operator<<( std::ostream& output, const Vector2& v )
 {
@@ -237,6 +247,11 @@ constexpr Vector3 operator/( const Vector3& v1,  const Vector3& v2 )
 		v1.y/v2.y, 
 		v1.z/v2.z
 	};
+}
+
+constexpr bool operator==(const Vector3& v1, const Vector3& v2 )
+{
+	return (v1.x==v2.x)&&(v1.y==v2.y)&&(v1.z==v2.z);
 }
 
 inline
@@ -380,6 +395,11 @@ constexpr Vector4 operator/( const Vector4& v1,  const Vector4& v2 )
 		v1.z/v2.z, 
 		v1.w/v2.w
 	};
+}
+
+constexpr bool operator==(const Vector4& v1, const Vector4& v2 )
+{
+	return (v1.x==v2.x)&&(v1.y==v2.y)&&(v1.z==v2.z)&&(v1.w==v2.w);
 }
 
 inline

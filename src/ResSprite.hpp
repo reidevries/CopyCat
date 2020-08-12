@@ -1,29 +1,33 @@
 /*
- * SpriteAnim.h
+ * ResSprite.h
  *
  *  Created on: Jul 17, 2020
  *      Author: rei de vries
- *		Component representing the frames of an animation.
- *		Also used for sprites with no animation by setting
- *		num_frames = 0
+ *		Struct representing a texture resource to be used by the game,
+ *		optionally with an animation. If no animation desired, set
+ * 		num_frames = 0 or 1
  */
-
-#ifndef SRC_COMPONENTS_SPRITEANIM_H_
-#define SRC_COMPONENTS_SPRITEANIM_H_
+ 
+ #ifndef SRC_COMPONENTS_RESSPRITE_H_
+#define SRC_COMPONENTS_RESSPRITE_H_
 
 #include <array>
 #include <cstdint>
 #include <string>
 
-#include "../ResConstants.hpp"
+#include "ResConstants.hpp"
+#include "CatConf.hpp"
+#include "IncludeJson.hpp"
 
-struct SpriteAnim
+struct ResSprite
 {
 	//name of the atlas
 	std::string atlas_name;
 
 	//name of the region
 	std::string region_name;
+	
+	Color tint = WHITE;
 
 	//id of the atlas containing the animation
 	std::size_t res_id;
@@ -36,7 +40,7 @@ struct SpriteAnim
 	//must be < Res::MAX_ANIM_FRAMES
 	std::size_t num_frames;
 
-	SpriteAnim()
+	ResSprite()
 		: res_id(Res::MAX_ANIM_FRAMES),
 		anim_index(0),
 		num_frames(0)
@@ -50,6 +54,8 @@ struct SpriteAnim
 	}
 };
 
+void to_json(json& j, const ResSprite& s);
+void from_json(const json& j, ResSprite& s);
 
 
-#endif /* SRC_COMPONENTS_SPRITEANIM_H_ */
+#endif /* SRC_COMPONENTS_RESSPRITE_H_ */

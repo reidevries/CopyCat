@@ -7,6 +7,7 @@
 #define INPUTDATA_HPP_
 
 #include "CatConf.hpp"
+#include "RaylibOps.hpp"
 
 class InputData
 {
@@ -23,6 +24,7 @@ public:
 		Button m;
 		Button r;
 		int scroll;
+		bool moving;
 	};
 	
 private:

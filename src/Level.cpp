@@ -10,7 +10,7 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 	SpriteAnim sa = man_tex.constructSprite(
 		"box_placeholder_generic",
 		(Vector2){World::METRE,World::METRE});
-	SoundRes sound_res = man_audio.constructSound("test");
+	SoundRes sound_res = man_audio.constructSound("ping");
 	stringstream ss;
 	ss << "using lattice: " << endl;
 	
@@ -24,9 +24,10 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
                     0,
                     static_cast<float>(v*World::METRE)
                 });
-			sound_res.pitch = lattice[u % SIZE_X][v % SIZE_Y];
+			sound_res.pitch = lattice[u % SIZE_X][v % SIZE_Y].getf();
 			reg.emplace<HoverSound>(e, sound_res);
-			ss << lattice[u % SIZE_X][v % SIZE_Y] << "\t\t";
+			ss << static_cast<Fraction>(lattice[u % SIZE_X][v % SIZE_Y]) 
+				<< "\t\t";
 		}
 		ss << endl;
 	}

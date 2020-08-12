@@ -5,6 +5,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	DebugPrinter.cpp
 	Environment.cpp
 	Factory.cpp
+	Fraction.cpp
 	InputData.cpp
 	Level.cpp
 	Main.cpp

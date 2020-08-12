@@ -62,6 +62,8 @@ int main(int argc, char* argv[])
 
     bool waiting_to_load = true;
     
+    Systems systems; //init systems global vars
+    
     while (!WindowShouldClose()) {
     	clk.tick(GetFrameTime());
     	man_tex.loadNextImage();
@@ -73,7 +75,7 @@ int main(int argc, char* argv[])
 		}
 
 		// system update methods
-		Systems::soundOnHover(environment.getReg(), 	
+		systems.soundOnHover(environment.getReg(), 	
 			clk, 
 			input_data.getMouseData(), 
 			man_audio);

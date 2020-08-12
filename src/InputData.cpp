@@ -7,7 +7,10 @@
 
 void InputData::updateValues(const Camera cam)
 {
-	mouse.ray = GetMouseRay(GetMousePosition(), cam);
+	Vector2 new_mouse_pos = GetMousePosition();
+	if (new_mouse_pos != mouse.screen_pos) mouse.moving = true;
+	else mouse.moving = false;
+	mouse.ray = GetMouseRay(new_mouse_pos, cam);
 	mouse.screen_pos = {
 		static_cast<float>(GetMouseX()), 
 		static_cast<float>(GetMouseY())
