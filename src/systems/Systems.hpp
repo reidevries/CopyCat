@@ -12,24 +12,28 @@
 #include <entt/entity/registry.hpp>
 
 #include "CatConf.hpp"
+#include "../DiceRoll.hpp"
 #include "../CatClock.hpp"
 #include "../InputData.hpp"
 #include "../IncludeComponents.hpp"
 #include "../VectorMath.hpp"
 #include "../ManAudio.hpp"
 #include "../DebugPrinter.hpp"
+#include "../Fraction.hpp"
+#include "../WorldConstants.hpp"
 
 
 class Systems
 {
 private:
+	DiceRoll dice;
 	//the entity currently being dragged by the mouse
 	//managed by growOnPress
 	std::optional<entt::entity> e_dragged;
 	//the entity with a hoversound currently hit by mouse ray
 	//set by soundOnHover
 	std::optional<entt::entity> sound_on_hover_hit;
-
+	
 public:
 	//System for playing sound when the mouse hovers over an entity 
 	//that has a "HoverSound" component. Need to do this before growOnPress
@@ -46,8 +50,14 @@ public:
 	void playDroneSound(entt::registry&,
 		const CatClock& clk,
 		ManAudio&);
-	void BatAI(entt::registry&,
+	void velocity(entt::registry&,
 		const CatClock& clk);
+	void spawnCreatures(entt::registry&,
+		const CatClock& clk);
+	void batAI(entt::registry&,
+		const CatClock& clk,
+		const std::array<std::array<Fraction,World::SIZE_Y>,World::SIZE_X>& ji,
+		ManAudio&);
 };
 
 #endif // SOUNDONHOVER_H

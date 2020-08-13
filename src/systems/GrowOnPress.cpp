@@ -36,7 +36,8 @@ void Systems::growOnPress(entt::registry& reg,
 		
 		limitVolAndH(drone_sound, sprite_quad);
 		
-		if (mouse.l.rls || mouse.m.rls || mouse.r.rls) {
+		if (mouse.l.rls || mouse.m.rls || mouse.r.rls
+			|| (!mouse.l.down && !mouse.m.down && !mouse.r.down)) {
 			e_dragged.reset();
 			reg.get<SpriteAnim>(*e_dragged).sprite.tint = {
 				255,
