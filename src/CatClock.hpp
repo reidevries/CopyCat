@@ -10,6 +10,7 @@
 #define SRC_CATCLOCK_H_
 
 #include <cstdint>
+#include <random>
 
 struct CatClock {
 	float dt_s;				//time in seconds since last frame
@@ -34,7 +35,7 @@ struct CatClock {
 	static const int S_M = 60;
 	static constexpr float S_MS = 1/MS_S;
 	static constexpr float M_S = 1/S_M;
-	static const int MSPB = 68;                               // ms per beat
+	static const int MSPB = 6561;                               // ms per beat
 
 	//call this at the beginning of every frame to update the clock
 	void tick(float dt_s) {

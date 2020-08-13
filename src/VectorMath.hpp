@@ -13,6 +13,10 @@
 #include "RaylibOps.hpp"
 
 namespace VectorMath {
+//value that some calculations will consider "close enough" to some int/limit
+//for floating point comparisons
+constexpr double CLOSE_ENUF = 0.00001f;
+
 constexpr double DEG_TO_RAD = 0.01745329252;
 constexpr double RAD_TO_DEG = 57.295779513;
 constexpr Matrix identity = {
@@ -179,6 +183,22 @@ static std::string printColor(const Color c)
 		ss << " alpha=" << std::setw(2) << std::hex << static_cast<int>(c.a);
 	}
 	return ss.str();
+}
+
+//limits between CLOSE_ENUF and 1-CLOSE_ENUF
+constexpr double limit(const double a)
+{
+	if (a >= 1-CLOSE_ENUF) return 1-CLOSE_ENUF;
+	else if (a <= CLOSE_ENUF) return CLOSE_ENUF;
+	return a;
+}
+
+//limits between CLOSE_ENUF and max-CLOSE_ENUF
+constexpr double limit(const double a, const double max)
+{
+	if (a >= max-CLOSE_ENUF) return max-CLOSE_ENUF;
+	else if (a <= CLOSE_ENUF) return CLOSE_ENUF;
+	return a;
 }
 
 static double invSqrt(const double a)

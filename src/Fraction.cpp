@@ -140,6 +140,13 @@ Fraction Fraction::operator/(int b)
 	return Fraction(n/b,d);
 }
 
+string Fraction::underscoreString()
+{
+	stringstream ss;
+	ss << n << "_" << d;
+	return ss.str();
+}
+
 std::ostream& operator<<(std::ostream& a, const Fraction& b)
 {
 	if (b.d == 1) {

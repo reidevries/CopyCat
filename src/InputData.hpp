@@ -14,7 +14,9 @@ class InputData
 public:
 	struct Mouse {
 		Ray ray;
+		Ray ray_vel;
 		Vector2 screen_pos;
+		Vector2 screen_vel;
 		struct Button {
 			bool down;
 			bool press;

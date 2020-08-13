@@ -16,7 +16,7 @@
 #include "DebugPrinter.hpp"
 #include "ResBuf.hpp"
 #include "ResConstants.hpp"
-#include "SoundRes.hpp"
+#include "ResSound.hpp"
 
 class ManAudio
 {
@@ -32,27 +32,29 @@ private:
 	
 	std::array<float, Res::AUDIO_BUF_SIZE> old_pitches;
 	
-	void freeAudioByIndex(const uint8_t index);
+	void freeAudioByIndex(const std::size_t index);
 
 public:
 	ManAudio(const bool set_debug);
 	
-	uint8_t requestAudio(const std::string& name);
-	uint8_t getAudioID(const std::string& name);
+	std::size_t requestAudio(const std::string& name);
+	std::size_t getAudioID(const std::string& name);
 	
 	void loadNextAudio();
 	
-	bool isAudioLoaded(const uint8_t id) const;
+	bool isAudioLoaded(const std::size_t id) const;
 	bool isAudioLoaded(const std::string& name) const;
 	
-	Sound& getAudioAt(const uint8_t id);
+	Sound& getAudioAt(const std::size_t id);
 	Sound& getAudioAt(const std::string& name);
 	
-	void playSound(const SoundRes& sound);
+	void playSound(const ResSound& sound, const float vol);
+	void playSound(const ResSound& sound) { playSound(sound,1); }
+	void playSoundMulti(const ResSound& sound);
 	
 	ResBuf<Sound, Res::AUDIO_BUF_SIZE>& getAudioBuf() {return audio_buf;}
 	
-	SoundRes constructSound(const std::string& name);
+	ResSound constructSound(const std::string& name);
 	
 	~ManAudio();
 };

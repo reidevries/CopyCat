@@ -14,16 +14,16 @@ string ManAudio::constructAudioFilename(const string& name) const
 	return audio_directory + name + ".ogg";
 }
 
-void ManAudio::freeAudioByIndex(const uint8_t index)
+void ManAudio::freeAudioByIndex(const size_t index)
 {
 	UnloadSound(audio_buf.pop(index));
 }
 
 ManAudio::ManAudio(const bool set_debug) : debug(set_debug) {}
 
-uint8_t ManAudio::requestAudio(const string& name)
+size_t ManAudio::requestAudio(const string& name)
 {
-	uint8_t audio_id = Res::AUDIO_BUF_SIZE;
+	size_t audio_id = Res::AUDIO_BUF_SIZE;
 	if (audio_buf.has(name)) {
 		audio_id = audio_buf.find(name);
 	} else {
@@ -33,9 +33,9 @@ uint8_t ManAudio::requestAudio(const string& name)
 	return audio_id;
 }
 
-uint8_t ManAudio::getAudioID(const string& name)
+size_t ManAudio::getAudioID(const string& name)
 {
-	uint8_t audio_id = Res::AUDIO_BUF_SIZE;
+	size_t  audio_id = Res::AUDIO_BUF_SIZE;
 	if (audio_buf.has(name)) {
 		audio_id = audio_buf.find(name);
 	}
@@ -47,7 +47,7 @@ void ManAudio::loadNextAudio()
 	if (audio_load_queue.empty()) return;
 	 
 	string to_load = audio_load_queue.front();
-	uint8_t cur_id = 0;
+	size_t cur_id = 0;
 	try {
 		cur_id = audio_buf.find(to_load);
 	} catch (const std::out_of_range& e) {
@@ -83,7 +83,7 @@ void ManAudio::loadNextAudio()
 	audio_load_queue.pop();
 }
 
-bool ManAudio::isAudioLoaded(const uint8_t id) const
+bool ManAudio::isAudioLoaded(const size_t id) const
 {
 	if (!audio_buf.isFree(id)) {
 		if (audio_buf.get(id).stream.buffer != nullptr) {
@@ -95,11 +95,11 @@ bool ManAudio::isAudioLoaded(const uint8_t id) const
 
 bool ManAudio::isAudioLoaded(const string& name) const
 {
-	uint8_t id = audio_buf.find(name);
+	size_t id = audio_buf.find(name);
 	return isAudioLoaded(id);
 }
 
-Sound& ManAudio::getAudioAt(const uint8_t id)
+Sound& ManAudio::getAudioAt(const size_t id)
 {
 	return audio_buf.at(id);
 }
@@ -109,15 +109,15 @@ Sound& ManAudio::getAudioAt(const string& name)
 	return audio_buf.at(name);
 }
 
-void ManAudio::playSound(const SoundRes& sound)
+void ManAudio::playSound(const ResSound& sound, const float vol)
 {
 	if (sound.res_id < Res::AUDIO_BUF_SIZE) {
 		Sound s = getAudioAt(sound.res_id);
-		if (old_pitches[sound.res_id] != sound.pitch) {
+		//if (old_pitches[sound.res_id] != sound.pitch) {
 			SetSoundPitch(s, sound.pitch);
-		}
+		//}
 		old_pitches[sound.res_id] = sound.pitch;
-		SetSoundVolume(s, sound.vol);
+		SetSoundVolume(s, sound.vol*vol);
 		PlaySound(s);
 	} else {
 		stringstream ss;
@@ -126,9 +126,22 @@ void ManAudio::playSound(const SoundRes& sound)
 	}
 }
 
-SoundRes ManAudio::constructSound(const string& name)
+void ManAudio::playSoundMulti(const ResSound& sound)
 {
-	SoundRes s(name);
+	if (sound.res_id < Res::AUDIO_BUF_SIZE) {
+		Sound s = getAudioAt(sound.res_id);
+		SetSoundVolume(s, sound.vol);
+		PlaySoundMulti(s);
+	} else {
+		stringstream ss;
+		ss << "invalid res_id of sound with name " << sound.name;
+		throw out_of_range(ss.str());
+	}
+}
+
+ResSound ManAudio::constructSound(const string& name)
+{
+	ResSound s(name);
 	s.res_id = requestAudio(name);
 	s.pitch = 1.0f;
 	s.vol = 1.0f;

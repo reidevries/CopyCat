@@ -15,7 +15,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 	Polygon.cpp
 	Quad.cpp
 	QuadDraw.cpp
-	SoundRes.cpp
+	ResSound.cpp
+	ResSprite.cpp
 	ViewRenderer.cpp
 )
 add_subdirectory(systems)

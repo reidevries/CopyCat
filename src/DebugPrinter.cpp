@@ -13,11 +13,11 @@ void DebugPrinter::printDebug(int verbosity,
 		if (verbosity == 4) cout << "DEBUG: ";
 		string log_line = src + ": " + debug_msg;
 		if (log_line == last_log) {
-			cout << "\r" << log_line
-				<< " [" << ++repetition_count << "]"
+			cout << "\r" << " [" 
+				<< ++repetition_count << "]"
 				<< flush;
-			DebugPrinter::record << "\r" << log_line
-				<< " [" << repetition_count << "]"
+			DebugPrinter::record << "\r" << " [" 
+				<< repetition_count << "]"
 				<< flush;
 		} else {
 			last_log = log_line;

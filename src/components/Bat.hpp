@@ -10,10 +10,28 @@
 #ifndef SRC_COMPONENTS_BAT_H_
 #define SRC_COMPONENTS_BAT_H_
 
+#include <optional>
+
+#include <entt/entity/registry.hpp>
+
 struct Bat
 {
-	float stamina; //regain by resting on mountains, stamina=0 results in death
-	float water; //regain by drinking, water=0 results in death
+	float stamina; //regain by resting on mountains, stamina=0 -> death
+	float water; //regain by drinking, water=0 -> death
+	
+	//values used in AI
+	std::optional<entt::entity> target_water;
+	std::optional<entt::entity> target_rest;
+	enum State {
+		seeking_water,
+		seeking_rest,
+		drinking,
+		sleeping,
+		flying,
+		dead
+	};
+	State state;
+	float flap_timer;
 };
 
 #endif

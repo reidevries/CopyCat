@@ -28,16 +28,18 @@ json ComponentsJson::fromFloor(entt::registry& reg,
 
 //-----------------public functions to load and save levels/game state------//
 
+//TODO: test each loaded object to set entt::entity on its parent based on the
+//name of its parent
 json ComponentsJson::loadLevel(entt::registry& reg, std::string file_name)
 {
 	json j;
 	ifstream f(file_name);
 	if (f.good()) {
 		f >> j;
-		for (auto& [level_id, components] : j.items()) {
+		for (auto& [obj_name, components] : j.items()) {
 			//floor
-			if (auto str_size = level_id.size(); str_size > 5 
-				&& level_id.substr(str_size-5,5) == string("floor")) {
+			if (auto str_size = obj_name.size(); str_size > 5 
+				&& obj_name.substr(str_size-5,5) == string("floor")) {
 				SpriteAnim s = components["SpriteAnim"].get<SpriteAnim>();
 				Vector3 pos = components["WorldPos"].get<WorldPos>().pos;
 				Factory::makeFloor(
@@ -63,16 +65,16 @@ void ComponentsJson::saveLevel(entt::registry& reg, std::string file_name)
 		"saving current level to " + full_name + "...");
 
 	json j;
-	auto view = reg.view<LevelID>();
+	auto view = reg.view<LevelObj>();
 	for (auto entity : view) {
-		string level_id = view.get<LevelID>(entity).name;
+		string obj_name = view.get<LevelObj>(entity).name;
 
 		//check to see if level id corresponds to a known object, to reduce
 		//the amount of necessary data to save as a lot of it can be inferred
-		if (level_id.substr(level_id.size()-5, 5) == string("floor")) {
-			j[level_id] = fromFloor(reg, entity);
+		if (obj_name.substr(obj_name.size()-5, 5) == string("floor")) {
+			j[obj_name] = fromFloor(reg, entity);
 		} else {
-			j[level_id] = ReiDV::entityToJson(reg, entity);
+			j[obj_name] = ReiDV::entityToJson(reg, entity);
 		}
 	}
 
@@ -100,8 +102,8 @@ void ComponentsJson::test()
 	NPatchInfo n = {{9,10,11,11}, 4, 3, 2, 1, NPT_3PATCH_HORIZONTAL};
 	Quad q(Rectangle{0,0,3,7});
 	SpriteAnim sa;
-	sa.atlas_name = "test atlas name";
-	sa.region_name = "test region name";
+	sa.sprite.atlas_name = "test atlas name";
+	sa.sprite.region_name = "test region name";
 	Camera2D cam_2d;
 	cam_2d.offset = {1,2};
 	cam_2d.target = {3,4};
@@ -177,8 +179,8 @@ void ComponentsJson::test()
 	Quad q_test = j["test08"].get<Quad>();
 	cout << "test08: " << q_test.print();
 	SpriteAnim sa_test = j["test09"].get<SpriteAnim>();
-	cout << "test09: '" << sa_test.atlas_name 
-		<< "' : '" << sa_test.region_name << "'" << endl;
+	cout << "test09: '" << sa_test.sprite.atlas_name 
+		<< "' : '" << sa_test.sprite.region_name << "'" << endl;
 	Camera2D cam_2d_test = j["test10"].get<Camera2D>();
 	cout << "test10:" << endl
 		<< " target: " << VectorMath::printVector(cam_2d_test.target)

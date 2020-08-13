@@ -11,8 +11,8 @@
 
 namespace World
 {
-	// 1 metre is 16 "world pixels"
-	static const int METRE = 16;
+	// 1 metre is 20 "world pixels"
+	static const int METRE = 24;
 	// world size is 128x128 metres
 	static const int HEIGHT = 128;
 	// bucket size is 8x8 metres

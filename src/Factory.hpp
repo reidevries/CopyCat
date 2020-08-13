@@ -13,6 +13,7 @@
 #include "VectorMath.hpp"
 #include "QuadDraw.hpp"
 #include <array>
+#include <string>
 #include <sstream>
 #include "IncludeComponents.hpp"
 #include "WorldConstants.hpp"
@@ -25,6 +26,16 @@ private:
 public:
 	static entt::entity makeLevelObject(entt::registry& reg, 
 		std::string name);
+	
+	static void setParentChild(entt::registry& reg,
+		entt::entity child,
+		entt::entity parent,
+		std::string parent_level_obj,
+		std::string child_level_obj);
+	
+	static void setParentChild(entt::registry& reg,
+		entt::entity child,
+		entt::entity parent);
 
 	static entt::entity makePlane(entt::registry& reg,
 		SpriteAnim sprite,
@@ -35,6 +46,13 @@ public:
 	static entt::entity makeFloor(entt::registry& reg,
 		SpriteAnim sprite,
 		Vector3 pos);
+	
+	//for audio gamejam
+	static entt::entity makeGrowThingy(entt::registry& reg,
+		SpriteAnim hill_sprite,
+		SpriteAnim water_sprite,
+		ResSound drone_sound,
+		entt::entity parent);
 };
 
 #endif /* SRC_FACTORY_H_ */

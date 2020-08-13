@@ -11,10 +11,20 @@
 #include "IncludeJson.hpp"
 #include "IncludeComponents.hpp"
 
+void from_json(const json&, Bat&);
+void to_json(json&, const Bat&);
+void from_json(const json&, Child&);
+void to_json(json&, const Child&);
+void from_json(const json&, Parent&);
+void to_json(json&, const Parent&);
+void from_json(const json&, DroneSound&);
+void to_json(json&, const DroneSound&);
 void from_json(const json&, HoverSound&);
 void to_json(json&, const HoverSound&);
 void from_json(const json&, WorldPos&);
 void to_json(json&, const WorldPos&);
+void from_json(const json&, SpriteMulti&);
+void to_json(json&, const SpriteMulti&);
 void from_json(const json&, SpriteSizeRot&);
 void to_json(json&, const SpriteSizeRot&);
 void from_json(const json&, SpriteQuad&);
@@ -23,8 +33,8 @@ void from_json(const json&, SpriteAnim&);
 void to_json(json&, const SpriteAnim&);
 void from_json(const json&, ScreenPos&);
 void to_json(json&, const ScreenPos&);
-void from_json(const json&, LevelID&);
-void to_json(json&, const LevelID&);
+void from_json(const json&, LevelObj&);
+void to_json(json&, const LevelObj&);
 void from_json(const json&, HitBox&);
 void to_json(json&, const HitBox&);
 

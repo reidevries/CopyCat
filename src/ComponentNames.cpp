@@ -15,10 +15,20 @@ void ReiDV::getToJson(entt::registry& reg,
 	json& j,
 	string type_text)
 {
-	if (type_text == "HoverSound") {
+	if (type_text == "Bat") {
+		getToJson<Bat>(reg, entity, j, "Bat");
+	} else if (type_text == "Child") {
+		getToJson<Child>(reg, entity, j, "Child");
+	} else if (type_text == "Parent") {
+		getToJson<Parent>(reg, entity, j, "Parent");
+	} else if (type_text == "DroneSound") {
+		getToJson<DroneSound>(reg, entity, j, "DroneSound");
+	} else if (type_text == "HoverSound") {
 		getToJson<HoverSound>(reg, entity, j, "HoverSound");
 	} else if (type_text == "WorldPos") {
 		getToJson<WorldPos>(reg, entity, j, "WorldPos");
+	} else if (type_text == "SpriteMulti") {
+		getToJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	} else if (type_text == "SpriteSizeRot") {
 		getToJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");
 	} else if (type_text == "SpriteQuad") {
@@ -27,8 +37,8 @@ void ReiDV::getToJson(entt::registry& reg,
 		getToJson<SpriteAnim>(reg, entity, j, "SpriteAnim");
 	} else if (type_text == "ScreenPos") {
 		getToJson<ScreenPos>(reg, entity, j, "ScreenPos");
-	} else if (type_text == "LevelID") {
-		getToJson<LevelID>(reg, entity, j, "LevelID");
+	} else if (type_text == "LevelObj") {
+		getToJson<LevelObj>(reg, entity, j, "LevelObj");
 	} else if (type_text == "HitBox") {
 		getToJson<HitBox>(reg, entity, j, "HitBox");
 	}
@@ -39,10 +49,20 @@ void ReiDV::getFromJson(entt::registry& reg,
 	const json j,
 	string type_text)
 {
-	if (type_text == "HoverSound") {
+	if (type_text == "Bat") {
+		getFromJson<Bat>(reg, entity, j, "Bat");
+	} else if (type_text == "Child") {
+		getFromJson<Child>(reg, entity, j, "Child");
+	} else if (type_text == "Parent") {
+		getFromJson<Parent>(reg, entity, j, "Parent");
+	} else if (type_text == "DroneSound") {
+		getFromJson<DroneSound>(reg, entity, j, "DroneSound");
+	} else if (type_text == "HoverSound") {
 		getFromJson<HoverSound>(reg, entity, j, "HoverSound");
 	} else if (type_text == "WorldPos") {
 		getFromJson<WorldPos>(reg, entity, j, "WorldPos");
+	} else if (type_text == "SpriteMulti") {
+		getFromJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	} else if (type_text == "SpriteSizeRot") {
 		getFromJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");
 	} else if (type_text == "SpriteQuad") {
@@ -51,8 +71,8 @@ void ReiDV::getFromJson(entt::registry& reg,
 		getFromJson<SpriteAnim>(reg, entity, j, "SpriteAnim");
 	} else if (type_text == "ScreenPos") {
 		getFromJson<ScreenPos>(reg, entity, j, "ScreenPos");
-	} else if (type_text == "LevelID") {
-		getFromJson<LevelID>(reg, entity, j, "LevelID");
+	} else if (type_text == "LevelObj") {
+		getFromJson<LevelObj>(reg, entity, j, "LevelObj");
 	} else if (type_text == "HitBox") {
 		getFromJson<HitBox>(reg, entity, j, "HitBox");
 	}
@@ -61,13 +81,18 @@ void ReiDV::getFromJson(entt::registry& reg,
 json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getToJson<Bat>(reg, entity, j, "Bat");
+	getToJson<Child>(reg, entity, j, "Child");
+	getToJson<Parent>(reg, entity, j, "Parent");
+	getToJson<DroneSound>(reg, entity, j, "DroneSound");
 	getToJson<HoverSound>(reg, entity, j, "HoverSound");
 	getToJson<WorldPos>(reg, entity, j, "WorldPos");
+	getToJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	getToJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");
 	getToJson<SpriteQuad>(reg, entity, j, "SpriteQuad");
 	getToJson<SpriteAnim>(reg, entity, j, "SpriteAnim");
 	getToJson<ScreenPos>(reg, entity, j, "ScreenPos");
-	getToJson<LevelID>(reg, entity, j, "LevelID");
+	getToJson<LevelObj>(reg, entity, j, "LevelObj");
 	getToJson<HitBox>(reg, entity, j, "HitBox");
 	return j;
 }
@@ -75,13 +100,18 @@ json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 json ReiDV::jsonToEntity(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getFromJson<Bat>(reg, entity, j, "Bat");
+	getFromJson<Child>(reg, entity, j, "Child");
+	getFromJson<Parent>(reg, entity, j, "Parent");
+	getFromJson<DroneSound>(reg, entity, j, "DroneSound");
 	getFromJson<HoverSound>(reg, entity, j, "HoverSound");
 	getFromJson<WorldPos>(reg, entity, j, "WorldPos");
+	getFromJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	getFromJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");
 	getFromJson<SpriteQuad>(reg, entity, j, "SpriteQuad");
 	getFromJson<SpriteAnim>(reg, entity, j, "SpriteAnim");
 	getFromJson<ScreenPos>(reg, entity, j, "ScreenPos");
-	getFromJson<LevelID>(reg, entity, j, "LevelID");
+	getFromJson<LevelObj>(reg, entity, j, "LevelObj");
 	getFromJson<HitBox>(reg, entity, j, "HitBox");
 	return j;
 }

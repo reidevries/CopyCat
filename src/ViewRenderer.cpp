@@ -55,17 +55,32 @@ void ViewRenderer::render(CatClock& clk,
 	BeginDrawing();
 	ClearBackground(RAYWHITE);
 
-	const auto render_list = reg.view<SpriteAnim, WorldPos, SpriteQuad>();
-
 	BeginMode3D(cam);
-	//DrawModel(testmodel, {0,0}, 1.0f, WHITE);
 
-	for (const entt::entity e : render_list) {
-		const SpriteAnim sprite = render_list.get<SpriteAnim>(e);
-		ReiDV::drawQuad( man_tex.getTexAt(sprite.res_id),
-			man_tex.getRegionAt(sprite.res_id, sprite.getCurRegion()),
-			render_list.get<WorldPos>(e).pos,
-			render_list.get<SpriteQuad>(e).quad );
+	//should do this every time a WorldPos component is added or removed,
+	//based on an observer pattern. But I'm rushing to get this gamejam
+	//done so this is how I'm doing it for now
+	reg.sort<WorldPos>([](const auto &lhs, const auto &rhs) {
+		return lhs.pos.x+lhs.pos.y < rhs.pos.x+rhs.pos.y;
+	});
+	reg.sort<SpriteAnim, WorldPos>();
+	
+	const auto render_view = reg.view<SpriteAnim, WorldPos, SpriteQuad>();
+	
+	for (const entt::entity e : render_view) {
+		SpriteAnim& s = render_view.get<SpriteAnim>(e);
+		if (s.show) {
+			s.frame_s += s.anim_speed*clk.dt_s;
+			while (s.frame_s > 1) {
+				s.sprite.animate();
+				s.frame_s -= 1;
+			}
+			ReiDV::drawQuad( man_tex.getTexAt(s.sprite.res_id),
+				man_tex.getRegionAt(s.sprite.res_id, s.sprite.getCurRegion()),
+				render_view.get<WorldPos>(e).pos,
+				render_view.get<SpriteQuad>(e).quad,
+				s.sprite.tint);
+		}
 	}
 
 	if (debug) {
@@ -136,15 +151,6 @@ void ViewRenderer::renderDebug(CatClock& clk,
 {
 	stringstream debugtxt;
 	debugtxt << "fps: " << clk.fps() << "\n";
-
-	const auto view = reg.view<SpriteAnim>();
-	for (const entt::entity e : view) {
-		debugtxt << view.get<SpriteAnim>(e).region_name << "\n";
-	}
-
-	Color c = VectorMath::hsvToRgb(128, 222, 250, 128);
-	DrawRectangle(screen_w * 0.7, screen_h * 0.1, screen_w * 0.25,
-		screen_h * 0.8, c);
 	// Draw text directly using sprite font
 	DrawTextEx(font, debugtxt.str().c_str(), (Vector2 ) {
 			static_cast<float>(screen_w * 0.7),

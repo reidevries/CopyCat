@@ -6,11 +6,16 @@
  * component.
  */
 
+#include "components/Bat.hpp"
+#include "components/Child.hpp"
+#include "components/Parent.hpp"
+#include "components/DroneSound.hpp"
 #include "components/HoverSound.hpp"
 #include "components/WorldPos.hpp"
+#include "components/SpriteMulti.hpp"
 #include "components/SpriteSizeRot.hpp"
 #include "components/SpriteQuad.hpp"
 #include "components/SpriteAnim.hpp"
 #include "components/ScreenPos.hpp"
-#include "components/LevelID.hpp"
+#include "components/LevelObj.hpp"
 #include "components/HitBox.hpp"

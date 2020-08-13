@@ -13,6 +13,8 @@
 #include <exception>
 #include <iostream>
 #include <cmath>
+#include <sstream>
+#include <string>
 
 class Fraction {
 private:
@@ -60,6 +62,8 @@ public:
 	Fraction operator*=(int b);
 	Fraction operator/(const Fraction& b);
 	Fraction operator/(int b);
+	
+	std::string underscoreString();
 };
 
 std::ostream& operator<<(std::ostream& a, const Fraction& b);

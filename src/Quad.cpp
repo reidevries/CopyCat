@@ -37,10 +37,10 @@ Quad::Quad(Rectangle rect, VectorMath::Orthog dir)
 		p[3] = {rect.x-w_half, rect.y-h_half, 0.0};
 		break;
 	case VectorMath::Orthog::facing_cam:
-		p[0]= {rect.x-w_half, rect.y+h_half, rect.x-w_half};
-		p[1] = {rect.x+w_half, rect.y+h_half, rect.x+w_half};
-		p[2] = {rect.x+w_half, rect.y-h_half, rect.x+w_half};
-		p[3] = {rect.x-w_half, rect.y-h_half, rect.x-w_half};
+		p[0]= {rect.x-w_half, rect.y+h_half, rect.x+w_half};
+		p[1] = {rect.x+w_half, rect.y+h_half, rect.x-w_half};
+		p[2] = {rect.x+w_half, rect.y-h_half, rect.x-w_half};
+		p[3] = {rect.x-w_half, rect.y-h_half, rect.x+w_half};
 		break;
 	}
 }
@@ -66,7 +66,7 @@ void Quad::scale(float scale)
 }
 void Quad::translate(Vector3 offset)
 {
-	p[0]= VectorMath::add(p[0], offset);
+	p[0] = VectorMath::add(p[0], offset);
 	p[1] = VectorMath::add(p[1], offset);
 	p[2] = VectorMath::add(p[2], offset);
 	p[3] = VectorMath::add(p[3], offset);
@@ -74,7 +74,7 @@ void Quad::translate(Vector3 offset)
 
 void Quad::rotate(Quaternion q)
 {
-	p[0]= Vector3RotateByQuaternion(p[0],q);
+	p[0] = Vector3RotateByQuaternion(p[0],q);
 	p[1] = Vector3RotateByQuaternion(p[1],q);
 	p[2] = Vector3RotateByQuaternion(p[2],q);
 	p[3] = Vector3RotateByQuaternion(p[3],q);

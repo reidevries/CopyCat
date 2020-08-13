@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
     ManAudio man_audio(debug);
     ViewRenderer view_renderer(screen_w, screen_h, debug);
     Environment environment;
+	environment.initLevel(man_tex, man_audio, string("test"));
     ComponentsJson::saveLevel(environment.getReg(), "test.json");
 	InputData input_data;
 
@@ -70,15 +71,14 @@ int main(int argc, char* argv[])
 		input_data.updateValues(view_renderer.getCam());
 
 		if (waiting_to_load) {
-			environment.initLevel(man_tex, man_audio, string("test"));
 			waiting_to_load = false;
 		}
 
 		// system update methods
-		systems.soundOnHover(environment.getReg(), 	
-			clk, 
-			input_data.getMouseData(), 
-			man_audio);
+		entt::registry& reg = environment.getReg();
+		systems.soundOnHover(reg, input_data.getMouseData(), man_audio);
+		systems.growOnPress(reg, clk, input_data.getMouseData());
+		systems.playDroneSound(reg, clk, man_audio);
 		// end of system update methods
 		
 		// this is still technically a system update method, but

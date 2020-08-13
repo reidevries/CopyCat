@@ -8,14 +8,26 @@ using namespace std;
 
 const string ManTex::tex_directory = "sprite/";
 
-string ManTex::constructImageFilename(string name) const 
+string ManTex::constructImageFilename(const string& name) const 
 {
 	return tex_directory + name + ".png";
 }
 
-string ManTex::constructAtlasFilename(string name) const
+string ManTex::constructAtlasFilename(const string& name) const
 {
 	return tex_directory + name + ".atlas";
+}
+
+string ManTex::constructRegionName(string_view name, size_t number) const
+{
+	stringstream ss;
+	if (number > Res::REGION_BUF_SIZE) {
+		ss << number << " is greater than region buf size which is " 
+			<< Res::REGION_BUF_SIZE << endl; 
+		throw out_of_range(ss.str());
+	}
+	ss << name << setfill('0') << setw(Res::MAX_ANIM_BITS) << number;
+	return ss.str();
 }
 
 
@@ -95,7 +107,7 @@ void ManTex::parseAtlasTok(const AtlasTok tok, const std::string word,
 void ManTex::parseAtlasString(std::string_view atlas)
 {
 	//data for the region currently being parsed
-	uint8_t region_id = Res::REGION_BUF_SIZE-1;
+	size_t region_id = Res::REGION_BUF_SIZE-1;
 	AtlasTok cur_tok = AtlasTok::s;
 	Rectangle cur_rect;
 	string cur_name;
@@ -138,16 +150,30 @@ void ManTex::parseAtlasString(std::string_view atlas)
 				parseAtlasTok(cur_tok, string(cur_word), cur_name, cur_rect);
 			
 				if (cur_tok == AtlasTok::sourceSizeHeight) {
+					stringstream ss;
 					//this is the last value we need to parse,
 					//so we can now add the rectangle to the regions list
 					//and move on to the next line (if there is a next line)
-					region_bufs[image_buf.ID].pushOrReplace(cur_name, cur_rect);
+					try {
+						region_bufs[image_buf.ID].replace(
+							region_bufs[image_buf.ID].find(cur_name), 
+							cur_rect);
+					} catch (const out_of_range& e) {
+						ss << "region by name of " << cur_name 
+							<< " not found in region_bufs[" 
+							<< image_buf.ID 
+							<< "] for image name " << image_buf.name << endl;
+						DebugPrinter::printDebug(0, 
+							"ManTex::parseAtlasString",
+							ss.str());
+					}
 					
-					stringstream ss;
+					ss.str("");
 					ss << "parsed region " << cur_name 
 						<< " to rectangle " 
 						<< VectorMath::printRect(cur_rect);
-					DebugPrinter::printDebug(5, "ManTex::parseAtlasString",
+					DebugPrinter::printDebug(4, 
+						"ManTex::parseAtlasString",
 						ss.str());
 					break;
 				}
@@ -169,9 +195,9 @@ void ManTex::parseAtlasString(std::string_view atlas)
 	DebugPrinter::printDebug(4, "ManTex::parseAtlasString", ss.str());
 }
 
-uint8_t ManTex::requestTex(const string& name)
+size_t ManTex::requestTex(const string& name)
 {
-	uint8_t atlas_id = Res::TEX_BUF_SIZE;
+	size_t atlas_id = Res::TEX_BUF_SIZE;
 	if (tex_buf.has(name)) {
 		atlas_id = tex_buf.find(name);
 	} else {
@@ -188,29 +214,47 @@ uint8_t ManTex::requestTex(const string& name)
 	return atlas_id;
 }
 
-array<uint8_t, Res::MAX_ANIM_FRAMES> ManTex::requestRegions(
-	uint8_t atlas_id,
+array<size_t, Res::MAX_ANIM_FRAMES> ManTex::requestRegions(
+	size_t atlas_id,
 	const string& name,
-	uint8_t num_frames)
+	size_t num_frames)
 {
-	array<uint8_t, Res::MAX_ANIM_FRAMES> accumulator;
+	if (num_frames > Res::MAX_ANIM_FRAMES) {
+		stringstream ss;
+		ss << "num_frames = " << num_frames 
+			<< " which is greater than " << Res::MAX_ANIM_FRAMES
+			<< " so the number of frames is being capped" << endl;
+		DebugPrinter::printDebug(0, "ManTex::requestRegions", ss.str());
+		num_frames = Res::MAX_ANIM_FRAMES;
+	}
+	array<size_t, Res::MAX_ANIM_FRAMES> accumulator;
+	
+	//remove digits from end of name
+	string_view real_name(name);
+	auto trim_index = real_name.find_first_of("0123456789");
+	if (trim_index != string_view::npos) {
+		real_name.remove_suffix(real_name.size()-trim_index);
+		DebugPrinter::printDebug(0, 
+			"ManTex::requestRegions", 
+			string(real_name));
+	}
+	
 	//don't queue regions for nonexistent atlas
 	if (!tex_buf.isFree(atlas_id)) {
 		//if num_frames==0, nonetheless request one region called ${name}0
-		if (num_frames == 0) num_frames = 1;
+		if (num_frames == 0) {
+			accumulator[0] = region_bufs[atlas_id].findOrPush(
+				constructRegionName(real_name, 0), 
+				Rectangle());
+		}
 
 		for (int i = 0; i < num_frames; ++i) {
-			if (isdigit(name.back())) {
-				accumulator[i]
-					= region_bufs[atlas_id].findOrPush(name, Rectangle());
-			} else {
-				string frame_name = name+to_string(i);
-				accumulator[i]
-					= region_bufs[atlas_id].findOrPush(frame_name, Rectangle());
-			}
+			accumulator[i] = region_bufs[atlas_id].findOrPush(
+				constructRegionName(real_name, i),
+				Rectangle());
 		}
 	} else {
-		DebugPrinter::printDebug(0, "ManTex::queueRegions",
+		DebugPrinter::printDebug(0, "ManTex::requestRegions",
 			"error: atlas id " + to_string(atlas_id)
 			+ " should be queued before loading the region " + name);
 	}
@@ -218,11 +262,12 @@ array<uint8_t, Res::MAX_ANIM_FRAMES> ManTex::requestRegions(
 }
 
 //request a single region without animation frames
-uint8_t ManTex::requestRegion(uint8_t atlas_id, const string& name)
+size_t ManTex::requestRegion(size_t atlas_id, const string& name)
 {
 	if (!tex_buf.isFree(atlas_id)) {
-		string frame_name = name+"0";
-		return region_bufs[atlas_id].findOrPush(frame_name, Rectangle());
+		return region_bufs[atlas_id].findOrPush(
+			constructRegionName(string_view(name), 0), 
+			Rectangle());
 	} else {
 		DebugPrinter::printDebug(0, "ManTex::queueRegions",
 			"error: atlas id " + to_string(atlas_id)
@@ -231,20 +276,20 @@ uint8_t ManTex::requestRegion(uint8_t atlas_id, const string& name)
 	}
 }
 
-void ManTex::freeTexByIndex(uint8_t index) 
+void ManTex::freeTexByIndex(size_t index) 
 {
 	UnloadTexture(tex_buf.pop(index));
 	region_bufs[index].clear();
 }
 
-uint8_t ManTex::getAtlasID(const string& name) const
+size_t ManTex::getAtlasID(const string& name) const
 {
 	if (tex_buf.has(name)) {
 		return tex_buf.find(name);
 	} else return Res::TEX_BUF_SIZE;
 }
 
-uint8_t ManTex::getRegionID(const string& atlas_name, 
+size_t ManTex::getRegionID(const string& atlas_name, 
 							const string& region_name) const
 {
 	if (tex_buf.has(atlas_name)) {
@@ -255,7 +300,7 @@ uint8_t ManTex::getRegionID(const string& atlas_name,
 	return Res::REGION_BUF_SIZE;
 }
 
-uint8_t ManTex::getRegionID(uint8_t atlas_id, 
+size_t ManTex::getRegionID(size_t atlas_id, 
 							const string& region_name) const
 {
 	if (atlas_id < Res::TEX_BUF_SIZE) {
@@ -272,7 +317,7 @@ void ManTex::loadNextImage()
 	if (tex_load_queue.empty()) return;
 
 	string to_load = tex_load_queue.front();
-	uint8_t cur_id = 0;
+	size_t cur_id = 0;
 	try {
 		cur_id = tex_buf.find(to_load);
 	} catch (const std::out_of_range& e) {
@@ -329,7 +374,14 @@ void ManTex::loadNextTex()
 	if (image_buf.ID >= Res::TEX_BUF_SIZE) return;
 
 	//first, load the texture from image_buf and unload the image
-	tex_buf.replace(image_buf.ID, LoadTextureFromImage(image_buf.image));
+	try {
+		tex_buf.replace(image_buf.ID, LoadTextureFromImage(image_buf.image));
+	} catch (const out_of_range& e) {
+		stringstream ss;
+		ss << "error replacing tex at " << image_buf.ID
+			<< " with atlas named " << image_buf.name
+			<< " ResBuf threw out_of_range: " << e.what() << endl;
+	}
 	UnloadImage(image_buf.image);
 
 	try {
@@ -344,7 +396,7 @@ void ManTex::loadNextTex()
 	image_buf = ImageBuf(); //reset image_buf
 }
 
-bool ManTex::isRegionLoaded(uint8_t atlas_id, uint8_t region_id) const
+bool ManTex::isRegionLoaded(size_t atlas_id, size_t region_id) const
 {
 	if (isTexLoaded(atlas_id)) {
 		return (!region_bufs.at(atlas_id).isFree(region_id));
@@ -355,12 +407,12 @@ bool ManTex::isRegionLoaded(const string& atlas_name,
 							const string& region_name) const
 {
 	if (isTexLoaded(atlas_name)) {
-		uint8_t cur_id = tex_buf.find(atlas_name);
+		size_t cur_id = tex_buf.find(atlas_name);
 		return (region_bufs.at(cur_id).has(region_name));
 	} else return false;
 }
 
-bool ManTex::isTexLoaded(uint8_t atlas_id) const
+bool ManTex::isTexLoaded(size_t atlas_id) const
 {
 	if (!tex_buf.isFree(atlas_id)) {
 		if (tex_buf.get(atlas_id).id > 0) {
@@ -379,17 +431,17 @@ bool ManTex::isTexLoaded(uint8_t atlas_id) const
 bool ManTex::isTexLoaded(const string& atlas_name) const
 {
 	if (tex_buf.has(atlas_name)) {
-		uint8_t cur_id = tex_buf.find(atlas_name);
+		size_t cur_id = tex_buf.find(atlas_name);
 		return isTexLoaded(cur_id);
 	} else return false;
 }
 
-SpriteAnim ManTex::constructSprite(const string& atlas_name,
+ResSprite ManTex::constructSprite(const string& atlas_name,
 	const string& region_name,
-	uint8_t num_frames,
+	size_t num_frames,
 	Vector2 size)
 {
-	SpriteAnim s;
+	ResSprite s;
 	s.atlas_name = atlas_name;
 	s.region_name = region_name;
 
@@ -402,13 +454,13 @@ SpriteAnim ManTex::constructSprite(const string& atlas_name,
 	return s;
 }
 
-SpriteAnim ManTex::constructSprite(const string& atlas_name,
+ResSprite ManTex::constructSprite(const string& atlas_name,
 	Vector2 size)
 {
 	return constructSprite(atlas_name, atlas_name, 0, size);
 }
 
-Rectangle ManTex::getRegionAt(uint8_t atlas_id, uint8_t region_id)
+Rectangle ManTex::getRegionAt(size_t atlas_id, size_t region_id)
 {
 	if (atlas_id < Res::TEX_BUF_SIZE
 		&& region_id < Res::REGION_BUF_SIZE
@@ -422,9 +474,9 @@ Rectangle ManTex::getRegionAt(uint8_t atlas_id, uint8_t region_id)
 	return Rectangle();
 }
 
-Rectangle ManTex::getRegionAt(uint8_t atlas_id, const std::string& region_name)
+Rectangle ManTex::getRegionAt(size_t atlas_id, const std::string& region_name)
 {
-	uint8_t region_id = getRegionID(atlas_id, region_name);
+	size_t region_id = getRegionID(atlas_id, region_name);
 	return getRegionAt(atlas_id, region_id);
 }
 
@@ -432,7 +484,7 @@ Rectangle ManTex::getRegionAt(uint8_t atlas_id, const std::string& region_name)
 Rectangle ManTex::getRegionAt(const std::string& atlas_name, 
 							  const std::string& region_name)
 {
-	uint8_t atlas_id = getAtlasID(atlas_name);
+	size_t atlas_id = getAtlasID(atlas_name);
 	return getRegionAt(atlas_id, region_name);
 }
 
@@ -440,7 +492,7 @@ vector<string> ManTex::getRegionNames(
 	const string& atlas_name) const
 {
 	vector<string> accumulator;
-	uint8_t id = getAtlasID(atlas_name);
+	size_t id = getAtlasID(atlas_name);
 	if (id >= Res::TEX_BUF_SIZE) return vector<string>();
 	
 	auto const& names = region_bufs.at(static_cast<int>(id));
@@ -451,7 +503,7 @@ vector<string> ManTex::getRegionNames(
 	return accumulator;
 }
 
-Texture2D ManTex::getTexAt(uint8_t id)
+Texture2D ManTex::getTexAt(size_t id)
 {
 	if (id < Res::TEX_BUF_SIZE
 		&& !tex_buf.isFree(id) ) {

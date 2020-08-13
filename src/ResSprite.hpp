@@ -1,7 +1,7 @@
 /*
  * ResSprite.h
  *
- *  Created on: Jul 17, 2020
+ *  Created on: Aug 11, 2020
  *      Author: rei de vries
  *		Struct representing a texture resource to be used by the game,
  *		optionally with an animation. If no animation desired, set
@@ -48,9 +48,14 @@ struct ResSprite
 		for (auto& id : region_ids) id = Res::MAX_ANIM_FRAMES;
 	}
 
-	std::size_t getCurRegion() const
+	constexpr std::size_t getCurRegion() const
 	{
 		return region_ids[anim_index];
+	}
+	
+	constexpr void animate()
+	{
+		anim_index = (anim_index+1)%num_frames;
 	}
 };
 
