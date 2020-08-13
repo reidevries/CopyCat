@@ -9,6 +9,9 @@
 #ifndef SRC_COMPONENTS_WATER_H_
 #define SRC_COMPONENTS_WATER_H_
 
-struct Water {};
+struct Water 
+{
+	bool exists = true;
+};
 
 #endif

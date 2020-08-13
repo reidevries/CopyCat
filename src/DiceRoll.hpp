@@ -11,8 +11,16 @@
 
 class DiceRoll 
 {
-	static std::random_device rd;
-	static std::mt19937::result_type seed;
+private:
+	std::random_device rd;
+	std::mt19937::result_type seed;
+	std::mt19937 gen;
+	
+public:
+	DiceRoll();
+	
+	//returns a float between 0.0 and 1.0
+	float rollF();
 };
 
 #endif

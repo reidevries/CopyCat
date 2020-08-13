@@ -15,7 +15,11 @@ void ReiDV::getToJson(entt::registry& reg,
 	json& j,
 	string type_text)
 {
-	if (type_text == "Bat") {
+	if (type_text == "Hill") {
+		getToJson<Hill>(reg, entity, j, "Hill");
+	} else if (type_text == "Water") {
+		getToJson<Water>(reg, entity, j, "Water");
+	} else if (type_text == "Bat") {
 		getToJson<Bat>(reg, entity, j, "Bat");
 	} else if (type_text == "Child") {
 		getToJson<Child>(reg, entity, j, "Child");
@@ -25,6 +29,8 @@ void ReiDV::getToJson(entt::registry& reg,
 		getToJson<DroneSound>(reg, entity, j, "DroneSound");
 	} else if (type_text == "HoverSound") {
 		getToJson<HoverSound>(reg, entity, j, "HoverSound");
+	} else if (type_text == "WorldVel") {
+		getToJson<WorldVel>(reg, entity, j, "WorldVel");
 	} else if (type_text == "WorldPos") {
 		getToJson<WorldPos>(reg, entity, j, "WorldPos");
 	} else if (type_text == "SpriteMulti") {
@@ -49,7 +55,11 @@ void ReiDV::getFromJson(entt::registry& reg,
 	const json j,
 	string type_text)
 {
-	if (type_text == "Bat") {
+	if (type_text == "Hill") {
+		getFromJson<Hill>(reg, entity, j, "Hill");
+	} else if (type_text == "Water") {
+		getFromJson<Water>(reg, entity, j, "Water");
+	} else if (type_text == "Bat") {
 		getFromJson<Bat>(reg, entity, j, "Bat");
 	} else if (type_text == "Child") {
 		getFromJson<Child>(reg, entity, j, "Child");
@@ -59,6 +69,8 @@ void ReiDV::getFromJson(entt::registry& reg,
 		getFromJson<DroneSound>(reg, entity, j, "DroneSound");
 	} else if (type_text == "HoverSound") {
 		getFromJson<HoverSound>(reg, entity, j, "HoverSound");
+	} else if (type_text == "WorldVel") {
+		getFromJson<WorldVel>(reg, entity, j, "WorldVel");
 	} else if (type_text == "WorldPos") {
 		getFromJson<WorldPos>(reg, entity, j, "WorldPos");
 	} else if (type_text == "SpriteMulti") {
@@ -81,11 +93,14 @@ void ReiDV::getFromJson(entt::registry& reg,
 json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getToJson<Hill>(reg, entity, j, "Hill");
+	getToJson<Water>(reg, entity, j, "Water");
 	getToJson<Bat>(reg, entity, j, "Bat");
 	getToJson<Child>(reg, entity, j, "Child");
 	getToJson<Parent>(reg, entity, j, "Parent");
 	getToJson<DroneSound>(reg, entity, j, "DroneSound");
 	getToJson<HoverSound>(reg, entity, j, "HoverSound");
+	getToJson<WorldVel>(reg, entity, j, "WorldVel");
 	getToJson<WorldPos>(reg, entity, j, "WorldPos");
 	getToJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	getToJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");
@@ -100,11 +115,14 @@ json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 json ReiDV::jsonToEntity(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getFromJson<Hill>(reg, entity, j, "Hill");
+	getFromJson<Water>(reg, entity, j, "Water");
 	getFromJson<Bat>(reg, entity, j, "Bat");
 	getFromJson<Child>(reg, entity, j, "Child");
 	getFromJson<Parent>(reg, entity, j, "Parent");
 	getFromJson<DroneSound>(reg, entity, j, "DroneSound");
 	getFromJson<HoverSound>(reg, entity, j, "HoverSound");
+	getFromJson<WorldVel>(reg, entity, j, "WorldVel");
 	getFromJson<WorldPos>(reg, entity, j, "WorldPos");
 	getFromJson<SpriteMulti>(reg, entity, j, "SpriteMulti");
 	getFromJson<SpriteSizeRot>(reg, entity, j, "SpriteSizeRot");

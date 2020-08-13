@@ -9,6 +9,9 @@
 #ifndef SRC_COMPONENTS_HILL_H_
 #define SRC_COMPONENTS_HILL_H_
 
-struct Hill {};
+struct Hill 
+{
+	bool exists = true;
+};
 
 #endif

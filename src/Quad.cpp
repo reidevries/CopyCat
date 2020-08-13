@@ -108,7 +108,7 @@ Vector3 Quad::getCenter() const
 	};
 }
 
-// TODO: make sure this works, dont think it does rn
+// TODO: make sure this works, idk rn
 RayHitInfo Quad::getRayHit(const Ray& r) const
 {
 	// find if the ray hit the plane that the quad's points lie on

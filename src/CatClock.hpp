@@ -10,7 +10,6 @@
 #define SRC_CATCLOCK_H_
 
 #include <cstdint>
-#include <random>
 
 struct CatClock {
 	float dt_s;				//time in seconds since last frame

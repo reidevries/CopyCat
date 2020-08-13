@@ -2,13 +2,23 @@
 
 using namespace std;
 
-auto DiceRoll::seed = rd() ^ (
-		static_cast<std::mt19937::result_type>(
-			std::chrono::duration_cast<std::chrono::seconds>(
-				std::chrono::system_clock::now().time_since_epoch()
+DiceRoll::DiceRoll()
+{
+	seed = rd() ^ (
+		static_cast<mt19937::result_type>(
+			chrono::duration_cast<chrono::seconds>(
+				chrono::system_clock::now().time_since_epoch()
 			).count()
-		) + static_cast<std::mt19937::result_type>(
-			std::chrono::duration_cast<std::chrono::microseconds>(
-				std::chrono::high_resolution_clock::now().time_since_epoch()
-			).count() )
-		);
+		) + static_cast<mt19937::result_type>(
+			chrono::duration_cast<chrono::microseconds>(
+				chrono::high_resolution_clock::now().time_since_epoch()
+		).count() )
+	);
+
+	gen = mt19937(seed);
+}
+
+float DiceRoll::rollF()
+{
+	return static_cast<float>(gen())/static_cast<float>(gen.max());
+}

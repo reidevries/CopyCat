@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
 		systems.soundOnHover(reg, input_data.getMouseData(), man_audio);
 		systems.growOnPress(reg, clk, input_data.getMouseData());
 		systems.playDroneSound(reg, clk, man_audio);
+		systems.velocity(reg, clk);
 		// end of system update methods
 		
 		// this is still technically a system update method, but

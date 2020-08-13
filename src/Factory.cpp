@@ -105,11 +105,13 @@ entt::entity Factory::makeGrowThingy(entt::registry& reg,
 	quad.quad = Quad({0, 0, World::METRE, 1}, VectorMath::Orthog::facing_cam);
 	drone_sound.vol = 0.0f;
 	reg.emplace<DroneSound>(e_hill, drone_sound);
+	reg.emplace<Hill>(e_hill);
 	
 	entt::entity e_water = Factory::makeFloor(
 		reg, 
 		water_sprite,
 		new_pos);
+	reg.emplace<Water>(e_water);
 	Factory::setParentChild(reg, e_water, e_hill);
 	
 	return e_hill;

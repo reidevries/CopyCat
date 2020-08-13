@@ -11,6 +11,10 @@
 #include "IncludeJson.hpp"
 #include "IncludeComponents.hpp"
 
+void from_json(const json&, Hill&);
+void to_json(json&, const Hill&);
+void from_json(const json&, Water&);
+void to_json(json&, const Water&);
 void from_json(const json&, Bat&);
 void to_json(json&, const Bat&);
 void from_json(const json&, Child&);
@@ -21,6 +25,8 @@ void from_json(const json&, DroneSound&);
 void to_json(json&, const DroneSound&);
 void from_json(const json&, HoverSound&);
 void to_json(json&, const HoverSound&);
+void from_json(const json&, WorldVel&);
+void to_json(json&, const WorldVel&);
 void from_json(const json&, WorldPos&);
 void to_json(json&, const WorldPos&);
 void from_json(const json&, SpriteMulti&);

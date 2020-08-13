@@ -6,11 +6,14 @@
  * component.
  */
 
+#include "components/Hill.hpp"
+#include "components/Water.hpp"
 #include "components/Bat.hpp"
 #include "components/Child.hpp"
 #include "components/Parent.hpp"
 #include "components/DroneSound.hpp"
 #include "components/HoverSound.hpp"
+#include "components/WorldVel.hpp"
 #include "components/WorldPos.hpp"
 #include "components/SpriteMulti.hpp"
 #include "components/SpriteSizeRot.hpp"
