@@ -6,7 +6,7 @@ This is a small game engine I'm working on in C++17, for a tactical RPG I'm desi
 * Uses EnTT (a C++ library) for its efficient Entity-Component-System
 * Sprite-based 3D rendering - Every in-game sprite is drawn on a freely-transformable quadrilateral, Sega Saturn inspired
 * Efficient, small scale resource manager for asynchronous image/audio loading
-* Level saving/loading
+* Level saving/loading to/from json using nlohmann::json library
 
 ### Some goals:
 * Mouse-based level editing within the engine, using Raygui for the user interface
