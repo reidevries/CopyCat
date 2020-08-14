@@ -22,3 +22,8 @@ float DiceRoll::rollF()
 {
 	return static_cast<float>(gen())/static_cast<float>(gen.max());
 }
+
+bool DiceRoll::rollB(float p)
+{
+	return (rollF() > p);
+}

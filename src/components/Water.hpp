@@ -11,7 +11,7 @@
 
 struct Water 
 {
-	bool exists = true;
+	bool occupied = false;
 };
 
 #endif

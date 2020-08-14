@@ -6,6 +6,7 @@
  * component.
  */
 
+#include "components/AllBatSounds.hpp"
 #include "components/Hill.hpp"
 #include "components/Water.hpp"
 #include "components/Bat.hpp"

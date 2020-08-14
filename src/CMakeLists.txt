@@ -3,6 +3,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	ComponentSerialize.cpp
 	ComponentsJson.cpp
 	DebugPrinter.cpp
+	DiceRoll.cpp
 	Environment.cpp
 	Factory.cpp
 	Fraction.cpp

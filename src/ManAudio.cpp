@@ -109,14 +109,13 @@ Sound& ManAudio::getAudioAt(const string& name)
 	return audio_buf.at(name);
 }
 
-void ManAudio::playSound(const ResSound& sound, const float vol)
+void ManAudio::playSound(const ResSound& sound, 
+	const float vol, 
+	const float pitch)
 {
 	if (sound.res_id < Res::AUDIO_BUF_SIZE) {
 		Sound s = getAudioAt(sound.res_id);
-		//if (old_pitches[sound.res_id] != sound.pitch) {
-			SetSoundPitch(s, sound.pitch);
-		//}
-		old_pitches[sound.res_id] = sound.pitch;
+		SetSoundPitch(s, sound.pitch*pitch);
 		SetSoundVolume(s, sound.vol*vol);
 		PlaySound(s);
 	} else {
@@ -124,6 +123,16 @@ void ManAudio::playSound(const ResSound& sound, const float vol)
 		ss << "invalid res_id of sound with name " << sound.name;
 		throw out_of_range(ss.str());
 	}
+}
+
+void ManAudio::playSound(const ResSound& sound, const float vol)
+{
+	playSound(sound, vol, 1);
+}
+
+void ManAudio::playSound(const ResSound& sound)
+{
+	playSound(sound,1,1);
 }
 
 void ManAudio::playSoundMulti(const ResSound& sound)

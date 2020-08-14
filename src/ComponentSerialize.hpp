@@ -11,6 +11,8 @@
 #include "IncludeJson.hpp"
 #include "IncludeComponents.hpp"
 
+void from_json(const json&, AllBatSounds&);
+void to_json(json&, const AllBatSounds&);
 void from_json(const json&, Hill&);
 void to_json(json&, const Hill&);
 void from_json(const json&, Water&);

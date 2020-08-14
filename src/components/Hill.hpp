@@ -11,7 +11,7 @@
 
 struct Hill 
 {
-	bool exists = true;
+	bool occupied = false;
 };
 
 #endif

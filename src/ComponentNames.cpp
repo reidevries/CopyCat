@@ -15,7 +15,9 @@ void ReiDV::getToJson(entt::registry& reg,
 	json& j,
 	string type_text)
 {
-	if (type_text == "Hill") {
+	if (type_text == "AllBatSounds") {
+		getToJson<AllBatSounds>(reg, entity, j, "AllBatSounds");
+	} else if (type_text == "Hill") {
 		getToJson<Hill>(reg, entity, j, "Hill");
 	} else if (type_text == "Water") {
 		getToJson<Water>(reg, entity, j, "Water");
@@ -55,7 +57,9 @@ void ReiDV::getFromJson(entt::registry& reg,
 	const json j,
 	string type_text)
 {
-	if (type_text == "Hill") {
+	if (type_text == "AllBatSounds") {
+		getFromJson<AllBatSounds>(reg, entity, j, "AllBatSounds");
+	} else if (type_text == "Hill") {
 		getFromJson<Hill>(reg, entity, j, "Hill");
 	} else if (type_text == "Water") {
 		getFromJson<Water>(reg, entity, j, "Water");
@@ -93,6 +97,7 @@ void ReiDV::getFromJson(entt::registry& reg,
 json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getToJson<AllBatSounds>(reg, entity, j, "AllBatSounds");
 	getToJson<Hill>(reg, entity, j, "Hill");
 	getToJson<Water>(reg, entity, j, "Water");
 	getToJson<Bat>(reg, entity, j, "Bat");
@@ -115,6 +120,7 @@ json ReiDV::entityToJson(entt::registry& reg, const entt::entity entity)
 json ReiDV::jsonToEntity(entt::registry& reg, const entt::entity entity)
 {
 	json j;
+	getFromJson<AllBatSounds>(reg, entity, j, "AllBatSounds");
 	getFromJson<Hill>(reg, entity, j, "Hill");
 	getFromJson<Water>(reg, entity, j, "Water");
 	getFromJson<Bat>(reg, entity, j, "Bat");

@@ -11,8 +11,13 @@
 #define SRC_COMPONENTS_BAT_H_
 
 #include <optional>
+#include <array>
 
 #include <entt/entity/registry.hpp>
+
+#include "CatConf.hpp"
+#include "../ResSound.hpp"
+#include "../WorldConstants.hpp"
 
 struct Bat
 {
@@ -22,6 +27,7 @@ struct Bat
 	//values used in AI
 	std::optional<entt::entity> target_water;
 	std::optional<entt::entity> target_rest;
+	std::optional<Vector3> target_pos;
 	enum State {
 		seeking_water,
 		seeking_rest,
@@ -32,6 +38,7 @@ struct Bat
 	};
 	State state;
 	float flap_timer;
+	bool just_flapped; //for playing appropriate sound
 };
 
 #endif

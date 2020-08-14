@@ -8,6 +8,7 @@
 #include "Factory.hpp"
 
 using namespace std;
+using namespace VectorMath;
 
 int Factory::level_id_counter = 0;
 
@@ -52,7 +53,7 @@ entt::entity Factory::makePlane(entt::registry& reg,
 	SpriteAnim sprite,
 	Vector3 pos,
 	Rectangle rect,
-	VectorMath::Orthog dir)
+	Orthog dir)
 {
 	const entt::entity e = Factory::makeLevelObject(reg, "plane");
 
@@ -77,7 +78,7 @@ entt::entity Factory::makeFloor(entt::registry& reg,
 
 	SpriteQuad& quad = reg.emplace<SpriteQuad>(e);
 	quad.quad = Quad({0, 0, World::METRE, World::METRE}, 
-		VectorMath::Orthog::up);
+		Orthog::up);
 	reg.emplace<HitBox>(e, quad.quad.getBoundingBox(pos));
 
 	return e;
@@ -102,9 +103,10 @@ entt::entity Factory::makeGrowThingy(entt::registry& reg,
 	reg.emplace<SpriteAnim>(e_hill, hill_sprite);
 	reg.emplace<WorldPos>(e_hill, new_pos);
 	SpriteQuad& quad = reg.emplace<SpriteQuad>(e_hill);
-	quad.quad = Quad({0, 0, World::METRE, 1}, VectorMath::Orthog::facing_cam);
+	quad.quad = Quad({0, 0, World::METRE, 1}, Orthog::facing_cam);
 	drone_sound.vol = 0.0f;
-	reg.emplace<DroneSound>(e_hill, drone_sound);
+	DroneSound& s = reg.emplace<DroneSound>(e_hill, drone_sound);
+	s.ji = reg.get<HoverSound>(parent).ji;
 	reg.emplace<Hill>(e_hill);
 	
 	entt::entity e_water = Factory::makeFloor(
@@ -115,4 +117,23 @@ entt::entity Factory::makeGrowThingy(entt::registry& reg,
 	Factory::setParentChild(reg, e_water, e_hill);
 	
 	return e_hill;
+}
+
+entt::entity Factory::makeBat(entt::registry& reg,
+	Vector3 pos,
+	SpriteAnim bat_sprite)
+{
+	entt::entity e_bat = reg.create();
+	reg.emplace<WorldPos>(e_bat, pos);
+	reg.emplace<WorldVel>(e_bat, Vector3{0,0,0}, Vector3{0,0,0});
+	reg.emplace<SpriteAnim>(e_bat, bat_sprite);
+	Quad q = Quad(
+		{0,0, World::METRE*0.4f, World::METRE*0.5f}, 
+		Orthog::facing_cam
+	);
+	reg.emplace<SpriteQuad>(e_bat, q);
+	// initialize the bat with full stamina and full water needs
+	Bat& b = reg.emplace<Bat>(e_bat, 1.0f, 1.0f); 
+	b.state = Bat::State::flying;
+	return e_bat;
 }

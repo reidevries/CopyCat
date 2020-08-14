@@ -10,20 +10,14 @@
 #include "DebugPrinter.hpp"
 #include "ManAudio.hpp"
 #include "Fraction.hpp"
+#include "WorldConstants.hpp"
 
 namespace Level
 {
-//if a level bigger than this is generated, modulo op is used to find
-//the position in the lattice
-static const int SIZE_X = 8;
-static const int SIZE_Y = 7;
-
-static const Vector2 LEVEL_ORIGIN = {-2,-3};
-
-static const std::array<Fraction, SIZE_Y> ROWS = {{
+static const std::array<Fraction, World::SIZE_Y> ROWS = {{
 	{1,1}, {5,4}, {25,16}, {125,64}, {729,343}, {81,49}, {9,7}
 }};
-static const std::array<Fraction, SIZE_X> COLS = {{
+static const std::array<Fraction, World::SIZE_X> COLS = {{
 	{1,1}, {3,2}, {9,4}, {27,8}, {81,16}, {64,27}, {16,9}, {4,3}
 }};
 
@@ -54,7 +48,12 @@ static std::array<std::array<Fraction, size_y>, size_x> genLattice(
 
 static Fraction getJIAt(std::size_t x, std::size_t y)
 {
-	return getJIAt<SIZE_X,SIZE_Y>(x,y,COLS,ROWS);
+	return getJIAt<World::SIZE_X,World::SIZE_Y>(x,y,COLS,ROWS);
+}
+
+static auto genLattice()
+{
+	return genLattice<World::SIZE_X, World::SIZE_Y>(COLS, ROWS);
 }
 
 void loadTest(entt::registry& reg, ManTex& man_tex,  ManAudio& man_audio);

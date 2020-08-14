@@ -17,6 +17,7 @@
 #include "ResBuf.hpp"
 #include "ResConstants.hpp"
 #include "ResSound.hpp"
+#include "WorldConstants.hpp"
 
 class ManAudio
 {
@@ -35,6 +36,10 @@ private:
 	void freeAudioByIndex(const std::size_t index);
 
 public:
+	static std::array<
+		std::array<ResSound, World::SIZE_Y>, World::SIZE_X
+	> flap_sound; //for Audio gamejam
+	
 	ManAudio(const bool set_debug);
 	
 	std::size_t requestAudio(const std::string& name);
@@ -48,8 +53,9 @@ public:
 	Sound& getAudioAt(const std::size_t id);
 	Sound& getAudioAt(const std::string& name);
 	
+	void playSound(const ResSound& sound, const float vol, const float pitch);
 	void playSound(const ResSound& sound, const float vol);
-	void playSound(const ResSound& sound) { playSound(sound,1); }
+	void playSound(const ResSound& sound);
 	void playSoundMulti(const ResSound& sound);
 	
 	ResBuf<Sound, Res::AUDIO_BUF_SIZE>& getAudioBuf() {return audio_buf;}

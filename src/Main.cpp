@@ -80,6 +80,8 @@ int main(int argc, char* argv[])
 		systems.growOnPress(reg, clk, input_data.getMouseData());
 		systems.playDroneSound(reg, clk, man_audio);
 		systems.velocity(reg, clk);
+		systems.batAI(reg, clk, Level::genLattice(), man_audio);
+		systems.spawnCreatures(reg, clk, man_tex, man_audio);
 		// end of system update methods
 		
 		// this is still technically a system update method, but

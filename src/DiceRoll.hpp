@@ -21,6 +21,9 @@ public:
 	
 	//returns a float between 0.0 and 1.0
 	float rollF();
+	//p is probability between 0.0 and 1.0
+	bool rollB(float p);
+	
 };
 
 #endif

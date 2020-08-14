@@ -7,8 +7,8 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 {
 	stringstream ss;
 	
-	array<array<Fraction,SIZE_Y>, SIZE_X> lattice 
-		= genLattice<SIZE_X,SIZE_Y>(COLS,ROWS);
+	array<array<Fraction,World::SIZE_Y>, World::SIZE_X> lattice 
+		= genLattice<World::SIZE_X,World::SIZE_Y>(COLS,ROWS);
 
 	DebugPrinter::printDebug(1, "Level::loadTest", "loading floor sprite");
 	ResSprite floor_sprite = man_tex.constructSprite("mappo",
@@ -31,9 +31,9 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 	ResSound ping_sound = man_audio.constructSound("ping");
 	
 	DebugPrinter::printDebug(1, "Level::loadTest", "loading drone sfx");
-	ResSound drones[SIZE_X][SIZE_Y];
-	for (int u = 0; u < SIZE_X; ++u) {
-		for (int v = 0; v < SIZE_Y; ++v) {
+	ResSound drones[World::SIZE_X][World::SIZE_Y];
+	for (int u = 0; u < World::SIZE_X; ++u) {
+		for (int v = 0; v < World::SIZE_Y; ++v) {
 			ss.str("");
 			ss << "drone" << lattice[u][v].underscoreString();
 			drones[u][v] = man_audio.constructSound(ss.str());
@@ -42,19 +42,33 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 		}
 	}
 	
+	DebugPrinter::printDebug(1, "Level::loadTest", "loading flute sfx");
+	ResSound flute[World::SIZE_X][World::SIZE_Y];
+	for (int u = 0; u < World::SIZE_X; ++u) {
+		for (int v = 0; v < World::SIZE_Y; ++v) {
+			ss.str("");
+			ss << "flute" << lattice[u][v].underscoreString();
+			drones[u][v] = man_audio.constructSound(ss.str());
+			drones[u][v].pitch = 1.0f;
+			drones[u][v].vol = 0.0f;
+		}
+	}
+	const entt::entity e = reg.create();
+	reg.emplace<AllBatSounds>(e, flute);
+	
 	ss.str("");
 	ss << "using lattice: " << endl;
 	
-	for (int u = 0; u < SIZE_X+1; ++u) {
-		for (int v = 0; v < SIZE_Y+1; ++v) {
+	for (int u = 0; u < World::SIZE_X+1; ++u) {
+		for (int v = 0; v < World::SIZE_Y+1; ++v) {
 			Vector2 cur_pos = {
 				static_cast<float>(u*World::METRE),
 				static_cast<float>(v*World::METRE)
 			};
-			cur_pos = cur_pos + LEVEL_ORIGIN;
+			cur_pos = cur_pos + Vector2{World::ORIGIN_X, World::ORIGIN_Y};
 		
-			int u_m = u % SIZE_X;
-			int v_m = v % SIZE_Y;
+			int u_m = u % World::SIZE_X;
+			int v_m = v % World::SIZE_Y;
 			
 			int rand_16 = (u*69 + ((v*7013)%420)*3)%16;
 			
@@ -70,7 +84,8 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
                 });
 			Fraction ji = lattice[u_m][v_m];
 			ping_sound.pitch = ji.getf();
-			reg.emplace<HoverSound>(floor, ping_sound);
+			HoverSound& s = reg.emplace<HoverSound>(floor, ping_sound);
+			s.ji = ji;
 			ss << ji << "\t\t";
 			
 			entt::entity grow_thingy = Factory::makeGrowThingy(reg,

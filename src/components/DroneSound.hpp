@@ -13,10 +13,12 @@
 #include <cstdint>
 
 #include "../ResSound.hpp"
+#include "../Fraction.hpp"
 
 struct DroneSound 
 {
 	ResSound sound;
+	Fraction ji;
 };
 
 #endif

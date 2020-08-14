@@ -53,6 +53,9 @@ public:
 		SpriteAnim water_sprite,
 		ResSound drone_sound,
 		entt::entity parent);
+	static entt::entity makeBat(entt::registry& reg,
+		Vector3 pos,
+		SpriteAnim bat_sprite);
 };
 
 #endif /* SRC_FACTORY_H_ */
