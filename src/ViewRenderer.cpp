@@ -88,7 +88,24 @@ void ViewRenderer::render(CatClock& clk,
 	}
 
 	EndMode3D();
-
+	
+	Color help_tint = {0,0,25,255};
+	
+	if (clk.time_m == 0) help_tint.a = 100;
+	
+	DrawTextEx(
+		font, 
+		"Click and drag to raise or lower land and create lakes\n"
+		"Bats need a tall hill to rest on and water to drink\n"
+		"The soundtrack reflects the health of your ecosystem\n", 
+		(Vector2 ) {
+			static_cast<float>(screen_w * 0.02f),
+			static_cast<float>(screen_h * 0.8f)
+		}, 
+		static_cast<float>(font.baseSize), 
+		2.0f, 
+		help_tint);
+		
 	if (debug) renderDebug(clk, reg, man_tex);
 	EndDrawing();
 }

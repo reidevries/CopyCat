@@ -4,5 +4,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 	PlayDroneSound.cpp
 	PlayerInput.cpp
 	SoundOnHover.cpp
+	SpawnCreatures.cpp
 	Velocity.cpp
 )

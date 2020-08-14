@@ -43,18 +43,18 @@ void Level::loadTest(entt::registry& reg, ManTex& man_tex, ManAudio& man_audio)
 	}
 	
 	DebugPrinter::printDebug(1, "Level::loadTest", "loading flute sfx");
-	ResSound flute[World::SIZE_X][World::SIZE_Y];
+	array<array<ResSound, World::SIZE_Y>, World::SIZE_X> flute;
 	for (int u = 0; u < World::SIZE_X; ++u) {
 		for (int v = 0; v < World::SIZE_Y; ++v) {
 			ss.str("");
 			ss << "flute" << lattice[u][v].underscoreString();
-			drones[u][v] = man_audio.constructSound(ss.str());
-			drones[u][v].pitch = 1.0f;
-			drones[u][v].vol = 0.0f;
+			flute[u][v] = man_audio.constructSound(ss.str());
+			flute[u][v].pitch = 1.0f;
+			flute[u][v].vol = 0.2f;
 		}
 	}
 	const entt::entity e = reg.create();
-	reg.emplace<AllBatSounds>(e, flute);
+	AllBatSounds& all_b = reg.emplace<AllBatSounds>(e, true, flute);
 	
 	ss.str("");
 	ss << "using lattice: " << endl;

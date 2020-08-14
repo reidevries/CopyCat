@@ -20,6 +20,16 @@ void limitVolAndH(DroneSound& drone_sound, SpriteQuad& sprite_quad) {
 	sprite_quad.quad.p[1].y = cur_base_h + cur_h;
 }
 
+void deactivateHill(SpriteAnim& hill_sprite, std::size_t& num_active_hills) {
+	hill_sprite.show = false;
+	if (num_active_hills>0) --num_active_hills;
+}
+
+void activateHill(SpriteAnim& hill_sprite, std::size_t& num_active_hills) {
+	hill_sprite.show = true;
+	++num_active_hills;
+}
+
 void Systems::growOnPress(entt::registry& reg, 
 	const CatClock& clk,
 	const InputData::Mouse& mouse)
@@ -28,6 +38,7 @@ void Systems::growOnPress(entt::registry& reg,
 	if (e_dragged.has_value()) {
 		DroneSound& drone_sound = reg.get<DroneSound>(*e_dragged);
 		SpriteQuad& sprite_quad = reg.get<SpriteQuad>(*e_dragged);
+		SpriteAnim& sprite_anim = reg.get<SpriteAnim>(*e_dragged);
 		
 		sprite_quad.quad.p[0].y += mouse.ray_vel.position.y;
 		sprite_quad.quad.p[1].y += mouse.ray_vel.position.y;
@@ -39,61 +50,43 @@ void Systems::growOnPress(entt::registry& reg,
 		if (mouse.l.rls || mouse.m.rls || mouse.r.rls
 			|| (!mouse.l.down && !mouse.m.down && !mouse.r.down)) {
 			e_dragged.reset();
-			reg.get<SpriteAnim>(*e_dragged).sprite.tint = {
+			sprite_anim.sprite.tint = {
 				255,
 				255,
 				255,
 				255
 			};
+		} else {
+			sprite_anim.sprite.tint = {
+				230,
+				230,
+				255,
+				128
+			};
+		}
+	
+		float cur_h = sprite_quad.quad.p[0].y-sprite_quad.quad.p[2].y;
+		
+		//if hill is reduced to minimum size, "deactivate" it
+		if (sprite_anim.show && (cur_h <= 2)) {
+			deactivateHill(sprite_anim, Systems::num_active_hills);
+		} else if (!sprite_anim.show && (cur_h > 2)) {
+			activateHill(sprite_anim, Systems::num_active_hills);
+		}
+		//if hill is reduced beyond minimum size, "activate" water instead
+		entt::entity e_water = reg.get<Child>(*e_dragged).e;
+		SpriteAnim& water_sprite = reg.get<SpriteAnim>(e_water);
+		water_sprite.show = (cur_h < 1);
+	} else { //if something innt being dragged, check for clicks
+		//if mouse is not down, can't possibly be clicking on anything
+		if (!mouse.l.down && !mouse.r.down && (mouse.scroll == 0)) return;
+		//if mouse is not hovering over anything, 
+		//can't possibly be clicking on anything
+		if (!sound_on_hover_hit.has_value()) return;
+
+		entt::entity e_hill = reg.get<Child>(*sound_on_hover_hit).e;
+		if (mouse.l.press || mouse.r.press || mouse.m.press) {
+			e_dragged = e_hill;
 		}
 	}
-	
-	
-	//if mouse is not down, can't possibly be clicking on anything
-	if (!mouse.l.down && !mouse.r.down && (mouse.scroll == 0)) return;
-	//if mouse is not hovering over anything, 
-	//can't possibly be clicking on anything
-	if (!sound_on_hover_hit.has_value()) return;
-	
-	entt::entity e_hill = reg.get<Child>(*sound_on_hover_hit).e;
-	DroneSound& drone_sound = reg.get<DroneSound>(e_hill);
-	SpriteQuad& sprite_quad = reg.get<SpriteQuad>(e_hill);
-	SpriteAnim& sprite_anim = reg.get<SpriteAnim>(e_hill);
-	limitVolAndH(drone_sound, sprite_quad);
-	
-	float cur_vol = drone_sound.sound.vol;
-	
-	//change of height/volume is fastest when the height/volume is closest
-	//to the maximum / 2
-	//this is the function min(1, -32(x^2 - x))
-	if (mouse.scroll != 0) {
-		float delta = -32*(cur_vol*cur_vol - cur_vol);
-		if (delta >= 1.0f) delta = 1.0f;
-		delta = delta * GROWTH_RATE*clk.dt_s;
-		float mod_h = delta*mouse.scroll;
-		float mod_vol = delta*H_LIMIT*mouse.scroll;
-		
-		sprite_quad.quad.p[0].y += mod_h;
-		sprite_quad.quad.p[1].y += mod_h;
-		drone_sound.sound.vol += mod_vol;
-	}
-	
-	if (mouse.l.press || mouse.r.press || mouse.m.press) {
-		e_dragged = e_hill;
-		sprite_anim.sprite.tint = {
-			255,
-			255,
-			255,
-			128
-		};
-	}
-	
-	float cur_h = sprite_quad.quad.p[0].y-sprite_quad.quad.p[2].y;
-	
-	//show water instead of hill when hill is at minimum size
-	sprite_anim.show = (cur_h > 2);
-	
-	entt::entity e_water = reg.get<Child>(e_hill).e;
-	SpriteAnim& water_sprite = reg.get<SpriteAnim>(e_water);
-	water_sprite.show = (cur_h < 1);
 }

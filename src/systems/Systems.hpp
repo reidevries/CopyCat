@@ -18,9 +18,11 @@
 #include "../IncludeComponents.hpp"
 #include "../VectorMath.hpp"
 #include "../ManAudio.hpp"
+#include "../ManTex.hpp"
 #include "../DebugPrinter.hpp"
 #include "../Fraction.hpp"
 #include "../WorldConstants.hpp"
+#include "../Factory.hpp"
 
 
 class Systems
@@ -34,6 +36,18 @@ private:
 	//set by soundOnHover
 	std::optional<entt::entity> sound_on_hover_hit;
 	
+	std::size_t num_active_hills = 0;
+	std::size_t num_living_bats = 0;
+	
+	//number of octaves allowed in output
+	//3 max means no octave reduction takes place
+	//0 means all octaves lowered to 1st octave
+	uint8_t octave_reduce = 0;
+	
+	void seekWater(entt::registry& reg, Bat& bat, const Vector3& bat_pos);
+	void seekHill(entt::registry& reg, Bat& bat, const Vector3& bat_pos);
+	float calcOctaveReducePitch(Fraction ji);
+
 public:
 	//System for playing sound when the mouse hovers over an entity 
 	//that has a "HoverSound" component. Need to do this before growOnPress
@@ -53,7 +67,9 @@ public:
 	void velocity(entt::registry&,
 		const CatClock& clk);
 	void spawnCreatures(entt::registry&,
-		const CatClock& clk);
+		const CatClock& clk,
+		ManTex&,
+		ManAudio&);
 	void batAI(entt::registry&,
 		const CatClock& clk,
 		const std::array<std::array<Fraction,World::SIZE_Y>,World::SIZE_X>& ji,

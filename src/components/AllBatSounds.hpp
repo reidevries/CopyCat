@@ -1,24 +1,24 @@
 /*
- * WorldVel.hpp
+ * AllBatSounds.hpp
  *
- *  Created on: Aug 13, 2020
+ *  Created on: Aug 14, 2020
  *      Author: rei de vries
- *      component for world velocity in 3d, corresponding to WorldPos
+ * stores every single bat sound
  */
 
-#ifndef SRC_COMPONENTS_WORLDVEL_H_
-#define SRC_COMPONENTS_WORLDVEL_H_
+#ifndef SRC_COMPONENTS_ALLBATSOUNDS_H_
+#define SRC_COMPONENTS_ALLBATSOUNDS_H_
+
+#include <array>
 
 #include "CatConf.hpp"
+#include "../WorldConstants.hpp"
+#include "../ResSound.hpp"
 
-struct WorldVel
+struct AllBatSounds
 {
-	Vector3 vel;
-	//set this impulse value, and the velocity will set by velocity system
-	//according to the impulse direction and magnitude
-	Vector3 impulse; 
-	//determines how fast the impulse falls off
-	float impulse_fall_rate = 0.5f;
+	bool stub; //just to get it to work with my scripts please fix this
+	std::array<std::array<ResSound, World::SIZE_Y>, World::SIZE_X> flute;
 };
 
-#endif /* SRC_COMPONENTS_WORLDVEL_H_ */
+#endif /* SRC_COMPONENTS_ALLBATSOUNDS_H_ */

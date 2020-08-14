@@ -40,8 +40,9 @@ void Systems::soundOnHover(entt::registry& reg,
 		Vector3 e_pos = view.get<WorldPos>(e).pos;
 		Quad e_quad = view.get<SpriteQuad>(e).quad;
 		if (e_quad.getRayHit(mouse.ray, e_pos).hit) {
-			ResSound s = view.get<HoverSound>(e).sound;
-			man_audio.playSound(s);
+			HoverSound s = view.get<HoverSound>(e);
+			float repitch = calcOctaveReducePitch(s.ji);
+			man_audio.playSound(s.sound, 0.3f, repitch);
 			sound_on_hover_hit = e;
 			reg.get<SpriteAnim>(*sound_on_hover_hit).sprite.tint = {
 				255,
