@@ -7,24 +7,39 @@
 
 #include <iostream>
 #include <raylib.h>
-#include "src/vectormath.h"
-#include "src/polygon.h"
 #include <vector>
 #include <memory>
+#include "../src/Polygon.hpp"
+#include "../src/VectorMath.hpp"
 
 int main(void) {
 	Polygon test_pentagon((Vector2){5,5}, 3.5f, 5);
-	std::vector<Vector2> trivertices = {(Vector2){8,2}, (Vector2){5,9}, (Vector2){2,2}};
-	Polygon test_triangle(trivertices, 3);
-	std::vector<Vector2> irregvertices = {(Vector2){6,1}, (Vector2){5,9}, (Vector2){3,8}, (Vector2){7,5}, (Vector2){2,2}};
-	Polygon test_irregular(irregvertices, 3);
+	std::vector<Vector2> trivertices = {
+		(Vector2){8,2}, 
+		(Vector2){5,9}, 
+		(Vector2){2,2}
+	};
+	Polygon test_triangle(trivertices);
+	std::vector<Vector2> irregvertices = {
+		(Vector2){6,1}, 
+		(Vector2){5,9}, 
+		(Vector2){3,8}, 
+		(Vector2){7,5}, 
+		(Vector2){2,2}
+	};
+	Polygon test_irregular(irregvertices);
 
-	std::cout << "testing checkPointInPolygon for regular pentagon" << std::endl;
-	std::cout << "----0         1         2         3         4         5         6         7         8         9         10" << std::endl;
+	std::cout << "testing checkPointInPolygon for regular pentagon" 
+		<< std::endl
+		<< "----0         1         2         3         4         5"
+		<< "         6         7         8         9         10" 
+		<< std::endl;
 	for (int y = 0; y < 10; ++y) {
 		std::cout << y << "---";
 		for (int x = 0; x < 100; ++x) {
-			if (VectorMath::checkPointInPolygon((Vector2){x/10.0f,y}, test_pentagon.getVertices())) {
+			if (VectorMath::checkPointInPolygon(
+				(Vector2){x/10.0f,static_cast<float>(y)}, 
+				test_pentagon.getVertices())) {
 				std::cout << "#";
 			} else {
 				std::cout << " ";
@@ -33,12 +48,17 @@ int main(void) {
 		std::cout << std::endl;
 	}
 
-	std::cout << "testing checkPointInPolygon for triangle" << std::endl;
-	std::cout << "----0         1         2         3         4         5         6         7         8         9         10" << std::endl;
+	std::cout << "testing checkPointInPolygon for triangle" 
+		<< std::endl
+		<< "----0         1         2         3         4         5"
+		<< "         6         7         8         9         10" 
+		<< std::endl;
 	for (int y = 0; y < 10; ++y) {
 		std::cout << y << "---";
 		for (int x = 0; x < 100; ++x) {
-			if (VectorMath::checkPointInPolygon((Vector2){x/10.0f,y}, test_triangle.getVertices())) {
+			if (VectorMath::checkPointInPolygon(
+				(Vector2){x/10.0f,static_cast<float>(y)}, 
+				test_triangle.getVertices())) {
 				std::cout << "#";
 			} else {
 				std::cout << " ";
@@ -47,12 +67,18 @@ int main(void) {
 		std::cout << std::endl;
 	}
 
-	std::cout << std::endl <<  "testing checkPointInPolygon for self-intersecting polygon" << std::endl;
-	std::cout << "----0         1         2         3         4         5         6         7         8         9         10" << std::endl;
+	std::cout << std::endl 
+		<<  "testing checkPointInPolygon for self-intersecting polygon"
+		<< std::endl
+		<< "----0         1         2         3         4         5"
+		<< "         6         7         8         9         10" 
+		<< std::endl;
 	for (int y = 0; y < 10; ++y) {
 		std::cout << y << "---";
 		for (int x = 0; x < 100; ++x) {
-			if (VectorMath::checkPointInPolygon((Vector2){x/10.0f,y}, test_irregular.getVertices())) {
+			if (VectorMath::checkPointInPolygon(
+				(Vector2){x/10.0f,static_cast<float>(y)}, 
+				test_irregular.getVertices())) {
 				std::cout << "#";
 			} else {
 				std::cout << " ";
@@ -71,47 +97,137 @@ int main(void) {
 	const Vector2 top			= { 5, 0};
 	const Vector2 bottom		= { 5, 10};
 
-	std::cout << std::endl << "testing distanceToLine for horizontal line (=5)" << std::endl;
-	std::cout << VectorMath::distanceToLine(topleft, topright, centre) << std::endl;
-	std::cout << "testing distanceToLine for vertical line (=5)" << std::endl;
-	std::cout << VectorMath::distanceToLine(topleft, bottomleft, centre) << std::endl;
-	std::cout << "testing distanceToLine for intersecting diagonal line (=0)" << std::endl;
-	std::cout << VectorMath::distanceToLine(topleft, bottomright, centre) << std::endl;
-	std::cout << "testing distanceToLine for non-intersecting diagonal line (=7.07107)" << std::endl;
-	std::cout << VectorMath::distanceToLine(topleft, bottomright, topright) << std::endl;
-	std::cout << "testing distanceToLine for point that intersects outside the segment (=0)" << std::endl;
-	std::cout << VectorMath::distanceToLine(centre, bottomright, topleft) << std::endl;
-	std::cout << "testing distanceToLine for point that is nearest to a part of line outside the segment" << std::endl;
-	std::cout << VectorMath::distanceToLine(centre, bottomright, top) << std::endl;
+	std::cout << std::endl 
+		<< "testing distanceToLine for horizontal line (=5)" 
+		<< std::endl
+		<< VectorMath::distanceToLine(topleft, topright, centre) 
+		<< std::endl
+		<< "testing distanceToLine for vertical line (=5)" 
+		<< std::endl
+		<< VectorMath::distanceToLine(topleft, bottomleft, centre) 
+		<< std::endl
+		<< "testing distanceToLine for intersecting diagonal line (=0)" 
+		<< std::endl
+		<< VectorMath::distanceToLine(topleft, bottomright, centre) 
+		<< std::endl
+		<< "testing distanceToLine for non-intersecting diagonal line "
+		<< "(=7.07107)"
+		<< std::endl
+		<< VectorMath::distanceToLine(topleft, bottomright, topright) 
+		<< std::endl
+		<< "testing distanceToLine for point that intersects outside "
+		<< "the segment (=0)" 
+		<< std::endl
+		<< VectorMath::distanceToLine(centre, bottomright, topleft) 
+		<< std::endl
+		<< "testing distanceToLine for point that is nearest to a part of " 
+		<< "line outside the segment" 
+		<< std::endl
+		<< VectorMath::distanceToLine(centre, bottomright, top) 
+		<< std::endl
 
-	std::cout << std::endl << "testing nearestPointOnLine for horizontal line (=5,0)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(topleft, topright, centre)) << std::endl;
-	std::cout << "testing nearestPointOnLine for vertical line (=0,5)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(topleft, bottomleft, centre)) << std::endl;
-	std::cout << "testing nearestPointOnLine for intersecting diagonal line (=5,5)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(topleft, bottomright, centre)) << std::endl;
-	std::cout << "testing nearestPointOnLine for non-intersecting diagonal line (=5,5)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(topleft, bottomright, topright)) << std::endl;
-	std::cout << "testing nearestPointOnLine for point that intersects outside the segment (=5,5)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(centre, bottomright, topleft)) << std::endl;
-	std::cout << "testing nearestPointOnLine for point that is nearest to a part of the line outside the segment (=5,5)" << std::endl;
-	std::cout << printVector(VectorMath::nearestPointOnSegment(centre, bottomright, top)) << std::endl;
+	std::cout << std::endl 
+		<< "testing nearestPointOnLine for horizontal line (=5,0)" 
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(topleft,topright,centre)) 
+		<< std::endl
+		<< "testing nearestPointOnLine for vertical line (=0,5)" 
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(topleft, bottomleft,centre))
+		<< std::endl
+		<< "testing nearestPointOnLine for intersecting diagonal line " 
+		<< "(=5,5)" 
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(topleft,bottomright, centre))
+		<< std::endl
+		<< "testing nearestPointOnLine for non-intersecting diagonal line "
+		<< "(=5,5)" 
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(
+				topleft,
+				bottomright, 
+				topright))
+		<< std::endl
+		<< "testing nearestPointOnLine for point that intersects outside "
+		<< "the segment (=5,5)"
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(
+				centre,
+				bottomright, 
+				topleft))
+		<< std::endl
+		<< "testing nearestPointOnLine for point that is nearest to a "
+		<< "part of the line outside the segment (=5,5)" 
+		<< std::endl
+		<< VectorMath::printVector(
+			VectorMath::nearestPointOnSegment(centre,bottomright, top)) 
+		<< std::endl;
 
-	std::cout << std::endl << "testing getNearestEdge on triangle, nearest to top" << std::endl;
+	std::cout << std::endl 
+		<< "testing getNearestEdge on triangle, nearest to top" 
+		<< std::endl;
 	std::array<Vector2, 2> edge = test_triangle.getNearestEdge(top);
-	std::cout << printVector(edge[0]) << " to " << printVector(edge[1]) << std::endl;
+	std::cout << VectorMath::printVector(edge[0]) 
+		<< " to " << VectorMath::printVector(edge[1]) << std::endl;
 	std::cout << "testing nearest to centre left" << std::endl;
 	edge = test_triangle.getNearestEdge(left);
-	std::cout << printVector(edge[0]) << " to " << printVector(edge[1]) << std::endl;
+	std::cout << VectorMath::printVector(edge[0]) 
+		<< " to " << VectorMath::printVector(edge[1]) << std::endl;
 	std::cout << "testing nearest to centre right" << std::endl;
 	edge = test_triangle.getNearestEdge(right);
-	std::cout << printVector(edge[0]) << " to " << printVector(edge[1]) << std::endl;
+	std::cout << VectorMath::printVector(edge[0]) 
+		<< " to " << VectorMath::printVector(edge[1]) << std::endl;
 	std::cout << "testing nearest to bottom left" << std::endl;
 	edge = test_triangle.getNearestEdge(bottomleft);
-	std::cout << printVector(edge[0]) << " to " << printVector(edge[1]) << std::endl;
+	std::cout << VectorMath::printVector(edge[0]) 
+		<< " to " << VectorMath::printVector(edge[1]) << std::endl;
 	std::cout << "testing nearest to bottom right" << std::endl;
 	edge = test_triangle.getNearestEdge(bottomright);
-	std::cout << printVector(edge[0]) << " to " << printVector(edge[1]) << std::endl;
+	std::cout << VectorMath::printVector(edge[0]) 
+		<< " to " << VectorMath::printVector(edge[1]) << std::endl;
+	
+	BoundingBox correct_b = {
+		(Vector3) {-10.0f, -10.0f, -10.0f}, 
+		(Vector3) { 10.0f,  10.0f,  10.0f}
+	};
+	BoundingBox incorrect_b = {
+		(Vector3) {-10.0f,  10.0f,  10.0f}, 
+		(Vector3) { 10.0f, -10.0f, -10.0f}
+	};
+	std::cout << std::endl
+		<< "testing boxContains for a correct and incorrect boundingbox "
+		<< std::endl
+		<< "( correct min = {-10, -10, -10}, max = {10, 10, 10})" 
+		<< std::endl
+		<< "( incorrect min = {-10, 10, 10}, max = {10, -10, -10})" 
+	for (int y = -20; y < 20; ++y) {
+		for (int x = -20; x < 20; ++x) {
+			for (int z = -20; z < 20; ++z) {
+				Vector3 p = {
+					static_cast<float>(x), 
+					static_cast<float>(y), 
+					static_cast<float>(z)
+				}
+				if (VectorMath::boxContains(correct_b, p)
+					&& VectorMath::boxContains(correct_b, p)) {
+					std::cout << "HITS MATCH ";
+				} else {
+					if (VectorMath::boxContains(correct_b, p)) {
+						std::cout << " ONLY CORRECT BOX HIT!!!";
+					} else if (VectorMath::boxContains(incorrect_b, p)) {
+						std::cout << " ONLY INCORRECT BOX HIT!!!";
+					}
+				}
+			}
+		}
+	}
+	std::cout << std::endl << " the above should show only HITS MATCH"
+		<< std::endl;
 }
 
 

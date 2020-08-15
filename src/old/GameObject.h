@@ -7,13 +7,13 @@
 #include <memory>
 #include <cstdint>
 
+#include "../Level.h"
+#include "../MessageList.h"
+#include "../ResBuf.h"
+#include "../ResConstants.h"
+#include "../TexSprite.h"
 #include "catconf.h"
-#include "level.h"
-#include "texsprite.h"
-#include "messagelist.h"
-#include "catclock.h"
-#include "resbuf.h"
-#include "resconstants.h"
+#include "CatClock.h"
 
 class GameObject
 {

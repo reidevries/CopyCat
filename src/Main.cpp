@@ -1,18 +1,5 @@
-#include <raylib.h>
-#include <iostream>
-#include <stdlib.h>
-#include <string.h>
-#include <memory>
-
+#include "App.hpp"
 #include "CatConf.hpp"
-#include "CatClock.hpp"
-#include "Environment.hpp"
-#include "MessageList.hpp"
-#include "ManTex.hpp"
-#include "ViewRenderer.hpp"
-#include "ComponentsJson.hpp"
-#include "IncludeSystems.hpp"
-#include "InputData.hpp"
 
 #ifndef CATCONF_H
 #define CAT_VERBOSITY 0
@@ -20,80 +7,62 @@
 #define COPYCAT_VERSION_MINOR 0
 #endif
 
+#if defined(PLATFORM_WEB)
+    #include <emscripten/emscripten.h>
+#endif
+
 using namespace std;
 
 const bool debug = (ReiDV::VERBOSITY > 0);
+App app(1920,1080,debug);
 
-void parseSystemMessages(vector<Message> messages) {
-	for (auto const& message: messages) {
-		cout << "Message from " << message.src_id
-			<< " : " << message.message << endl;
-	}
+/*void updateFrame()
+{
+	if (IsKeyPressed(KEY_F5)) ToggleFullscreen(); 
+	app.view_renderer.updateScreenWH(GetScreenWidth(), GetScreenHeight());
+
+	app.clk.tick(GetFrameTime());
+	app.man_tex.loadNextImage();
+	app.input_data.updateValues(app.view_renderer.getCam());
+
+	// system update methods
+	entt::registry& reg = app.environment.getReg();
+	app.systems.soundOnHover(reg, app.input_data.getMouseData(), app.man_audio);
+	app.systems.growOnPress(reg, app.clk, app.input_data.getMouseData());
+	app.systems.playDroneSound(reg, app.clk, app.man_audio);
+	app.systems.velocity(reg, app.clk);
+	app.systems.batAI(reg, app.clk, Level::genLattice(), app.man_audio);
+	app.systems.spawnCreatures(reg, app.clk, app.man_tex, app.man_audio);
+	// end of system update methods
+	
+	// this is still technically a system update method, but
+	// it should definitely go last
+	app.view_renderer.render(app.clk, app.environment.getReg(), app.man_tex);
+	
+	app.man_audio.loadNextAudio();
+	app.man_tex.loadNextTex();
+}*/
+
+void updateFrame()
+{
+	app.update();
 }
+
 
 int main(int argc, char* argv[])
 {
-    const int screen_w = 1280;	//size of viewport in pixels
-	const int screen_h = 720;
-
-	stringstream window_title;
-	window_title << "copycat version "
-		<< int(COPYCAT_VERSION_MAJOR)
-		<< "." << int(COPYCAT_VERSION_MINOR);
-
-    InitWindow(screen_w, screen_h, window_title.str().c_str());
-    InitAudioDevice();
-    //globally disable backface culling
-    //we are not loading models in this game
-	rlDisableBackfaceCulling();
-
-    ManTex man_tex(debug);
-    ManAudio man_audio(debug);
-    ViewRenderer view_renderer(screen_w, screen_h, debug);
-    Environment environment;
-	environment.initLevel(man_tex, man_audio, string("test"));
-    ComponentsJson::saveLevel(environment.getReg(), "test.json");
-	InputData input_data;
-
-    SetTargetFPS(60);
 	
-    if (ReiDV::VERBOSITY >= 3) ComponentsJson::test();
 
-    CatClock clk;
-
-    bool waiting_to_load = true;
-    
-    Systems systems; //init systems global vars
-    
-    while (!WindowShouldClose()) {
-    	clk.tick(GetFrameTime());
-    	man_tex.loadNextImage();
-		input_data.updateValues(view_renderer.getCam());
-
-		if (waiting_to_load) {
-			waiting_to_load = false;
-		}
-
-		// system update methods
-		entt::registry& reg = environment.getReg();
-		systems.soundOnHover(reg, input_data.getMouseData(), man_audio);
-		systems.growOnPress(reg, clk, input_data.getMouseData());
-		systems.playDroneSound(reg, clk, man_audio);
-		systems.velocity(reg, clk);
-		systems.batAI(reg, clk, Level::genLattice(), man_audio);
-		systems.spawnCreatures(reg, clk, man_tex, man_audio);
-		// end of system update methods
-		
-		// this is still technically a system update method, but
-		// it should definitely go last
-		view_renderer.render(clk, environment.getReg(), man_tex);
-		
-		man_audio.loadNextAudio();
-		man_tex.loadNextTex();
-    }
-    
-    CloseAudioDevice();
-    CloseWindow();
-
-    return 0;
+#if defined(PLATFORM_WEB)
+	emscripten_set_main_loop(&updateFrame, 0, 1);
+#else
+	SetTargetFPS(60);
+	while (!WindowShouldClose()) // Detect window close button or ESC key
+	{
+		if (IsKeyPressed(KEY_F5)) ToggleFullscreen(); 
+		app.updateScreenWH(GetScreenWidth(), GetScreenHeight());
+		updateFrame();
+	}
+#endif
+	return 0;
 }

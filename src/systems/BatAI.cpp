@@ -137,7 +137,6 @@ void flap(Bat& bat,
 		if (bat_pos.y < World::METRE && vel.impulse.y < 0) {
 			vel.impulse.y = -vel.impulse.y;
 		}
-		bat.just_flapped = true;
 		
 		man_audio.playSound(s, 0.2f, pitch);
 	}

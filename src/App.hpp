@@ -14,10 +14,6 @@
 #include <string>
 #include <sstream>
 
-#if defined(PLATFORM_WEB)
-    #include <emscripten/emscripten.h>
-#endif
-
 #include "CatConf.hpp"
 #include "CatClock.hpp"
 #include "Environment.hpp"
@@ -46,7 +42,9 @@ private:
 	Systems systems;
 public:
 	App(const int w, const int h, const bool set_debug);
+	void updateScreenWH(int w, int h) { view_renderer.updateScreenWH(w,h); }
 	void update();
+	~App();
 };
 
 #endif

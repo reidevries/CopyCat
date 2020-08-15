@@ -20,7 +20,7 @@ namespace World
 	// world size is 8x7
 	static const int SIZE_X = 8;
 	static const int SIZE_Y = 7;
-	static const int ORIGIN_X = -3;
-	static const int ORIGIN_Y = -2;
+	static const int ORIGIN_X = -4;
+	static const int ORIGIN_Y = -3;
 }
 #endif

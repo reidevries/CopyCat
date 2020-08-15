@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "texres.h"
+#include "old/texres.h"
 
 //generate a blank texture as default
 TexRes::TexRes()
@@ -19,7 +19,7 @@ TexRes::TexRes(const char* filename)
 	tex = LoadTexture(filename);
 }
 
-void TexRes::reloadTexture(Image& image) {
+void TexRes::assignTexture(Image& image) {
 	UpdateTexture(tex, image.data);
 }
 

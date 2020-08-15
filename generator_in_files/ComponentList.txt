@@ -1,8 +1,17 @@
 HitBox box
-LevelID name
+LevelObj name
 ScreenPos pos
-SpriteAnim atlas_name region_name
+SpriteAnim sprite show anim_speed
 SpriteQuad quad
 SpriteSizeRot size rot
+SpriteMulti sprites pos visible
 WorldPos pos
+WorldVel vel impulse impulse_fall_rate
 HoverSound sound
+DroneSound sound
+Parent name
+Child name
+Bat stamina water
+Water occupied
+Hill occupied
+AllBatSounds stub

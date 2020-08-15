@@ -4,12 +4,13 @@
 #include <raylib.h>
 #include <vector>
 #include <string>
-#include "gameobject.h"
-#include "polygon.h"
-#include "resman.h"
-#include "debugprinter.h"
 #include <random>
-#include "level.h"
+
+#include "../DebugPrinter.h"
+#include "../GameObject.h"
+#include "../Level.h"
+#include "../Polygon.h"
+#include "../ResMan.h"
 #include "texres.h"
 
 class GameWorld {

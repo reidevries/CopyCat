@@ -106,6 +106,18 @@ void ViewRenderer::render(CatClock& clk,
 		2.0f, 
 		help_tint);
 		
+	DrawTextEx(
+		font,
+		"f5 toggles fullscreen\n"
+		"esc is quit", 
+		(Vector2 ) {
+			static_cast<float>(screen_w * 0.8f),
+			static_cast<float>(screen_h * 0.8f + font.baseSize)
+		}, 
+		static_cast<float>(font.baseSize), 
+		2.0f, 
+		help_tint);
+		
 	if (debug) renderDebug(clk, reg, man_tex);
 	EndDrawing();
 }

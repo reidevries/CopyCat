@@ -170,6 +170,8 @@ if(STATIC)
   string (REPLACE ";" " " PKG_CONFIG_LIBS_PRIVATE "${PKG_CONFIG_LIBS_PRIVATE}")
   if (${PLATFORM} MATCHES "Desktop")
     target_link_libraries(raylib_static glfw ${GLFW_LIBRARIES} ${LIBS_PRIVATE})
+  elseif (${PLATFORM} MATCHES "Web")
+    target_link_libraries(raylib_static -lglfw)
   endif()
 
   if (WITH_PIC)

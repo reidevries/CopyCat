@@ -6,45 +6,94 @@
  */
 
 #include <iostream>
-#include "../src/resbuf.h"
+
+#include "../src/ResBuf.hpp"
 using namespace std;
+
+int printPush(ResBuf<char, 7>& r, string name, char val)
+{
+	cout << "pushing '" << val << "' at '" << name << "'" << endl;
+	return r.push(name, val);
+}
 
 int main(void)
 {
-	ResBuf<char, 8> test_buf('a');
+	ResBuf<char, 7> test_buf('a');
 	cout << test_buf.printBuf() << endl;
 
+	cout << "pushing 't' at 'test'" << endl;
 	test_buf.push("test", 't');
 	cout << test_buf.printBuf() << endl;
 
-	int hello = test_buf.push("hello", '0');
-	int this_int = test_buf.push("this", '1');
-	int is = test_buf.push("is", '2');
-	int a_test = test_buf.push("a test", '3');
-	int for_int = test_buf.push("for", '4');
-	int res_buf = test_buf.push("resbuf", '5');
-	int template_int = test_buf.push("template", '6');
+	int a, b, c, d, e, f, g;
+	
+	try {
+		a = printPush(test_buf, "hello", 'a');
+		b = printPush(test_buf, "this", 'b');
+		c = printPush(test_buf, "is", 'c');
+		d = printPush(test_buf, "a test", 'd');
+		e = printPush(test_buf, "for", 'e');
+		f = printPush(test_buf, "resbuf", 'f');
+		g = printPush(test_buf, "template", 'g');
+	} catch ( const std::range_error& e ) {
+		cout << "range error: " <<  e.what() << endl;
+	}
 	cout << test_buf.printBuf() << endl;
-	cout << "popped char " << test_buf.pop(template_int) << endl << endl;
-	cout << "popped char " << test_buf.pop(this_int) << endl << endl;
-	test_buf.push("woah overflow", '7');
+	
+	cout << "popped char " << test_buf.pop(a) << endl;
+	cout << "popped char " << test_buf.pop(c) << endl << endl;
 	cout << test_buf.printBuf() << endl;
-	cout << "popped char " << test_buf.pop(hello) << endl << endl;
-	cout << "popped char " << test_buf.pop(this_int) << endl << endl;
-	cout << "popped char " << test_buf.pop(is) << endl << endl;
-	cout << "popped char " << test_buf.pop(a_test) << endl << endl;
-	cout << "popped char " << test_buf.pop(for_int) << endl << endl;
-	cout << "popped char " << test_buf.pop(res_buf) << endl << endl;
-	cout << "popped char " << test_buf.pop(template_int) << endl << endl;
-	test_buf.push("lets", 'z');
-	test_buf.push("do", 'y');
-	test_buf.push("it", 'x');
-	test_buf.push("all", 'w');
-	test_buf.push("again", 'v');
-	test_buf.push("for", 'u');
-	test_buf.push("the", 't');
-	test_buf.push("lulz", 's');
+	
+	printPush(test_buf, "woah overflow", '7');
 	cout << test_buf.printBuf() << endl;
+	
+	try {
+		cout << "popping char " << test_buf.pop(g) << endl;
+		cout << "popping char " << test_buf.pop(f) << endl;
+		cout << "popping char " << test_buf.pop(e) << endl;
+		cout << "popping char " << test_buf.pop(d) << endl;
+		cout << "popping char " << test_buf.pop(c) << endl;
+		cout << "popping char " << test_buf.pop(b) << endl;
+		cout << "popping char " << test_buf.pop(a) << endl;
+	} catch ( const std::invalid_argument& e ) {
+		cout << "invalid argument: " <<  e.what() << endl;
+	} catch ( const std::out_of_range& e) {
+		cout << "out of range error: " << e.what() << endl;
+	}
+	cout << test_buf.printBuf() << endl << endl;
+	
+	try {
+		printPush(test_buf, "lets", 'z');
+		printPush(test_buf, "do", 'y');
+		printPush(test_buf, "it", 'x');
+		printPush(test_buf, "all", 'w');
+		printPush(test_buf, "again", 'v');
+		printPush(test_buf, "for", 'u');
+		printPush(test_buf, "the", 't');
+		printPush(test_buf, "lulz", 's');
+	} catch ( const std::range_error& e ) {
+		cout << "range error: " <<  e.what() << endl;
+	}
+	cout << test_buf.printBuf() << endl;
+	
+	cout << "force push 'lulz'" << endl;
+	int lulz = test_buf.forcePush("lulz",  's');
+	cout << test_buf.printBuf() << endl << endl;
+	
+	cout << "replace value after 'lulz'" << endl;
+	test_buf.replace(lulz, '!');
+	cout << test_buf.printBuf() << endl << endl;
+	
+	cout << "test popOldest" << endl;
+	cout << "oldest value is " << test_buf.popOldest() << endl;
+	cout << test_buf.printBuf() << endl << endl;
+	
+	cout << "looking up 'lulz'" << endl;
+	cout << "value at 'lulz' is '" << test_buf.at("lulz") << "'" << endl;
+	cout << "value at previously stored index of 'lulz' is '"
+		<< test_buf.at(lulz) << "'" << endl << endl;
+	
+	cout << "end of testing" << endl;
 }
 
 

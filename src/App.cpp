@@ -28,19 +28,10 @@ App::App(const int w, const int h, const bool set_debug)
 	
 	environment.initLevel(man_tex, man_audio, string("test"));
     if (ReiDV::VERBOSITY >= 3) ComponentsJson::test();
-	
-#if defined(PLATFORM_WEB)
-	emscripten_set_main_loop(update, 0, 1);
-#else
-	SetTargetFPS(60);	
-#endif
 }
 
 void App::update()
 {
-	if (IsKeyPressed(KEY_F5)) ToggleFullscreen(); 
-	view_renderer.updateScreenWH(GetScreenWidth(), GetScreenHeight());
-
 	clk.tick(GetFrameTime());
 	man_tex.loadNextImage();
 	input_data.updateValues(view_renderer.getCam());
@@ -61,4 +52,10 @@ void App::update()
 	
 	man_audio.loadNextAudio();
 	man_tex.loadNextTex();
+}
+
+App::~App()
+{
+    CloseAudioDevice();
+    CloseWindow();
 }

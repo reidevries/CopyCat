@@ -5,7 +5,7 @@
  *      Author: rei de vries
  */
 
-#include "texregion.h"
+#include "old/texregion.h"
 
 using namespace std;
 

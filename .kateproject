@@ -1,6 +1,7 @@
 {
   "name": "CopyCat"
-, "files": [ { "git": 1 } ]
+, "files": [ { "git": 1 }, {"directory": "build", "filters": "*.hpp"} ]
+, "index": true
 , "build": {
     "directory": ""
   , "build": "cmake --build ./build"

@@ -113,6 +113,8 @@ foreach(example_source ${example_sources})
   string(REGEX MATCH ".*/.*/" resources_dir ${example_source})
   string(APPEND resources_dir "resources")
 
+  message(STATUS "resource dir for ${example_name} is ${resources_dir}")
+
   if(${PLATFORM} MATCHES "Web" AND EXISTS ${resources_dir})
     # The local resources path needs to be mapped to /resources virtual path
     string(APPEND resources_dir "@resources")

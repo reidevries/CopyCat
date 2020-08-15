@@ -11,10 +11,10 @@
 #include <vector>
 #include <string>
 
+#include "../GameObject.h"
+#include "../MessageList.h"
+#include "../TexSprite.h"
 #include "catconf.h"
-#include "../gameobject.h"
-#include "../messagelist.h"
-#include "../texsprite.h"
 
 class FloorTile : public GameObject
 {

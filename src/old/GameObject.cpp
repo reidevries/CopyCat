@@ -1,4 +1,4 @@
-#include "gameobject.h"
+#include "../GameObject.h"
 
 using namespace std;
 

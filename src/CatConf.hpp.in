@@ -4,12 +4,9 @@
 #define COPYCAT_VERSION_MAJOR @copycat_VERSION_MAJOR@
 #define COPYCAT_VERSION_MINOR @copycat_VERSION_MINOR@
 
-#cmakedefine USE_LOCAL_RAYLIB @USE_LOCAL_RAYLIB@
-#ifdef USE_LOCAL_RAYLIB
-#include "raylib.h"
-#else
+#cmakedefine PLATFORM_WEB
+
 #include <raylib.h>
-#endif
 
 namespace ReiDV
 {

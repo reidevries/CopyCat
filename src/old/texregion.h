@@ -10,14 +10,15 @@
  *	be used to do transformations and stuff.
  */
 
-#ifndef SRC_TEXREGION_H_
-#define SRC_TEXREGION_H_
+#ifndef SRC_OLD_TEXREGION_H_
+#define SRC_OLD_TEXREGION_H_
 
 #include <raylib.h>
 #include <iostream>
-#include "debugprinter.h"
 #include <memory>
-#include "texres.h"
+
+#include "../DebugPrinter.h"
+#include "old/texres.h"
 
 class TexRegion {
 private:
@@ -39,4 +40,4 @@ public:
 };
 
 
-#endif /* SRC_TEXREGION_H_ */
+#endif /* SRC_OLD_TEXREGION_H_ */

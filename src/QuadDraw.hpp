@@ -18,6 +18,8 @@
 
 namespace ReiDV {
 	void drawQuad(Texture2D tex, Rectangle src_rect, Vector3 center,
+		Quad quad, Color tint, bool flip_x, bool flip_y);
+	void drawQuad(Texture2D tex, Rectangle src_rect, Vector3 center,
 		Quad quad, Color tint);
 	void drawQuad(Texture2D tex, Rectangle src_rect, Vector3 center,
 		Quad quad);

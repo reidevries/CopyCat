@@ -38,7 +38,7 @@ void Example::parseMessage(Message message, std::vector<Token> lexed)
 				my_example_data = 0;
 				break;
 			case spin:
-				rotateSprites((Vector3){10,1000,100});
+				rotateSprites(0.0,-0.008,-0.0);
 			default:
 				break;
 			}

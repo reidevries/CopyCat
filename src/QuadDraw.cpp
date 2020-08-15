@@ -8,45 +8,64 @@
 #include "QuadDraw.hpp"
 
 void ReiDV::drawQuad(Texture2D tex, Rectangle src_rect,
-	Vector3 center, Quad q, Color tint)
+	Vector3 center, Quad q, Color tint, bool flip_x, bool flip_y)
 {
 	if (rlCheckBufferLimit(4)) rlglDraw();
 
 	rlEnableTexture(tex.id);
+	
+	float left_x = src_rect.x/tex.width;
+	float right_x = (src_rect.x+src_rect.width)/tex.width;
+	float bottom_y = src_rect.y/tex.height;
+	float top_y = (src_rect.y+src_rect.height)/tex.height;
+	
+	if (flip_x) {
+		float temp = left_x;
+		left_x = right_x;
+		right_x = temp;
+	}
+	
+	if (flip_y) {
+		float temp = bottom_y;
+		bottom_y = top_y;
+		top_y = temp;
+	}
 
 	rlBegin(RL_QUADS);
 		rlColor4ub(tint.r, tint.g, tint.b, tint.a);
 
 		// Bottom-left corner for texture and quad
-		rlTexCoord2f(src_rect.x/tex.width,
-			src_rect.y/tex.height);
+		rlTexCoord2f(left_x, bottom_y);
 		rlVertex3f(center.x+q.p[0].x,
 			center.y+q.p[0].y,
 			center.z+q.p[0].z);
 
 		// Top-left corner for texture and quad
-		rlTexCoord2f(src_rect.x/tex.width,
-			(src_rect.y+src_rect.height)/tex.height);
+		rlTexCoord2f(left_x, top_y);
 		rlVertex3f(center.x+q.p[3].x,
 			center.y+q.p[3].y,
 			center.z+q.p[3].z);
 
 		// Top-right corner for texture and quad
-		rlTexCoord2f((src_rect.x+src_rect.width)/tex.width,
-			(src_rect.y+src_rect.height)/tex.height);
+		rlTexCoord2f(right_x, top_y);
 		rlVertex3f(center.x+q.p[2].x,
 			center.y+q.p[2].y,
 			center.z+q.p[2].z);
 
 		// Bottom-right corner for texture and quad
-		rlTexCoord2f((src_rect.x+src_rect.width)/tex.width,
-			src_rect.y/tex.height);
+		rlTexCoord2f(right_x, bottom_y);
 		rlVertex3f(center.x+q.p[1].x,
 			center.y+q.p[1].y,
 			center.z+q.p[1].z);
 	rlEnd();
 
 	rlDisableTexture();
+}
+
+void ReiDV::drawQuad(Texture2D tex, Rectangle src_rect,
+	Vector3 center, Quad q, Color tint) 
+{
+	drawQuad(tex,src_rect,center,q,tint,false,false);
 }
 
 //calls above method, with no tint

@@ -38,7 +38,6 @@ struct Bat
 	};
 	State state;
 	float flap_timer;
-	bool just_flapped; //for playing appropriate sound
 };
 
 #endif

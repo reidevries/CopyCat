@@ -43,6 +43,7 @@ public:
 public:
 	ViewRenderer(const int screen_w, const int screen_h,
 		const bool set_debug);
+	void updateScreenWH(const int w, const int h) {screen_w=w; screen_h=h;}
 	void render(CatClock& clk, entt::registry& reg, ManTex& man_tex);
 	const Camera& getCam() const {return cam;}
 };

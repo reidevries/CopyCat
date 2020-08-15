@@ -7,7 +7,8 @@
  */
 
 #include "quadtree.h"
-#include "debugprinter.h"
+
+#include "../DebugPrinter.h"
 
 using namespace std;
 

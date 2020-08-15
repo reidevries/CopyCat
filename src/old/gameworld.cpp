@@ -58,7 +58,7 @@ unique_ptr<ResMan> GameWorld::update(float dt, unsigned int time_s,
 			"created face texture at time " + to_string(time_s), 1);
 	}
 	for (auto &&ui : ui_buf) {
-		ui->setRotation(ui->getRotation() + 1);
+		ui->setRotation(ui->getRot() + 1);
 	}
 	return move(resman);
 }

@@ -1,4 +1,5 @@
 target_sources(${PROJECT_NAME} PRIVATE 
+	App.cpp
 	ComponentNames.cpp
 	ComponentSerialize.cpp
 	ComponentsJson.cpp
